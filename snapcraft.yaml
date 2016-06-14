@@ -1,0 +1,193 @@
+name: nextcloud
+version: 9.0.50snap1
+summary: Nextcloud
+description: Nextcloud running on Apache with MySQL. This is currently in beta.
+confinement: strict
+
+apps:
+  # Apache daemon
+  apache:
+    command: apachectl start -DFOREGROUND
+    stop-command: apachectl stop
+    daemon: simple
+    plugs: [network, network-bind]
+
+  # MySQL daemon
+  mysql:
+    command: start_mysql
+    stop-command: support-files/mysql.server stop
+    daemon: simple
+    plugs: [network, network-bind]
+
+  # MySQL client
+  mysql-client:
+    command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
+    plugs: [network, network-bind]
+
+  # mDNS daemon
+  mdns-publisher:
+    command: delay-on-failure mdns-publisher nextcloud
+    daemon: simple
+    plugs: [network, network-bind]
+
+  # Nextcloud occ command
+  occ:
+    command: occ
+    plugs: [network, network-bind]
+
+parts:
+  apache:
+    plugin: apache
+    source: https://github.com/kyrofa/nextcloud.git
+    source-tag: 9.0.50
+
+    # The built-in Apache modules to enable
+    modules:
+      - headers
+      - fcgid
+      - setenvif
+      - env
+      - rewrite
+      - mime
+      - dir
+      - authz_core
+      - unixd
+      - alias
+
+    # Extra Apache configuration for Nextcloud (and PHP)
+    extra-configuration: src/nextcloud/apache_config
+
+    # Script to run before bringing up Apache
+    startup-script: src/nextcloud/setup_nextcloud
+
+    third-party-modules:
+      # Build PHP
+      - source: http://us1.php.net/get/php-7.0.2.tar.gz/from/this/mirror
+        source-type: tar
+        configflags:
+          - --enable-ctype
+          - --enable-mbstring
+          - --enable-zip
+          - --with-pdo-mysql
+          - --with-zlib
+          - --with-gd
+          - --with-curl
+          - --with-openssl
+          - --with-bz2
+          - --with-mcrypt
+          - --enable-exif
+    stage:
+      - -htdocs/.git*
+    snap:
+      - -manual # No need to include the documentation in the .snap
+      - -htdocs/.git*
+    stage-packages:
+      # These are only included here until the OS snap stabilizes
+      - libxml2
+      - libpng12-0
+    build-packages:
+      - libxml2-dev
+      - libcurl4-openssl-dev
+      - libpng12-dev
+      - libbz2-dev
+      - libmcrypt-dev
+
+  # Copy over our PHP configuration file.
+  php-config:
+    plugin: copy
+    files:
+      src/php/php.ini: php.ini
+
+  # Copy over our Nextcloud configuration files
+  nextcloud-customizations:
+    plugin: copy
+    files:
+      src/nextcloud/*config.php: htdocs/config/
+      src/nextcloud/occ: bin/
+
+  # Download the boost headers for MySQL. Note that the version used may need to
+  # be updated if the version of MySQL changes.
+  boost:
+    plugin: copy
+    source: http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz
+    files:
+      '*': boost/
+    snap:
+      - -*
+
+  mysql:
+    plugin: cmake
+    source: https://github.com/kyrofa/mysql-server.git
+    source-type: git
+    source-branch: feature/support_no_setpriority
+    after: [boost]
+    configflags:
+      - -DWITH_BOOST=$SNAPCRAFT_STAGE/boost
+      - -DWITH_INNODB_PAGE_CLEANER_PRIORITY=OFF
+      - -DCMAKE_INSTALL_PREFIX=/
+      - -DBUILD_CONFIG=mysql_release
+      - -DWITH_UNIT_TESTS=OFF
+      - -DWITH_EMBEDDED_SERVER=OFF
+      - -DWITH_EMBEDDED_SHARED_LIBRARY=OFF
+      - -DWITH_ARCHIVE_STORAGE_ENGINE=OFF
+      - -DWITH_BLACKHOLE_STORAGE_ENGINE=OFF
+      - -DWITH_FEDERATED_STORAGE_ENGINE=OFF
+      - -DWITH_PARTITION_STORAGE_ENGINE=OFF
+      - -DINSTALL_MYSQLTESTDIR=
+    build-packages:
+      - wget
+      - g++
+      - cmake
+      - bison
+      - libncurses5-dev
+      - libaio-dev
+    stage:
+      # Remove scripts that we'll be replacing with our own
+      - -support-files/mysql.server
+    snap:
+      # Remove scripts that we'll be replacing with our own
+      - -support-files/mysql.server
+
+      # Remove unused binaries that waste space
+      - -bin/innochecksum
+      - -bin/lz4_decompress
+      - -bin/myisam*
+      - -bin/mysqladmin
+      - -bin/mysqlbinlog
+      - -bin/mysql_client_test
+      - -bin/mysql_config*
+      - -bin/mysqld_multi
+      - -bin/mysqldump*
+      - -bin/mysqlimport
+      - -bin/mysql_install_db
+      - -bin/mysql_plugin
+      - -bin/mysqlpump
+      - -bin/mysql_secure_installation
+      - -bin/mysqlshow
+      - -bin/mysqlslap
+      - -bin/mysql_ssl_rsa_setup
+      - -bin/mysqltest
+      - -bin/mysql_tzinfo_to_sql
+      - -bin/perror
+      - -bin/replace
+      - -bin/resolveip
+      - -bin/resolve_stack_dump
+      - -bin/zlib_decompress
+
+  # Copy over our MySQL scripts
+  mysql-customizations:
+    plugin: copy
+    files:
+      # This one is what creates the initial database and account for Nextcloud.
+      src/mysql/start_mysql: bin/
+      src/mysql/my.cnf: my.cnf
+      src/mysql/mysql.server: support-files/
+
+  mdns-publisher:
+    plugin: go
+    go-packages: [github.com/kyrofa/mdns-publisher]
+
+  delay-on-failure:
+    plugin: copy
+    files:
+      src/delay-on-failure/delay-on-failure: bin/

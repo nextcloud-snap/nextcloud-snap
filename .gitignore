@@ -1,0 +1,7 @@
+*.snap
+*.swp
+parts/*
+!parts/plugins/
+__pycache__/
+prime/
+stage/

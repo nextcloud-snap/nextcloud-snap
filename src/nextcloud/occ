@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
+
+php -c $SNAP $SNAP/htdocs/occ $*

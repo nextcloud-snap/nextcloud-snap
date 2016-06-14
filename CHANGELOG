@@ -1,0 +1,5 @@
+v 9.0.50snap1
+  - Target series 16.
+  - Use the common directory for Nextcloud data.
+  - Use two app folders: the read-only in-snap apps, and user-installed ones in
+    $SNAP_DATA.

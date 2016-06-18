@@ -54,6 +54,10 @@ class ApachePlugin(snapcraft.BasePlugin):
                 'type': 'string'
             },
         }
+        schema['properties']['mpm'] = {
+            'type': 'string',
+            'default': 'event',
+        }
         schema['properties']['third-party-modules'] = {
             'type': 'array',
             'minitems': 1,
@@ -183,8 +187,12 @@ class ApachePlugin(snapcraft.BasePlugin):
 
         shutil.copytree(apache_source_directory, apache_build_directory)
 
-        subprocess.check_call("./configure --prefix={} --enable-modules=none --enable-mods-shared='{}' ENABLED_DSO_MODULES='{}'".format(self.installdir, ' '.join(self.options.modules), ','.join(self.options.modules)),
-                              cwd=apache_build_directory, shell=True)
+        subprocess.check_call(
+            "./configure --prefix={} --with-mpm={} --enable-modules=none --enable-mods-shared='{}' ENABLED_DSO_MODULES='{}'".format(
+                self.installdir, self.options.mpm,
+                ' '.join(self.options.modules),
+                ','.join(self.options.modules)),
+            cwd=apache_build_directory, shell=True)
 
         self.run(
             ['make', '-j{}'.format(

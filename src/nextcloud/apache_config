@@ -1,8 +1,11 @@
+# PHP-FPM
+ProxyTimeout 900
 <FilesMatch \.php$>
-    SetHandler application/x-httpd-php
+    SetHandler "proxy:unix:${SNAP_DATA}/php/php-fpm.sock|fcgi://localhost/"
 </FilesMatch>
 
-PHPIniDir "${SNAP}/php.ini"
+<Proxy "fcgi://localhost/">
+</Proxy>
 
 # Serve static assets for apps in a writable location.
 Alias "/extra-apps" "${SNAP_DATA}/nextcloud/extra-apps"
@@ -18,13 +21,6 @@ Alias "/extra-apps" "${SNAP_DATA}/nextcloud/extra-apps"
     # on Snappy (since the .htaccess file is read-only) so we'll do it here so
     # as to avoid manually copying it in and needing to maintain it.
     Include ${SNAP}/htdocs/.htaccess
-
-    # Increase the max upload size, and upload into a different tmp so we don't
-    # try to use that much RAM.
-    php_value upload_max_filesize 16G
-    php_value post_max_size 16G
-    # FIXME: Use common environment variable when it exists.
-    php_admin_value upload_tmp_dir ${SNAP_DATA}/../common/nextcloud/tmp
 
     # Note that nothing else is included here as this directive is merged with
     # the one in the main configuration file.

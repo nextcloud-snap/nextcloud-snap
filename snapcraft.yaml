@@ -1,5 +1,5 @@
 name: nextcloud
-version: 9.0.50snap1
+version: 9.0.50snap2
 summary: Nextcloud
 description: Nextcloud running on Apache with MySQL. This is currently in beta.
 confinement: strict

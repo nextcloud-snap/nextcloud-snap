@@ -1,0 +1,8 @@
+#!/bin/sh
+
+mkdir -p -m 750 ${SNAP_DATA}/redis
+
+# redis doesn't support environment variables in its config files. Thankfully
+# it supports reading the config file from stdin though, so we'll rewrite the
+# config file on the fly and pipe it in.
+sed -e "s|\${SNAP_DATA}|$SNAP_DATA|" $SNAP/config/redis/redis.conf | redis-server -

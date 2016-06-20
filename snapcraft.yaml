@@ -25,6 +25,12 @@ apps:
     daemon: simple
     plugs: [network, network-bind]
 
+  # redis server daemon
+  redis-server:
+    command: start-redis-server
+    daemon: simple
+    plugs: [network, network-bind]
+
   # mDNS daemon
   mdns-publisher:
     command: delay-on-failure mdns-publisher nextcloud
@@ -74,7 +80,7 @@ parts:
       - -htdocs/.git*
 
   php:
-    plugin: autotools
+    plugin: php
     source: http://us1.php.net/get/php-7.0.2.tar.gz/from/this/mirror
     source-type: tar
     install-via: prefix
@@ -112,6 +118,17 @@ parts:
     organize:
       # Put php-fpm in bin with everything else, not sbin.
       sbin/php-fpm: bin/php-fpm
+    extensions: [redis]
+
+  redis:
+    plugin: redis
+    source: http://download.redis.io/releases/redis-3.2.1.tar.gz
+
+  redis-customizations:
+    plugin: copy
+    files:
+      src/redis/config/*: config/redis/
+      src/redis/scripts/*: bin/
 
   # Copy over our PHP configuration file.
   php-customizations:

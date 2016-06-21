@@ -173,7 +173,7 @@ class ApachePlugin(snapcraft.BasePlugin):
 
     def run(self, cmd, cwd=None, **kwargs):
         env = os.environ.copy()
-        env['CFLAGS']='-O2'
+        env['CFLAGS'] = '-O2'
 
         super().run(cmd, cwd=cwd, env=env, **kwargs)
 

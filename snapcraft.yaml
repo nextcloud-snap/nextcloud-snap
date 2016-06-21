@@ -118,7 +118,10 @@ parts:
     organize:
       # Put php-fpm in bin with everything else, not sbin.
       sbin/php-fpm: bin/php-fpm
-    extensions: [redis]
+    extensions:
+      # Build the redis PHP module
+      - source: https://github.com/phpredis/phpredis.git
+        source-branch: php7
 
   redis:
     plugin: redis

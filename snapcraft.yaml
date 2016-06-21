@@ -1,5 +1,5 @@
 name: nextcloud
-version: 9.0.50snap1
+version: 9.0.50snap2
 summary: Nextcloud
 description: Nextcloud running on Apache with MySQL. This is currently in beta.
 confinement: strict
@@ -19,15 +19,27 @@ apps:
     daemon: simple
     plugs: [network, network-bind]
 
-  # MySQL client
-  mysql-client:
-    command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
+  # PHP FPM daemon
+  php-fpm:
+    command: start-php-fpm
+    daemon: simple
+    plugs: [network, network-bind]
+
+  # redis server daemon
+  redis-server:
+    command: start-redis-server
+    daemon: simple
     plugs: [network, network-bind]
 
   # mDNS daemon
   mdns-publisher:
     command: delay-on-failure mdns-publisher nextcloud
     daemon: simple
+    plugs: [network, network-bind]
+
+  # MySQL client
+  mysql-client:
+    command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
     plugs: [network, network-bind]
 
   # Nextcloud occ command
@@ -44,7 +56,8 @@ parts:
     # The built-in Apache modules to enable
     modules:
       - headers
-      - fcgid
+      - proxy
+      - proxy_fcgi
       - setenvif
       - env
       - rewrite
@@ -60,27 +73,35 @@ parts:
     # Script to run before bringing up Apache
     startup-script: src/nextcloud/setup_nextcloud
 
-    third-party-modules:
-      # Build PHP
-      - source: http://us1.php.net/get/php-7.0.2.tar.gz/from/this/mirror
-        source-type: tar
-        configflags:
-          - --enable-ctype
-          - --enable-mbstring
-          - --enable-zip
-          - --with-pdo-mysql
-          - --with-zlib
-          - --with-gd
-          - --with-curl
-          - --with-openssl
-          - --with-bz2
-          - --with-mcrypt
-          - --enable-exif
     stage:
       - -htdocs/.git*
     snap:
       - -manual # No need to include the documentation in the .snap
       - -htdocs/.git*
+
+  php:
+    plugin: php
+    source: http://us1.php.net/get/php-7.0.2.tar.gz/from/this/mirror
+    source-type: tar
+    install-via: prefix
+    configflags:
+      - --enable-fpm
+      - --disable-cgi
+      - --disable-phar
+      - --disable-phpdbg
+      - --enable-ctype
+      - --enable-mbstring
+      - --enable-zip
+      - --with-pdo-mysql
+      - --with-zlib
+      - --with-gd
+      - --with-curl
+      - --with-openssl
+      - --with-bz2
+      - --with-mcrypt
+      - --enable-exif
+      - --enable-intl
+      - --disable-rpath
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2
@@ -91,12 +112,33 @@ parts:
       - libpng12-dev
       - libbz2-dev
       - libmcrypt-dev
+    snap:
+     - -sbin/
+     - -etc/
+    organize:
+      # Put php-fpm in bin with everything else, not sbin.
+      sbin/php-fpm: bin/php-fpm
+    extensions:
+      # Build the redis PHP module
+      - source: https://github.com/phpredis/phpredis.git
+        source-branch: php7
 
-  # Copy over our PHP configuration file.
-  php-config:
+  redis:
+    plugin: redis
+    source: http://download.redis.io/releases/redis-3.2.1.tar.gz
+
+  redis-customizations:
     plugin: copy
     files:
-      src/php/php.ini: php.ini
+      src/redis/config/*: config/redis/
+      src/redis/scripts/*: bin/
+
+  # Copy over our PHP configuration file.
+  php-customizations:
+    plugin: copy
+    files:
+      src/php/config/*: config/php/
+      src/php/scripts/*: bin/
 
   # Copy over our Nextcloud configuration files
   nextcloud-customizations:

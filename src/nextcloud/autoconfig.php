@@ -5,6 +5,8 @@ $snap_name = getenv('SNAP_NAME');
 $data_path = '/var/snap/'.$snap_name.'/current';
 $common_data_path = '/var/snap/'.$snap_name.'/common';
 
+$database_password = trim(file_get_contents($data_path . '/mysql/nextcloud_password'));
+
 $AUTOCONFIG = array(
 'directory' => $common_data_path.'/nextcloud/data',
 
@@ -16,5 +18,5 @@ $AUTOCONFIG = array(
 
 'dbuser' => 'nextcloud',
 
-'dbpass' => getenv('NEXTCLOUD_DATABASE_PASSWORD'),
+'dbpass' => $database_password,
 );

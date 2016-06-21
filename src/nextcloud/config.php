@@ -44,6 +44,13 @@ $CONFIG = array(
 	'mysql',
 ),
 
+'memcache.locking' => '\OC\Memcache\Redis',
+'memcache.local' => '\OC\Memcache\Redis',
+'redis' => array(
+    'host' => '/var/snap/'.$snap_name.'/current/redis/redis.sock',
+    'port' => 0,
+),
+
 /**
  * Nextcloud doesn't support hosting the config file out of the application, so
  * this version of Nextclout has been patched slightly to allow for it. As a

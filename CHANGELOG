@@ -1,3 +1,7 @@
+v 9.0.50snap2
+  - Use redis for local and locking memcache.
+  - Use PHP FPM instead of PHP Apache module.
+
 v 9.0.50snap1
   - Target series 16.
   - Use the common directory for Nextcloud data.

@@ -1,31 +1,5 @@
 #!/bin/sh
 
-mysqld_pid_file_path=$SNAP_DATA/mysql/`hostname`.pid
-# Wait for mysql to be up and running, since we need to make sure
-# we run the upgrade process.
-echo "Waiting for mysql..."
-while [ ! -f "$mysqld_pid_file_path" ]; do
-	sleep 1
-done
-
-# Wait until we have an nextcloud mysql password
-echo "Obtaining nextcloud mysql credentials..."
-nextcloud_password_path=$SNAP_DATA/mysql/nextcloud_password
-timeout=10
-while [ $timeout -gt 0 -a ! -e $nextcloud_password_path ]; do
-	timeout=$((timeout-1))
-	sleep 1
-done
-if [ -e $nextcloud_password_path ]; then
-	echo "nextcloud mysql credentials successfully obtained"
-	export NEXTCLOUD_DATABASE_PASSWORD=$(cat $nextcloud_password_path)
-else
-	echo -n "Timed out while attempting to obtain nextcloud mysql password. "
-	echo -n "This isn't unusual when starting up for the first time after "
-	echo "an install or an upgrade. Will try again."
-	exit 1
-fi
-
 # Make sure nextcloud directory exists
 # FIXME: Use common environment variable when it exists
 mkdir -p -m 750 $SNAP_DATA/../common/nextcloud
@@ -38,11 +12,27 @@ mkdir -p -m 750 $SNAP_DATA/../common/nextcloud/tmp
 mkdir -p -m 750 $SNAP_DATA/nextcloud/extra-apps
 
 # If this is a new install, make sure it's configured correctly
-export NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
+NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
 if [ ! -d "$NEXTCLOUD_CONFIG_DIR" ]; then
 	echo "Configuring nextcloud..."
 	cp -r $SNAP/htdocs/config $NEXTCLOUD_CONFIG_DIR
+else
+    # This is not a new installation, so we don't want to overwrite the config.
+    # We do, however, want to make sure we incorporate the new capabilities of
+    # this snap version, namely, using Redis for the memcache and file locking.
+    occ config:system:set redis host --value="/var/snap/$SNAP_NAME/current/redis/redis.sock" --type=string
+    occ config:system:set redis port --value=0 --type=integer
+    occ config:system:set memcache.locking --value="\OC\Memcache\Redis" --type=string
+    occ config:system:set memcache.local --value="\OC\Memcache\Redis" --type=string
 fi
+
+# Wait for PHP FPM to be up and running before continuing, since we need to make
+# sure we can run the upgrade process below.
+php_pid_file_path=$SNAP_DATA/php/php-fpm.pid
+echo "Waiting for PHP..."
+while [ ! -f "$php_pid_file_path" ]; do
+	sleep 1
+done
 
 # Finally, make sure nextcloud is up to date. The return code of the upgrade
 # can be used to determine the outcome:

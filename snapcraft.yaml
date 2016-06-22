@@ -1,5 +1,5 @@
 name: nextcloud
-version: 9.0.50snap2
+version: 9.0.50snap3
 summary: Nextcloud
 description: Nextcloud running on Apache with MySQL. This is currently in beta.
 confinement: strict
@@ -139,6 +139,7 @@ parts:
     files:
       src/php/config/*: config/php/
       src/php/scripts/*: bin/
+    stage-packages: [mawk]
 
   # Copy over our Nextcloud configuration files
   nextcloud-customizations:

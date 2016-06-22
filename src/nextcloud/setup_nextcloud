@@ -11,28 +11,28 @@ mkdir -p -m 750 $SNAP_DATA/../common/nextcloud/tmp
 # Make sure nextcloud extra-apps directory exists (for user apps)
 mkdir -p -m 750 $SNAP_DATA/nextcloud/extra-apps
 
+# Wait for PHP FPM to be up and running before continuing, since we need to make
+# sure we can use occ below.
+php_pid_file_path=$SNAP_DATA/php/php-fpm.pid
+echo "Waiting for PHP..."
+while [ ! -f "$php_pid_file_path" ]; do
+	sleep 1
+done
+
 # If this is a new install, make sure it's configured correctly
 NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
 if [ ! -d "$NEXTCLOUD_CONFIG_DIR" ]; then
 	echo "Configuring nextcloud..."
 	cp -r $SNAP/htdocs/config $NEXTCLOUD_CONFIG_DIR
 else
-    # This is not a new installation, so we don't want to overwrite the config.
-    # We do, however, want to make sure we incorporate the new capabilities of
-    # this snap version, namely, using Redis for the memcache and file locking.
-    occ config:system:set redis host --value="/var/snap/$SNAP_NAME/current/redis/redis.sock" --type=string
-    occ config:system:set redis port --value=0 --type=integer
-    occ config:system:set memcache.locking --value="\OC\Memcache\Redis" --type=string
-    occ config:system:set memcache.local --value="\OC\Memcache\Redis" --type=string
+	# This is not a new installation, so we don't want to overwrite the config.
+	# We do, however, want to make sure we incorporate the new capabilities of
+	# this snap version, namely, using Redis for the memcache and file locking.
+	occ config:system:set redis host --value="/var/snap/$SNAP_NAME/current/redis/redis.sock" --type=string
+	occ config:system:set redis port --value=0 --type=integer
+	occ config:system:set memcache.locking --value="\OC\Memcache\Redis" --type=string
+	occ config:system:set memcache.local --value="\OC\Memcache\Redis" --type=string
 fi
-
-# Wait for PHP FPM to be up and running before continuing, since we need to make
-# sure we can run the upgrade process below.
-php_pid_file_path=$SNAP_DATA/php/php-fpm.pid
-echo "Waiting for PHP..."
-while [ ! -f "$php_pid_file_path" ]; do
-	sleep 1
-done
 
 # Finally, make sure nextcloud is up to date. The return code of the upgrade
 # can be used to determine the outcome:

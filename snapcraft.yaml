@@ -139,6 +139,7 @@ parts:
     files:
       src/php/config/*: config/php/
       src/php/scripts/*: bin/
+    stage-packages: [mawk]
 
   # Copy over our Nextcloud configuration files
   nextcloud-customizations:

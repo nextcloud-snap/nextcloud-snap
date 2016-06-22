@@ -27,7 +27,7 @@ fi
 
 # Tends to be between 30-50MB
 average_php_memory_requirement=50
-total_memory=$(awk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo)
+total_memory=$(mawk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo)
 export PHP_FPM_MAX_CHILDREN=$(($total_memory/$average_php_memory_requirement))
 
 php-fpm -R -F --fpm-config ${SNAP}/config/php/php-fpm.conf -c ${SNAP}/config/php

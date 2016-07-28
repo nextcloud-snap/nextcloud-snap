@@ -48,7 +48,7 @@ return_code=$?
 if [ $return_code -eq 1 ]; then
 	echo "Nextcloud is not yet installed-- no upgrade necessary"
 elif [ $return_code -eq 3 ]; then
-	echo "Nextclout is fully upgraded"
+	echo "Nextcloud is fully upgraded"
 elif [ $return_code -ne 0 ]; then
 	echo "Unable to upgrade Nextcloud. Will try again."
 	# occ may have left it in maintenance mode, so turn that off

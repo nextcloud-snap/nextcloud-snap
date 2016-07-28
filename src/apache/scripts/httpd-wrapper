@@ -1,0 +1,21 @@
+#!/bin/sh
+
+. $SNAP/utilities/https-utilities
+
+params=""
+if [ -e $LIVE_CERTS_DIRECTORY ]; then
+	echo "Certificates have been activated: using HTTPS only"
+	params="$params -DEnableHTTPS"
+
+	# Only enable HSTS if the certificate is not self-signed.
+	if ! self_signed_certificates_are_active; then
+		echo "Certificates don't appear self-signed: enabling HSTS"
+		params="$params -DEnableHSTS"
+	else
+		echo "Certificates appear self-signed: disabling HSTS"
+	fi
+else
+	echo "No certificates are active: using HTTP only"
+fi
+
+httpd -d $SNAP $params $@

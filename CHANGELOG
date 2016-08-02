@@ -1,3 +1,6 @@
+v 9.0.53snap1
+  - Upgrade Nextcloud to 9.0.53.
+
 v 9.0.50snap3
   - Wait for PHP to be up before trying to use occ.
   - Bundle mawk.

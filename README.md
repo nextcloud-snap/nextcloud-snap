@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 9.0.50
+- Nextcloud 9.0.53
 - Apache 2.4
 - PHP 7
 - MySQL 5.7
@@ -51,6 +51,6 @@ There are a few CLI utilities included:
     - Redis database
     - Nextcloud config
     - Any Nextcloud apps installed by the user
-- `$SNAP_DATA/../common` (unversioned directory):
+- `$SNAP_COMMON`
     - Nextcloud data
     - Nextcloud logs

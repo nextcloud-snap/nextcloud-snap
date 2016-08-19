@@ -101,6 +101,7 @@ parts:
       - --with-mcrypt
       - --enable-exif
       - --enable-intl
+      - --with-jpeg-dir=/usr/lib
       - --disable-rpath
     stage-packages:
       # These are only included here until the OS snap stabilizes
@@ -110,6 +111,7 @@ parts:
       - libxml2-dev
       - libcurl4-openssl-dev
       - libpng12-dev
+      - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
     snap:

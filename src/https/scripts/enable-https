@@ -1,0 +1,109 @@
+#!/bin/sh
+
+. $SNAP/utilities/https-utilities
+
+extra_params=""
+cert_type=""
+
+while getopts ":dtsh" opt; do
+	case $opt in
+		d) extra_params="$extra_params --dry-run";;
+		t) extra_params="$extra_params --test-cert";;
+		s) cert_type="self-signed";;
+		h)
+			echo "Usage:"
+			echo "    $0 [-h -t -d -s]"
+			echo ""
+			echo "    -t: Obtain a test certificate. This is a valid Let's"
+			echo "        Encrypt certificate, but is not signed by a"
+			echo "        recognized CA, so browsers won't accept it."
+			echo "    -d: Dry run: don't actually obtain/install certificates"
+			echo "        from Let's Encrypt, but make sure it's possible."
+			echo "    -s: Generate and use a self-signed certificate. This"
+			echo "        is easier to setup than Let's Encrypt certificates,"
+			echo "        but will cause warnings in browsers."
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG"
+			exit 1
+			;;
+	esac
+done
+
+if [ $(id -u) -ne 0 ]; then
+	echo "This utility needs to run as root"
+	exit 1
+fi
+
+if [ "$cert_type" = "self-signed" ]; then
+	echo -n "Generating key and self-signed certificate... "
+	output=$(generate_self_signed_certificate 2>&1)
+	if [ $? -ne 0 ]; then
+		echo "error:"
+		echo "$output"
+		exit 1
+	fi
+
+	echo "done"
+	activate_self_signed_certificate
+else
+	echo "In order for Let's Encrypt to verify that you actually own the domain for"
+	echo "which you're requesting a certificate, there are a number of requirements"
+	echo "of which you need to be aware:"
+	echo ""
+
+	echo "1. In order to register with the Let's Encrypt ACME server, you must agree"
+	echo "   to the currently-in-effect Subscriber Agreement located here:"
+	echo ""
+	echo "       https://letsencrypt.org/repository/"
+	echo ""
+	echo "   By continuing to use this tool you agree to these terms. Please cancel"
+	echo "   now if otherwise."
+	echo ""
+
+	echo "2. You must have the domain name(s) for which you want certificates"
+	echo "   pointing at the external IP address of this machine."
+	echo ""
+
+	echo "3. Both ports 80 and 443 on the external IP address of this machine must"
+	echo "   point to this machine (e.g. port forwarding might need to be setup on"
+	echo "   your router)."
+	echo ""
+
+	while true; do
+		read -p "Have you met these requirements? (y/n) " answer
+		case $answer in
+			[Yy]* ) break;;
+			[Nn]* ) exit;;
+			* ) echo "Please answer yes or no.";;
+		esac
+	done
+
+	read -p "Please enter an email address (for urgent notices or key recovery): " email
+
+	domains=""
+	read -p "Please enter your domain name(s) (space-separated): " answer
+	for domain in $answer; do
+		domains="$domains -d $domain"
+	done
+
+	echo -n "Attempting to obtain certificates... "
+	output=$(run_certbot certonly $extra_params \
+			--authenticator nextcloud:webroot \
+			--nextcloud:webroot-path $CERTBOT_DIRECTORY \
+			--rsa-key-size 4096 \
+			--email $email \
+			--non-interactive \
+			--agree-tos \
+			--force-renewal \
+			$domains 2>&1)
+	if [ $? -eq 0 ]; then
+		echo "done"
+		activate_certbot_certificate
+	else
+		echo "error running certbot:"
+		echo ""
+		echo "$output"
+	fi
+fi

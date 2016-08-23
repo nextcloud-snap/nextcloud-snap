@@ -1,0 +1,91 @@
+#!/bin/sh
+
+LIVE_CERTS_DIRECTORY=$SNAP_DATA/certs/live
+LIVE_CERT=$LIVE_CERTS_DIRECTORY/cert.pem
+LIVE_KEY=$LIVE_CERTS_DIRECTORY/privkey.pem
+LIVE_CHAIN=$LIVE_CERTS_DIRECTORY/chain.pem
+
+SELF_SIGNED_DIRECTORY=$SNAP_DATA/certs/self-signed
+SELF_SIGNED_KEY=$SELF_SIGNED_DIRECTORY/privkey.pem
+SELF_SIGNED_CERT=$SELF_SIGNED_DIRECTORY/cert.pem
+SELF_SIGNED_CHAIN=$SELF_SIGNED_DIRECTORY/chain.pem
+
+CERTBOT_DIRECTORY=$SNAP_DATA/certs/certbot
+CERTBOT_LIVE_DIRECTORY=$CERTBOT_DIRECTORY/config/live
+
+APACHE_PIDFILE=$SNAP_DATA/apache/httpd.pid
+
+# If this function is run multiple times it will replace the certificate
+# and key if they're already present.
+generate_self_signed_certificate()
+{
+	mkdir -p -m 750 $(dirname $SELF_SIGNED_KEY)
+	mkdir -p -m 750 $(dirname $SELF_SIGNED_CERT)
+	mkdir -p -m 750 $(dirname $SELF_SIGNED_CHAIN)
+
+	openssl req -newkey rsa:4096 -nodes -keyout $SELF_SIGNED_KEY \
+	        -x509 -days 90 -out $SELF_SIGNED_CERT -subj "/O=Nextcloud"
+
+	rm -f $SELF_SIGNED_CHAIN
+	ln -s $SELF_SIGNED_CERT $SELF_SIGNED_CHAIN
+}
+
+activate_self_signed_certificate()
+{
+	deactivate_certificates
+	ln -s $SELF_SIGNED_DIRECTORY $LIVE_CERTS_DIRECTORY
+	restart_apache_if_running
+}
+
+self_signed_certificates_are_active()
+{
+	[ "$(realpath $LIVE_CERTS_DIRECTORY)" = "$SELF_SIGNED_DIRECTORY" ]
+}
+
+certificates_are_active()
+{
+	[ -e $LIVE_CERTS_DIRECTORY ]
+}
+
+deactivate_certificates()
+{
+	rm -rf $LIVE_CERTS_DIRECTORY
+}
+
+activate_certbot_certificate()
+{
+	# There shouldn't be multiple domains here since we have no way to
+	# support them, but account for the possibility by simply taking the
+	# first domain's certificates.
+	certdir=$(ls $CERTBOT_LIVE_DIRECTORY | sort -n | head -1)
+
+	deactivate_certificates
+	ln -s $CERTBOT_LIVE_DIRECTORY/$certdir $LIVE_CERTS_DIRECTORY
+	restart_apache_if_running
+}
+
+# Run a certbot instance that writes to snap-writable data.
+run_certbot()
+{
+	certbot --text --config-dir $CERTBOT_DIRECTORY/config \
+	               --work-dir $CERTBOT_DIRECTORY/work \
+	               --logs-dir $CERTBOT_DIRECTORY/logs $@
+} 
+
+restart_apache_if_running()
+{
+	if [ -f $APACHE_PIDFILE ]; then
+		# Restart apache by stopping it and letting systemd start it again.
+		echo -n "Restarting apache... "
+		output=$(httpd-wrapper -k stop 2>&1)
+		if [ $? -eq 0 ]; then
+			while [ -f $APACHE_PIDFILE ]; do
+				sleep 1
+			done
+			echo "done"
+		else
+			echo "error"
+			echo "$output"
+		fi
+	fi
+}

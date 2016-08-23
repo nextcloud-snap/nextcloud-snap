@@ -7,9 +7,10 @@ confinement: strict
 apps:
   # Apache daemon
   apache:
-    command: apachectl start -DFOREGROUND
-    stop-command: apachectl stop
+    command: run-httpd -k start -DFOREGROUND
+    stop-command: run-httpd -k stop
     daemon: simple
+    restart-condition: always
     plugs: [network, network-bind]
 
   # MySQL daemon
@@ -17,24 +18,28 @@ apps:
     command: start_mysql
     stop-command: support-files/mysql.server stop
     daemon: simple
+    restart-condition: always
     plugs: [network, network-bind]
 
   # PHP FPM daemon
   php-fpm:
     command: start-php-fpm
     daemon: simple
+    restart-condition: always
     plugs: [network, network-bind]
 
   # redis server daemon
   redis-server:
     command: start-redis-server
     daemon: simple
+    restart-condition: always
     plugs: [network, network-bind]
 
   # mDNS daemon
   mdns-publisher:
     command: delay-on-failure mdns-publisher nextcloud
     daemon: simple
+    restart-condition: always
     plugs: [network, network-bind]
 
   # MySQL client
@@ -47,11 +52,28 @@ apps:
     command: occ
     plugs: [network, network-bind]
 
+  enable-https:
+    command: enable-https
+    plugs: [network, network-bind]
+
+  disable-https:
+    command: disable-https
+    plugs: [network, network-bind]
+
+  certbot:
+    command: certbot
+    plugs: [network, network-bind]
+
+  renew-certs:
+    command: renew-certs
+    daemon: simple
+    restart-condition: always
+    plugs: [network, network-bind]
+
 parts:
   apache:
     plugin: apache
-    source: https://github.com/kyrofa/nextcloud.git
-    source-tag: 9.0.53
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.23.tar.bz2
 
     # The built-in Apache modules to enable
     modules:
@@ -66,18 +88,40 @@ parts:
       - authz_core
       - unixd
       - alias
+      - ssl
+      - socache_shmcb
 
-    # Extra Apache configuration for Nextcloud (and PHP)
-    extra-configuration: src/nextcloud/apache_config
-
-    # Script to run before bringing up Apache
-    startup-script: src/nextcloud/setup_nextcloud
-
+    filesets:
+      exclude:
+        - -man
+        - -manual
+        - -htdocs
+        - -include
+        - -build
+        - -conf/httpd.conf
+        - -conf/magic
+        - -conf/original
+        - -conf/extra
+        - -bin/apachectl
+        - -bin/envvars*
     stage:
-      - -htdocs/.git*
+      - $exclude
     snap:
-      - -manual # No need to include the documentation in the .snap
-      - -htdocs/.git*
+      - $exclude
+
+  apache-customizations:
+    plugin: copy
+    files:
+      src/apache/scripts/*: bin/
+      src/apache/conf/*: conf/
+
+  nextcloud:
+    plugin: copy
+    source: https://github.com/kyrofa/nextcloud.git
+    source-tag: 9.0.53
+    files:
+      '*': htdocs/
+      '.htaccess': htdocs/
 
   php:
     plugin: php
@@ -147,8 +191,8 @@ parts:
   nextcloud-customizations:
     plugin: copy
     files:
-      src/nextcloud/*config.php: htdocs/config/
-      src/nextcloud/occ: bin/
+      src/nextcloud/config/*: htdocs/config/
+      src/nextcloud/scripts/*: bin/
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.
@@ -236,3 +280,17 @@ parts:
     plugin: copy
     files:
       src/delay-on-failure/delay-on-failure: bin/
+
+  certbot-nextcloud-plugin:
+    plugin: python2
+    source: src/https/
+    build-packages: [python-dev, libffi-dev]
+
+  setup-https:
+    plugin: copy
+    files:
+      src/https/scripts/*: bin/
+      src/https/utilities/*: utilities/
+    stage-packages: [openssl]
+    stage: [-etc/ssl]
+    snap: [-etc/ssl]

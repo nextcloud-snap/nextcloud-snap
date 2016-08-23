@@ -1,0 +1,18 @@
+#!/bin/sh
+
+. $SNAP/utilities/https-utilities
+
+if [ $(id -u) -ne 0 ]; then
+	echo "This utility needs to run as root"
+	exit 1
+fi
+
+if certificates_are_active; then
+	echo -n "Deactivating HTTPS... "
+	deactivate_certificates
+	echo "done"
+	restart_apache_if_running
+else
+	echo "HTTPS doesn't seem enabled"
+	exit 1
+fi

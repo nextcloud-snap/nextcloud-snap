@@ -53,7 +53,7 @@ $CONFIG = array(
 
 /**
  * Nextcloud doesn't support hosting the config file out of the application, so
- * this version of Nextclout has been patched slightly to allow for it. As a
+ * this version of Nextcloud has been patched slightly to allow for it. As a
  * result, we fail the integrity check, so we'll just disable it.
  */
 'integrity.check.disabled' => true,

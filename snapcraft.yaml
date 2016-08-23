@@ -1,5 +1,5 @@
 name: nextcloud
-version: 9.0.53snap1
+version: 9.0.53snap2
 summary: Nextcloud
 description: Nextcloud running on Apache with MySQL. This is currently in beta.
 confinement: strict
@@ -58,10 +58,6 @@ apps:
 
   disable-https:
     command: disable-https
-    plugs: [network, network-bind]
-
-  certbot:
-    command: certbot
     plugs: [network, network-bind]
 
   renew-certs:

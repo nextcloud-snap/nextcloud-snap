@@ -1,12 +1,10 @@
 #!/bin/sh
 
 # Make sure nextcloud directory exists
-# FIXME: Use common environment variable when it exists
-mkdir -p -m 750 $SNAP_DATA/../common/nextcloud
+mkdir -p -m 750 $SNAP_COMMON/nextcloud
 
 # Make sure nextcloud tmp directory exists
-# FIXME: Use common environment variable when it exists
-mkdir -p -m 750 $SNAP_DATA/../common/nextcloud/tmp
+mkdir -p -m 750 $SNAP_COMMON/nextcloud/tmp
 
 # Make sure nextcloud extra-apps directory exists (for user apps)
 mkdir -p -m 750 $SNAP_DATA/nextcloud/extra-apps

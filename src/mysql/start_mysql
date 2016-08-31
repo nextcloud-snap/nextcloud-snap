@@ -3,7 +3,7 @@
 root_option_file="$SNAP_DATA/mysql/root.ini"
 nextcloud_password_file="$SNAP_DATA/mysql/nextcloud_password"
 mysqld_pid_file_path=$SNAP_DATA/mysql/`hostname`.pid
-mysql_socket_file_path=$SNAP_DATA/mysql/mysql.sock
+mysql_socket_file_path="/var/snap/$SNAP_NAME/current/mysql/mysql.sock"
 new_install=false
 
 # Make sure the database is initialized (this is safe to run if already

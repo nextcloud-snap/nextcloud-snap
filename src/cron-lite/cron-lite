@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
+
+while true; do
+	php -c $SNAP/config/php $SNAP/htdocs/cron.php
+	sleep 15m
+done

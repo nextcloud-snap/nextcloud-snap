@@ -66,6 +66,11 @@ apps:
     restart-condition: always
     plugs: [network, network-bind]
 
+  cron-lite:
+    command: cron-lite
+    daemon: simple
+    restart-condition: always
+
 parts:
   apache:
     plugin: apache
@@ -290,3 +295,9 @@ parts:
     stage-packages: [openssl]
     stage: [-etc/ssl]
     snap: [-etc/ssl]
+
+  cron-lite:
+    plugin: copy
+    files:
+      src/cron-lite/cron-lite: bin/
+

@@ -66,6 +66,12 @@ apps:
     restart-condition: always
     plugs: [network, network-bind]
 
+  nextcloud-cron:
+    command: nextcloud-cron
+    daemon: simple
+    restart-condition: always
+    plugs: [network, network-bind]
+
 parts:
   apache:
     plugin: apache

@@ -74,12 +74,13 @@ run_certbot()
 
 restart_apache_if_running()
 {
-	if [ -f $APACHE_PIDFILE ]; then
+	if [ -f "$APACHE_PIDFILE" ]; then
 		# Restart apache by stopping it and letting systemd start it again.
+		apache_pid=$(cat "$APACHE_PIDFILE")
 		echo -n "Restarting apache... "
 		output=$(httpd-wrapper -k stop 2>&1)
 		if [ $? -eq 0 ]; then
-			while [ -f $APACHE_PIDFILE ]; do
+			while kill -0 $apache_pid 2>/dev/null; do
 				sleep 1
 			done
 			echo "done"

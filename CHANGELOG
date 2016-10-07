@@ -1,3 +1,7 @@
+v 9.0.53snap4
+  - Add service that runs cron.php every 15 minutes.
+  - Clarify help text for enable-https script.
+
 v 9.0.53snap3
   - Use SNAP_COMMON now that it exists.
   - Increase PHP and Apache proxy timeout to 3600 seconds.

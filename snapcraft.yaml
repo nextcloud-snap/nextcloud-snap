@@ -1,5 +1,5 @@
 name: nextcloud
-version: 9.0.53snap3
+version: 9.0.53snap4
 summary: Nextcloud
 description: Nextcloud running on Apache with MySQL. This is currently in beta.
 confinement: strict
@@ -287,6 +287,7 @@ parts:
     plugin: python2
     source: src/https/
     build-packages: [python-dev, libffi-dev]
+    python-packages: [cffi]
 
   setup-https:
     plugin: copy

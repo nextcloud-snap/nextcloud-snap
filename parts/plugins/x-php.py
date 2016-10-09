@@ -59,6 +59,7 @@ class PhpPlugin(autotools.AutotoolsPlugin):
         return schema
 
     def __init__(self, name, options, project):
+        options.configflags.extend(['--with-libdir=lib/{}'.format(project.arch_triplet)])
         super().__init__(name, options, project)
 
         self.extensions_directory = os.path.join(self.partdir, 'extensions')

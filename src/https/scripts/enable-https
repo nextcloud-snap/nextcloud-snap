@@ -4,10 +4,14 @@
 
 extra_params=""
 cert_type=""
+dry_run=false
 
 while getopts ":dtsh" opt; do
 	case $opt in
-		d) extra_params="$extra_params --dry-run";;
+		d)
+			extra_params="$extra_params --dry-run"
+			dry_run=true
+			;;
 		t) extra_params="$extra_params --test-cert";;
 		s) cert_type="self-signed";;
 		h)
@@ -104,7 +108,11 @@ else
 			$domains 2>&1)
 	if [ $? -eq 0 ]; then
 		echo "done"
-		activate_certbot_certificate
+		if [ "$dry_run" = true ]; then
+			echo "Looks like you're ready for HTTPS!"
+		else
+			activate_certbot_certificate
+		fi
 	else
 		echo "error running certbot:"
 		echo ""

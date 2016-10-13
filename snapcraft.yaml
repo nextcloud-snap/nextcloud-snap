@@ -119,11 +119,11 @@ parts:
 
   nextcloud:
     plugin: copy
-    source: https://github.com/kyrofa/nextcloud.git
-    source-tag: 9.0.53
+    source: https://download.nextcloud.com/server/releases/nextcloud-10.0.1.tar.bz2
     files:
       '*': htdocs/
       '.htaccess': htdocs/
+      '.user.ini': htdocs/
 
   php:
     plugin: php

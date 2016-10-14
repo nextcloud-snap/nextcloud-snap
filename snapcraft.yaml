@@ -1,7 +1,9 @@
 name: nextcloud
-version: 9.0.53snap4
-summary: Nextcloud
-description: Nextcloud running on Apache with MySQL. This is currently in beta.
+version: 10.0.1snap1
+summary: Nextcloud Server
+description: |
+ Access, share and protect your files, calendars, contacts, communication and
+ more at home and in your enterprise.
 confinement: strict
 
 apps:

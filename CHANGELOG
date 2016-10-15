@@ -1,3 +1,9 @@
+v 10.0.1snap1
+  - Use current symlink for live certificates.
+  - Update PHP to 7.0.11.
+  - Upgrade to Nextcloud 10.
+  - https: show better message when a dry-run succeeds.
+
 v 9.0.53snap4
   - Add service that runs cron.php every 15 minutes.
   - Clarify help text for enable-https script.

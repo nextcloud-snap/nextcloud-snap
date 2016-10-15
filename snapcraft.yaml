@@ -1,7 +1,9 @@
 name: nextcloud
-version: 9.0.53snap4
-summary: Nextcloud
-description: Nextcloud running on Apache with MySQL. This is currently in beta.
+version: 10.0.1snap1
+summary: Nextcloud Server
+description: |
+ Access, share and protect your files, calendars, contacts, communication and
+ more at home and in your enterprise.
 confinement: strict
 
 apps:
@@ -119,15 +121,15 @@ parts:
 
   nextcloud:
     plugin: copy
-    source: https://github.com/kyrofa/nextcloud.git
-    source-tag: 9.0.53
+    source: https://download.nextcloud.com/server/releases/nextcloud-10.0.1.tar.bz2
     files:
       '*': htdocs/
       '.htaccess': htdocs/
+      '.user.ini': htdocs/
 
   php:
     plugin: php
-    source: http://us1.php.net/get/php-7.0.2.tar.gz/from/this/mirror
+    source: http://us1.php.net/get/php-7.0.11.tar.gz/from/this/mirror
     source-type: tar
     install-via: prefix
     configflags:

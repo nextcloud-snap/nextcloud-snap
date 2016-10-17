@@ -2,17 +2,6 @@
 
 . $SNAP/utilities/https-utilities
 
-# Rewrite live cert symlinks that aren't using the current symlink.
-# FIXME: Remove this migration once epochs and upgrade hooks are available.
-if certificates_are_active; then
-	self_signed_basename="$(basename $SELF_SIGNED_DIRECTORY)"
-	if [ "$(basename $(realpath $LIVE_CERTS_DIRECTORY))" = "$self_signed_basename" ]; then
-		activate_self_signed_certificate
-	else
-		activate_certbot_certificate
-	fi
-fi
-
 params=""
 if certificates_are_active; then
 	echo "Certificates have been activated: using HTTPS only"

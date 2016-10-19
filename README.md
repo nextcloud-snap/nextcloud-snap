@@ -36,6 +36,13 @@ there's no way for the snap to change the setting from Ajax to Cron for you.
 You must do that manually in the admin interface if you want to take advantage
 of the performance improvements.
 
+Also note that the interface providing the ability to access removable media is
+not automatically connected upon install, so if you'd like to use external
+storage, you need to give the snap permission to access removable media by
+connecting that interface:
+
+    $ sudo snap connect nextcloud:removable-media ubuntu-core:removable-media
+
 
 ### Included CLI utilities
 

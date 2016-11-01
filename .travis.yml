@@ -14,4 +14,7 @@ after_success:
 - eval "$(ssh-agent -s)"
 - ssh-add .travis/deploy_key
 
-- .travis/deploy.sh
+- git remote add deploy git+ssh://nextcloud-snappy-bot@git.launchpad.net/nextcloud-snap
+
+- test "$TRAVIS_EVENT_TYPE" != "cron" && .travis/deploy.sh
+- test "$TRAVIS_EVENT_TYPE" = "cron"  && .travis/cron.sh

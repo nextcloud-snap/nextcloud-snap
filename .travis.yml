@@ -14,5 +14,4 @@ after_success:
 - eval "$(ssh-agent -s)"
 - ssh-add .travis/deploy_key
 
-- git remote add deploy git+ssh://nextcloud-snappy-bot@git.launchpad.net/nextcloud-snap
-- git push deploy $TRAVIS_BRANCH --force
+- .travis/deploy.sh

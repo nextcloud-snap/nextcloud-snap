@@ -286,7 +286,8 @@ parts:
       src/delay-on-failure/delay-on-failure: bin/
 
   certbot-nextcloud-plugin:
-    plugin: python2
+    plugin: python
+    python-version: python2
     source: src/https/
     build-packages: [python-dev, libffi-dev]
     python-packages: [cffi]

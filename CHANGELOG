@@ -1,3 +1,6 @@
+v 10.0.1snap4
+  - Fix Travis daily builds.
+
 v 10.0.1snap3
   - Use Travis cron jobs to spin off daily builds.
   - Add ability to access removable media.

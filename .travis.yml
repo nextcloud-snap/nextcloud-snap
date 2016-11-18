@@ -15,4 +15,6 @@ after_success:
 - ssh-add .travis/deploy_key
 
 - git remote add deploy git+ssh://nextcloud-snappy-bot@git.launchpad.net/nextcloud-snap
-- git push deploy $TRAVIS_BRANCH --force
+
+- test "$TRAVIS_EVENT_TYPE" != "cron" && .travis/deploy.sh
+- test "$TRAVIS_EVENT_TYPE" = "cron"  && .travis/cron.sh

@@ -1,5 +1,5 @@
 name: nextcloud
-version: 10.0.1snap2
+version: 10.0.1snap3
 summary: Nextcloud Server
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -28,7 +28,7 @@ apps:
     command: start-php-fpm
     daemon: simple
     restart-condition: always
-    plugs: [network, network-bind]
+    plugs: [network, network-bind, removable-media]
 
   # redis server daemon
   redis-server:
@@ -52,7 +52,7 @@ apps:
   # Nextcloud occ command
   occ:
     command: occ
-    plugs: [network, network-bind]
+    plugs: [network, network-bind, removable-media]
 
   enable-https:
     command: enable-https
@@ -72,7 +72,7 @@ apps:
     command: nextcloud-cron
     daemon: simple
     restart-condition: always
-    plugs: [network, network-bind]
+    plugs: [network, network-bind, removable-media]
 
 parts:
   apache:

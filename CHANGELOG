@@ -1,3 +1,7 @@
+v 10.0.1snap3
+  - Use Travis cron jobs to spin off daily builds.
+  - Add ability to access removable media.
+
 v 10.0.1snap2
   - Move certificate migration to run-httpd.
   - Upgrade PHP to 7.0.12.

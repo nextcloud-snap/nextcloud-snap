@@ -1,5 +1,5 @@
 name: nextcloud
-version: 10.0.1snap4
+version: 10.0.2snap1
 summary: Nextcloud Server
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -121,7 +121,7 @@ parts:
 
   nextcloud:
     plugin: copy
-    source: https://download.nextcloud.com/server/releases/nextcloud-10.0.1.tar.bz2
+    source: https://download.nextcloud.com/server/releases/nextcloud-10.0.2.tar.bz2
     files:
       '*': htdocs/
       '.htaccess': htdocs/

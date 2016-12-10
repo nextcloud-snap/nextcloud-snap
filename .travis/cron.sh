@@ -6,13 +6,14 @@ latest_stable_url="https://download.nextcloud.com/server/daily/latest-stable10.t
 rewrite_snapcraft_yaml()
 {
 	sed -ri "s|(source:\s+).*download.nextcloud.com.*$|\1$1|" snapcraft.yaml
+	sed -ri "s|(version:\s+).*$|\1$2|" snapcraft.yaml
 }
 
 echo "Requesting build of latest master..."
 git checkout -b edge origin/${TRAVIS_BRANCH}
 
 # Rewrite the snapcraft.yaml to pull from the latest master.
-rewrite_snapcraft_yaml $latest_master_url
+rewrite_snapcraft_yaml $latest_master_url "latest-master"
 
 # Commit the changes and push to edge to begin the edge build.
 git add .
@@ -24,7 +25,7 @@ echo "Requesting build of latest stable..."
 git checkout -b beta origin/${TRAVIS_BRANCH}
 
 # Now rewrite the snapcraft.yaml to pull from the latest stable v10.
-rewrite_snapcraft_yaml $latest_stable_url
+rewrite_snapcraft_yaml $latest_stable_url "latest-stable10"
 
 # Commit the changes and push to beta to begin the beta build.
 git add .

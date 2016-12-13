@@ -120,12 +120,17 @@ parts:
       src/apache/conf/*: conf/
 
   nextcloud:
-    plugin: copy
+    plugin: dump
     source: https://download.nextcloud.com/server/releases/nextcloud-10.0.2.tar.bz2
-    files:
+    organize:
       '*': htdocs/
-      '.htaccess': htdocs/
-      '.user.ini': htdocs/
+      '.htaccess': htdocs/.htaccess
+      '.user.ini': htdocs/.user.ini
+
+    # This snap automatically updates. No need to include the updater to nag
+    # users. This does not result in an integrity check failure.
+    snap:
+      - -htdocs/apps/updatenotification
 
   php:
     plugin: php

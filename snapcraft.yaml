@@ -121,7 +121,7 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-10.0.2.tar.bz2
+    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.0.tar.bz2
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess

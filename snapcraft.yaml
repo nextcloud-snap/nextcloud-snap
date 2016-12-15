@@ -49,6 +49,10 @@ apps:
     command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
     plugs: [network, network-bind]
 
+  mysqldump:
+    command: mysqldump --defaults-file=$SNAP_DATA/mysql/root.ini --lock-tables nextcloud
+    plugs: [network, network-bind]
+
   # Nextcloud occ command
   occ:
     command: occ
@@ -255,7 +259,6 @@ parts:
       - -bin/mysql_client_test
       - -bin/mysql_config*
       - -bin/mysqld_multi
-      - -bin/mysqldump*
       - -bin/mysqlimport
       - -bin/mysql_install_db
       - -bin/mysql_plugin

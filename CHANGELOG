@@ -1,3 +1,6 @@
+v 11.0.0snap3
+  - dailies: fix overly-fragile version regex.
+
 v 11.0.0snap2
   - https: add 'map' parameter back to certbot plugin.
 

@@ -16,6 +16,7 @@ while true; do
 		if [ $difference -lt $seconds_to_renew ]; then
 			echo "Renewing self-signed certificate"
 			generate_self_signed_certificate
+			restart_apache_if_running
 		else
 			echo "Self-signed certificates aren't due for renewal"
 		fi
@@ -23,7 +24,7 @@ while true; do
 
 	# No need to check the Let's Encrypt certificates-- they'll only
 	# renew if they're within 30 days of expiration.
-	run_certbot renew
+	run_certbot renew --post-hook "restart-apache"
 
 	sleep 1d # Run once a day
 done

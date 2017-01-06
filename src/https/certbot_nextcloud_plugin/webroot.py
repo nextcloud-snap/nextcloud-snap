@@ -41,6 +41,7 @@ to serve all files under specified web root ({0})."""
     @classmethod
     def add_parser_arguments(cls, add):
         add("path", type=str, default='', help="public_html / webroot path")
+        add("map", default={}, help="Not used. Left for backward compatibility.")
 
     def get_chall_pref(self, domain):  # pragma: no cover
         # pylint: disable=missing-docstring,no-self-use,unused-argument
@@ -55,19 +56,19 @@ to serve all files under specified web root ({0})."""
         pass
 
     def perform(self, achalls):  # pylint: disable=missing-docstring
-        self._set_webroots(achalls)
+        webroot_path = self.conf("path")
+        if not webroot_path:
+            raise errors.PluginError("Missing path")
+
+        # The previous version had this as an array, but it gets loaded as
+        # a string. Just strip off the braces and quotes.
+        setattr(self.config, self.dest("path"), webroot_path.strip("[]'"))
+        logger.info("Using the webroot path %s for all domains.",
+                    self.conf("path"))
 
         self._create_challenge_dirs(achalls)
 
         return [self._perform_single(achall) for achall in achalls]
-
-    def _set_webroots(self, achalls):
-        if not self.conf("path"):
-            raise errors.PluginError("Missing path")
-
-        webroot_path = self.conf("path")[-1]
-        logger.info("Using the webroot path %s for all domains.",
-                    webroot_path)
 
     def _create_challenge_dirs(self, achalls):
         for achall in achalls:

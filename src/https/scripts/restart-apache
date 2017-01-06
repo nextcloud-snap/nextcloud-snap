@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. $SNAP/utilities/https-utilities
+
+restart_apache_if_running

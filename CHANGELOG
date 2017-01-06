@@ -1,3 +1,6 @@
+v 11.0.0snap2
+  - https: add 'map' parameter back to certbot plugin.
+
 v 11.0.0snap1
   - https: rewrite certbot plugin.
   - apache: update to v2.4.25.

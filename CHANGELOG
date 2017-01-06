@@ -1,3 +1,10 @@
+v 11.0.0snap1
+  - https: rewrite certbot plugin.
+  - apache: update to v2.4.25.
+  - snapcraft: start using new python plugin.
+  - nextcloud: update to v11.0.0.
+  - nextcloud: remove updater app.
+
 v 10.0.2snap1
   - Update Nextcloud to 10.0.2.
   - Daily builds: use versions that indicate so.

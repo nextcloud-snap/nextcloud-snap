@@ -84,6 +84,7 @@ parts:
       - headers
       - proxy
       - proxy_fcgi
+      - proxy_http
       - setenvif
       - env
       - rewrite

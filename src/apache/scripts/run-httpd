@@ -2,6 +2,16 @@
 
 mkdir -p -m 750 $SNAP_DATA/apache/logs
 
+# Setup SSL certificate
+RO_APACHE_CONF_FOLDER=$SNAP/conf
+RW_APACHE_CONF_FOLDER=$SNAP_DATA/apache/conf
+if [ ! -d $RW_APACHE_CONF_FOLDER ]; then
+	mkdir -p -m 750 $RW_APACHE_CONF_FOLDER
+	echo "Copying SSL config files"
+	cp $RO_APACHE_CONF_FOLDER/custom.conf $RW_APACHE_CONF_FOLDER
+fi
+mkdir -p -m 750 $SNAP_DATA/apache/conf
+
 # Make sure Nextcloud is installed and running
 echo "Making sure nextcloud is setup..."
 setup_nextcloud

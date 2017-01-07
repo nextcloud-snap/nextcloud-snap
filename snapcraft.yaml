@@ -94,6 +94,7 @@ parts:
       - alias
       - ssl
       - socache_shmcb
+      - log_config
 
     filesets:
       exclude:

@@ -51,7 +51,8 @@ apps:
 
   # Solr server
   solr:
-    command: solr.wrapper
+    command: solr-server start
+    stop-command: solr-server stop
     daemon: forking
     restart-condition: always
     plugs: [network, network-bind]

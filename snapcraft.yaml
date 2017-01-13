@@ -49,6 +49,18 @@ apps:
     command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
     plugs: [network, network-bind]
 
+  # Solr server
+  solr:
+    command: solr.wrapper
+    daemon: forking
+    restart-condition: always
+    plugs: [network, network-bind]
+
+  # nextant app initialization:
+  nextant:
+    command: nextant-deploy
+    plugs: [network]
+
   # Nextcloud occ command
   occ:
     command: occ
@@ -182,6 +194,31 @@ parts:
     plugin: redis
     source: http://download.redis.io/releases/redis-3.2.1.tar.gz
 
+  solr:
+    plugin: dump
+    source: http://apache.rediris.es/lucene/solr/6.3.0/solr-6.3.0.tgz
+    organize:
+      'bin': solr/bin
+      'contrib': solr/contrib
+      'dist': solr/dist
+      'licenses': solr/licenses
+      'server': solr/server
+    stage-packages: 
+      - default-jre-headless
+      - lsof
+    snap:
+      - -*.txt
+      - -example
+      - -docs
+
+  nextant:
+    plugin: dump
+    source: https://github.com/nextcloud/nextant/releases/download/v1.0.3/nextant-master-1.0.3.tar.gz
+    organize:
+      '*': nextant/
+    stage:
+      - nextant
+
   redis-customizations:
     plugin: copy
     files:
@@ -202,6 +239,20 @@ parts:
     files:
       src/nextcloud/config/*: htdocs/config/
       src/nextcloud/scripts/*: bin/
+
+  # Copy over our Solr configuration files
+  solr-customizations:
+    plugin: dump
+    source: src/solr
+    organize:
+      'scripts/*': bin/
+
+  # Deploy nextant app in nextcloud
+  nextant-customizations:
+    plugin: dump
+    source: src/nextant
+    organize:
+      'scripts/*': bin/
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.

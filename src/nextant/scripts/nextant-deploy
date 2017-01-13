@@ -1,0 +1,36 @@
+#!/bin/sh
+
+set -e
+set -x
+
+PRODUCT=nextant
+NEXTCLOUD_APPS_FOLDER=$SNAP_DATA/nextcloud/extra-apps
+
+# Config values
+SOLR_TIMEOUT=30
+SOLR_URL="http://127.0.0.1:8983/solr/"
+SOLR_CORE="nextant"
+
+CONFIGURED=2
+INDEX_FILES_NEEDED=1
+INDEX_LIVE=2
+
+if [ ! -e $NEXTCLOUD_APPS_FOLDER ]; then
+	echo "could not find folder to install nextant app. Verify nextcloud is installed"
+	exit 1
+fi
+
+[ -e $NEXTCLOUD_APPS_FOLDER/$PRODUCT ] 	|| cp -rf $SNAP/$PRODUCT $NEXTCLOUD_APPS_FOLDER
+
+#enable nextant app, configure and index
+$SNAP/bin/occ app:enable $PRODUCT
+
+$SNAP/bin/occ config:app:set $PRODUCT configured --value="$CONFIGURED"
+$SNAP/bin/occ config:app:set $PRODUCT index_files_needed --value="$INDEX_FILES_NEEDED"
+$SNAP/bin/occ config:app:set $PRODUCT index_live --value="$INDEX_LIVE"
+
+$SNAP/bin/occ config:app:set $PRODUCT solr_timeout --value="$SOLR_TIMEOUT"
+$SNAP/bin/occ config:app:set $PRODUCT sorl_url --value="$SOLR_URL"
+$SNAP/bin/occ config:app:set $PRODUCT solr_core --value="$SOLR_CORE"
+
+#$SNAP/bin/occ $PRODUCT:index

@@ -169,6 +169,7 @@ parts:
       - --enable-intl
       - --with-jpeg-dir=/usr/lib
       - --disable-rpath
+      - --enable-pcntl
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2

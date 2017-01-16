@@ -22,6 +22,14 @@ NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
 if [ ! -d "$NEXTCLOUD_CONFIG_DIR" ]; then
 	echo "Configuring nextcloud..."
 	cp -r $SNAP/htdocs/config $NEXTCLOUD_CONFIG_DIR
+
+	# set default user and password for admin. This allows finish
+	# nextcloud configuration from console and configure deployed
+	# applications if needed
+	occ maintenance:install --admin-user="admin" --admin-pass="admin"
+
+	#deploy applications
+	nextant-deploy
 else
 	# This is not a new installation, so we don't want to overwrite the config.
 	# We do, however, want to make sure we incorporate the new capabilities of

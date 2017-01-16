@@ -34,5 +34,8 @@ $SNAP/bin/occ config:app:set $PRODUCT solr_timeout --value="$SOLR_TIMEOUT"
 $SNAP/bin/occ config:app:set $PRODUCT sorl_url --value="$SOLR_URL"
 $SNAP/bin/occ config:app:set $PRODUCT solr_core --value="$SOLR_CORE"
 
+# kind of workaround to avoid using UI
+$SNAP/bin/occ $PRODUCT:check --fix
+
 # index
 $SNAP/bin/occ $PRODUCT:index

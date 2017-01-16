@@ -39,3 +39,11 @@ $SNAP/bin/occ $PRODUCT:check --fix
 
 # index
 $SNAP/bin/occ $PRODUCT:index
+
+## Configure autocompletion for search. First step is modifying solr config
+NEXTANT_SOLR_CONFIG_FILE=$NEXTCLOUD_APPS_FOLDER/$PRODUCT/config/nextant_solrconfig.xml
+SOLR_CONFIG_FILE=$SNAP_COMMON/solr/$PRODUCT/conf/solrconfig.xml
+sed -i "/<?xml version=\"1.0\" encoding=\"UTF-8\" ?>/a <!DOCTYPE config [\n\t<!ENTITY nextant_component SYSTEM \"$NEXTANT_SOLR_CONFIG_FILE\">\n\t]>" $SOLR_CONFIG_FILE
+sed -i "/<\/config>/i &nextant_component;" $SOLR_CONFIG_FILE
+
+$SNAP/bin/solr-server restart

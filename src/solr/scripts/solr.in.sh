@@ -121,3 +121,6 @@ SOLR_LOGS_DIR=$SNAP_COMMON/solr/logs
 #  -DzkDigestReadonlyUsername=readonly-user -DzkDigestReadonlyPassword=CHANGEME-READONLY-PASSWORD"
 #SOLR_OPTS="$SOLR_OPTS $SOLR_ZK_CREDS_AND_ACLS"
 
+# needed for nextant to work with search suggestions
+SOLR_OPTS="$SOLR_OPTS -Dsolr.allow.unsafe.resourceloading=true"
+

@@ -44,11 +44,6 @@ apps:
     restart-condition: always
     plugs: [network, network-bind]
 
-  # MySQL client
-  mysql-client:
-    command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
-    plugs: [network, network-bind]
-
   # Solr server
   solr:
     command: solr-server start
@@ -60,7 +55,14 @@ apps:
   # nextant app initialization:
   nextant:
     command: nextant-deploy
-    plugs: [network]
+    daemon: simple
+    restart-condition: on-failure
+    plugs: [network, network-bind]
+
+  # MySQL client
+  mysql-client:
+    command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
+    plugs: [network, network-bind]
 
   # Nextcloud occ command
   occ:

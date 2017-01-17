@@ -15,15 +15,17 @@ CONFIGURED=2
 INDEX_FILES_NEEDED=1
 INDEX_LIVE=2
 
-if [ ! -e $NEXTCLOUD_APPS_FOLDER ]; then
-	echo "could not find folder to install nextant app. Verify nextcloud is installed"
-	exit 1
-fi
+while [ ! -e $NEXTCLOUD_APPS_FOLDER ]; do
+	sleep 10
+done
 
 [ -e $NEXTCLOUD_APPS_FOLDER/$PRODUCT ] 	|| cp -rf $SNAP/$PRODUCT $NEXTCLOUD_APPS_FOLDER
 
-# enable nextant app
-$SNAP/bin/occ app:enable $PRODUCT
+# enable nextant app. Retry until having nextcloud configured
+while ! $SNAP/bin/occ app:enable $PRODUCT; do
+		# wait for 30 seconds before retrying
+        sleep 30
+done
 
 # configure with default parameters
 $SNAP/bin/occ config:app:set $PRODUCT configured --value="$CONFIGURED"

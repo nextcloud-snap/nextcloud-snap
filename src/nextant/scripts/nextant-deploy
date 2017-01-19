@@ -1,10 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 set -x
 
 PRODUCT=nextant
 NEXTCLOUD_APPS_FOLDER=$SNAP_DATA/nextcloud/extra-apps
+
+#include sed in path
+export PATH=$PATH:$SNAP/$PRODUCT/bin
 
 # Config default values
 SOLR_TIMEOUT=30
@@ -15,16 +18,21 @@ CONFIGURED=2
 INDEX_FILES_NEEDED=1
 INDEX_LIVE=2
 
+# wait for apps folder to be created before deploying our app files
 while [ ! -e $NEXTCLOUD_APPS_FOLDER ]; do
-	sleep 10
+    sleep 10
 done
 
-[ -e $NEXTCLOUD_APPS_FOLDER/$PRODUCT ] 	|| cp -rf $SNAP/$PRODUCT $NEXTCLOUD_APPS_FOLDER
+[ -e $NEXTCLOUD_APPS_FOLDER/$PRODUCT ]  || cp -rf $SNAP/$PRODUCT $NEXTCLOUD_APPS_FOLDER
+
+# wait for nextcloud script finish its configuration process before continueing trying to deploy nextant
+while [ ! -d $SNAP_DATA/nextcloud/config ]; do
+	sleep 30
+done
 
 # enable nextant app. Retry until having nextcloud configured
 while ! $SNAP/bin/occ app:enable $PRODUCT; do
-		# wait for 30 seconds before retrying
-        sleep 30
+    sleep 30
 done
 
 # configure with default parameters
@@ -45,7 +53,8 @@ $SNAP/bin/occ $PRODUCT:index
 ## Configure autocompletion for search. First step is modifying solr config
 NEXTANT_SOLR_CONFIG_FILE=$NEXTCLOUD_APPS_FOLDER/$PRODUCT/config/nextant_solrconfig.xml
 SOLR_CONFIG_FILE=$SNAP_COMMON/solr/$PRODUCT/conf/solrconfig.xml
-sed -i "/<?xml version=\"1.0\" encoding=\"UTF-8\" ?>/a <!DOCTYPE config [\n\t<!ENTITY nextant_component SYSTEM \"$NEXTANT_SOLR_CONFIG_FILE\">\n\t]>" $SOLR_CONFIG_FILE
-sed -i "/<\/config>/i &nextant_component;" $SOLR_CONFIG_FILE
 
-$SNAP/bin/solr-server restart
+cp $SNAP/$PRODUCT/config/solrconfig.xml $SOLR_CONFIG_FILE
+
+# this stop will force solr service to restart, as we wish.
+$SNAP/bin/solr-server stop

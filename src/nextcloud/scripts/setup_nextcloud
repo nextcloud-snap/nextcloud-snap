@@ -54,6 +54,3 @@ elif [ $return_code -ne 0 ]; then
 	sleep 10 # Delaying here so systemd doesn't throttle us
 	exit 1
 fi
-
-#deploy nextant
-nextant-deploy

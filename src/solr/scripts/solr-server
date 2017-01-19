@@ -30,16 +30,16 @@ case "$cmd" in
 		# start the server
 		$SNAP/$PRODUCT/bin/solr start -force #forces start as root if needed
 		
-		# using .configured file in current snap version data to know if this is first execution
+		# using .solr_configured file in current snap version data to know if this is first execution
 		# and thus it is needed to configure the solr home folder. This will be also executed
 		# in case a previous first execution didn't finish projperly
-		if [ ! -e $PRODUCT_COMMON/.configured ]; then
+		if [ ! -e $PRODUCT_COMMON/.solr_configured ]; then
 			# copy configset for nextant to common folder before creating the core in server
 			[ -e $PRODUCT_COMMON/nextant ]	||	cp -rf $SNAP/$PRODUCT/server/solr/configsets/basic_configs $PRODUCT_COMMON/nextant
 		
 			# create nextant core
 			$SNAP/$PRODUCT/bin/solr create -c nextant -force
-			touch $PRODUCT_COMMON/.configured
+			touch $PRODUCT_COMMON/.solr_configured
 		fi
 	;;
 	"stop" | "restart")

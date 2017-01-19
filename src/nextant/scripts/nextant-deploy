@@ -3,6 +3,11 @@
 set -e
 set -x
 
+# abort script in case nextant has been previously configured
+if [ -e $SNAP_COMMON/.nextant_configured ]; then
+	exit 0
+fi
+
 PRODUCT=nextant
 NEXTCLOUD_APPS_FOLDER=$SNAP_DATA/nextcloud/extra-apps
 
@@ -50,11 +55,22 @@ $SNAP/bin/occ $PRODUCT:check --fix
 # index
 $SNAP/bin/occ $PRODUCT:index
 
-## Configure autocompletion for search. First step is modifying solr config
+## XXX (rmescandon): -i option to update over same file is not working in confined mode. Thus, this copy of file is made
+# Ideally, should be:
+# sed -i "/<?xml version=\"1.0\" encoding=\"UTF-8\" ?>/a <!DOCTYPE config [\n\t<!ENTITY nextant_component SYSTEM \"$NEXTANT_SOLR_CONFIG_FILE\">\n\t]>" $SOLR_CONFIG_FILE
+# sed -i "/<\/config>/i &nextant_component;" $SOLR_CONFIG_FILE
+# but instead:
 NEXTANT_SOLR_CONFIG_FILE=$NEXTCLOUD_APPS_FOLDER/$PRODUCT/config/nextant_solrconfig.xml
 SOLR_CONFIG_FILE=$SNAP_COMMON/solr/$PRODUCT/conf/solrconfig.xml
-
-cp $SNAP/$PRODUCT/config/solrconfig.xml $SOLR_CONFIG_FILE
+TMP1_FILE=$SNAP_COMMON/solr/$PRODUCT/conf/tmp1.xml
+TMP2_FILE=$SNAP_COMMON/solr/$PRODUCT/conf/tmp2.xml
+sed "/<\/config>/i &nextant_component;" $SOLR_CONFIG_FILE > $TMP1_FILE
+sed "/<?xml version=\"1.0\" encoding=\"UTF-8\" ?>/a <!DOCTYPE config [\n\t<!ENTITY nextant_component SYSTEM \"$NEXTANT_SOLR_CONFIG_FILE\">\n\t]>" $TMP1_FILE > $TMP2_FILE
+mv $TMP2_FILE $SOLR_CONFIG_FILE
+rm $TMP1_FILE
 
 # this stop will force solr service to restart, as we wish.
 $SNAP/bin/solr-server stop
+
+# mark this as configured to avoid doing it again second and next times
+touch $SNAP_COMMON/.nextant_configured

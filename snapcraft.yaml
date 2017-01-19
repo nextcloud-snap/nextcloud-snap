@@ -50,7 +50,7 @@ apps:
     stop-command: solr-server stop
     daemon: forking
     restart-condition: always
-    plugs: [network, network-bind, system-observe]
+    plugs: [network, network-bind, system-observe, mount-observe]
 
   nextant:
     command: nextant-deploy
@@ -209,18 +209,19 @@ parts:
     stage-packages: 
       - default-jre-headless
       - lsof
-    snap:
+    stage:
       - -*.txt
       - -example
       - -docs
+      - -solr/bin/solr
 
   nextant:
     plugin: dump
     source: https://github.com/nextcloud/nextant/releases/download/v1.0.3/nextant-master-1.0.3.tar.gz
     organize:
       '*': nextant/
-    # stage-packages: 
-    #   - sed
+    stage-packages: 
+      - sed
     stage:
       - nextant
 
@@ -259,7 +260,6 @@ parts:
     source: src/nextant
     organize:
       'scripts/*': bin/
-      'config/*': nextant/config/
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.

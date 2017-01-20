@@ -73,11 +73,11 @@
 
 # Location where the bin/solr script will save PID files for running instances
 # If not set, the script will create PID files in $SOLR_TIP/bin
-SOLR_PID_DIR=$SNAP_COMMON/solr
+SOLR_PID_DIR=$SNAP_DATA/solr
 
 # Path to a directory for Solr to store cores and their data. By default, Solr will use server/solr
 # If solr.xml is not stored in ZooKeeper, this directory needs to contain solr.xml
-SOLR_HOME=$SNAP_COMMON/solr
+SOLR_HOME=$SNAP_DATA/solr
 
 # Solr provides a default Log4J configuration properties file in server/resources
 # however, you may want to customize the log settings and file appender location

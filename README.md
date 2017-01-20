@@ -71,6 +71,8 @@ There are a few CLI utilities included:
     - Redis database
     - Nextcloud config
     - Any Nextcloud apps installed by the user
+    - Nextant
+    - Solr
 - `$SNAP_COMMON`
     - Nextcloud data
     - Nextcloud logs

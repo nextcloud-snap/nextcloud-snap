@@ -1,5 +1,5 @@
 name: nextcloud
-version: 11.0.0snap3
+version: 11.0.1snap1
 summary: Nextcloud Server
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -47,6 +47,10 @@ apps:
   # MySQL client
   mysql-client:
     command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
+    plugs: [network, network-bind]
+
+  mysqldump:
+    command: mysqldump --defaults-file=$SNAP_DATA/mysql/root.ini --lock-tables nextcloud
     plugs: [network, network-bind]
 
   # Nextcloud occ command
@@ -121,7 +125,7 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.0.tar.bz2
+    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.1.tar.bz2
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -134,7 +138,7 @@ parts:
 
   php:
     plugin: php
-    source: http://us1.php.net/get/php-7.0.12.tar.gz/from/this/mirror
+    source: http://us1.php.net/get/php-7.1.1.tar.bz2/from/this/mirror
     source-type: tar
     install-via: prefix
     configflags:
@@ -180,7 +184,7 @@ parts:
 
   redis:
     plugin: redis
-    source: http://download.redis.io/releases/redis-3.2.1.tar.gz
+    source: http://download.redis.io/releases/redis-3.2.6.tar.gz
 
   redis-customizations:
     plugin: copy
@@ -255,7 +259,6 @@ parts:
       - -bin/mysql_client_test
       - -bin/mysql_config*
       - -bin/mysqld_multi
-      - -bin/mysqldump*
       - -bin/mysqlimport
       - -bin/mysql_install_db
       - -bin/mysql_plugin

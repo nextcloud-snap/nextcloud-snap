@@ -54,12 +54,17 @@ There are a few CLI utilities included:
     - MySQL client preconfigured to communicate with Nextcloud MySQL server.
       This may be useful in case you need to migrate Nextcloud installations.
       Note that it requires `sudo`.
+- `nextcloud.mysqldump`:
+    - Dump Nextcloud database to stdout. You should probaby redirect its output
+      to a file. Note that it requires `sudo`.
 - `nextcloud.enable-https`:
     - Enable HTTPS, either via self-signed certificates or via Let's Encrypt.
       HTTP will redirect to HTTPS. The certificates will automatically be kept
-      up-to-date. See `nextcloud.enable-https -h` for more information.
+      up-to-date. See `nextcloud.enable-https -h` for more information. Note
+      that it requires `sudo`.
 - `nextcloud.disable-https`:
-    - Disable HTTPS (does not remove certificates).
+    - Disable HTTPS (does not remove certificates). Note that it requires
+      `sudo`.
 
 
 ## Where is my stuff?

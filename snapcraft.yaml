@@ -138,7 +138,7 @@ parts:
 
   php:
     plugin: php
-    source: http://us1.php.net/get/php-7.0.12.tar.gz/from/this/mirror
+    source: http://us1.php.net/get/php-7.1.1.tar.bz2/from/this/mirror
     source-type: tar
     install-via: prefix
     configflags:

@@ -184,7 +184,7 @@ parts:
 
   redis:
     plugin: redis
-    source: http://download.redis.io/releases/redis-3.2.1.tar.gz
+    source: http://download.redis.io/releases/redis-3.2.6.tar.gz
 
   redis-customizations:
     plugin: copy

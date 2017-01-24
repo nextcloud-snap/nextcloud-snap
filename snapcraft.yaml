@@ -1,5 +1,5 @@
 name: nextcloud
-version: 11.0.1snap1
+version: 11.0.1snap2
 summary: Nextcloud Server
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -114,7 +114,7 @@ parts:
         - -bin/envvars*
     stage:
       - $exclude
-    snap:
+    prime:
       - $exclude
 
   apache-customizations:
@@ -133,12 +133,12 @@ parts:
 
     # This snap automatically updates. No need to include the updater to nag
     # users. This does not result in an integrity check failure.
-    snap:
+    prime:
       - -htdocs/apps/updatenotification
 
   php:
     plugin: php
-    source: http://us1.php.net/get/php-7.1.1.tar.bz2/from/this/mirror
+    source: http://us1.php.net/get/php-7.0.15.tar.bz2/from/this/mirror
     source-type: tar
     install-via: prefix
     configflags:
@@ -171,7 +171,7 @@ parts:
       - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
-    snap:
+    prime:
      - -sbin/
      - -etc/
     organize:
@@ -214,7 +214,7 @@ parts:
     source: http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz
     files:
       '*': boost/
-    snap:
+    prime:
       - -*
 
   mysql:
@@ -246,7 +246,7 @@ parts:
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
-    snap:
+    prime:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
 
@@ -307,4 +307,4 @@ parts:
       src/https/utilities/*: utilities/
     stage-packages: [openssl]
     stage: [-etc/ssl]
-    snap: [-etc/ssl]
+    prime: [-etc/ssl]

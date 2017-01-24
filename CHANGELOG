@@ -1,3 +1,6 @@
+v 11.0.1snap2
+  - php: downgrade to 7.0.15.
+
 v 11.0.1snap1
   - redis: upgrade to 3.2.6.
   - php: upgrade to 7.1.1.

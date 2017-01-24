@@ -96,12 +96,6 @@ class PhpPlugin(autotools.AutotoolsPlugin):
         if os.path.exists(self.extensions_directory):
             shutil.rmtree(self.extensions_directory)
 
-    def run(self, cmd, cwd=None, **kwargs):
-        env = os.environ.copy()
-        env['CFLAGS'] = '-O2'
-
-        super().run(cmd, cwd=cwd, env=env, **kwargs)
-
     def build(self):
         super().build()
 

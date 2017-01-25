@@ -28,6 +28,8 @@ generate_self_signed_certificate()
 	openssl req -newkey rsa:4096 -nodes -keyout $SELF_SIGNED_KEY \
 	        -x509 -days 90 -out $SELF_SIGNED_CERT -subj "/O=Nextcloud"
 
+	openssl ecparam -name secp384r1 >> $SELF_SIGNED_CERT
+
 	rm -f $SELF_SIGNED_CHAIN
 	ln -s $SELF_SIGNED_CERT $SELF_SIGNED_CHAIN
 }
@@ -72,6 +74,8 @@ run_certbot()
 	certbot --text --config-dir $CERTBOT_DIRECTORY/config \
 	               --work-dir $CERTBOT_DIRECTORY/work \
 	               --logs-dir $CERTBOT_DIRECTORY/logs $@
+
+	openssl ecparam -name secp384r1 >> $LIVE_CERT
 } 
 
 restart_apache_if_running()

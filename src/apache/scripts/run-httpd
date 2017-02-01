@@ -17,9 +17,13 @@ echo "All set! Running httpd..."
 # Rewrite live cert symlinks that aren't using the current symlink.
 # FIXME: Remove this migration once epochs and upgrade hooks are available.
 if certificates_are_active; then
+	live_basename="$(basename $(realpath $LIVE_CERTS_DIRECTORY))"
 	self_signed_basename="$(basename $SELF_SIGNED_DIRECTORY)"
-	if [ "$(basename $(realpath $LIVE_CERTS_DIRECTORY))" = "$self_signed_basename" ]; then
+	custom_basename="$(basename $CUSTOM_DIRECTORY)"
+	if [ "$live_basename" = "$self_signed_basename" ]; then
 		activate_self_signed_certificate
+	elif [ "$live_basename" = "$custom_basename" ]; then
+		activate_custom_certificate
 	else
 		activate_certbot_certificate
 	fi

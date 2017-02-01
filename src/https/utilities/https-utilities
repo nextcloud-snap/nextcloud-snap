@@ -12,6 +12,12 @@ SELF_SIGNED_KEY=$SELF_SIGNED_DIRECTORY/privkey.pem
 SELF_SIGNED_CERT=$SELF_SIGNED_DIRECTORY/cert.pem
 SELF_SIGNED_CHAIN=$SELF_SIGNED_DIRECTORY/chain.pem
 
+CUSTOM_DIRECTORY=$SNAP_CURRENT/certs/custom
+CUSTOM_KEY=$CUSTOM_DIRECTORY/privkey.pem
+CUSTOM_CERT=$CUSTOM_DIRECTORY/cert.pem
+CUSTOM_CHAIN=$CUSTOM_DIRECTORY/chain.pem
+CUSTOM_ENABLE_HSTS=$CUSTOM_DIRECTORY/hsts
+
 CERTBOT_DIRECTORY=$SNAP_CURRENT/certs/certbot
 CERTBOT_LIVE_DIRECTORY=$CERTBOT_DIRECTORY/config/live
 
@@ -41,7 +47,46 @@ activate_self_signed_certificate()
 
 self_signed_certificates_are_active()
 {
-	[ "$(realpath $LIVE_CERTS_DIRECTORY)" = "$SELF_SIGNED_DIRECTORY" ]
+	live_path="$(realpath $LIVE_CERTS_DIRECTORY)"
+	self_signed_path="$(realpath $SELF_SIGNED_DIRECTORY)"
+
+	[ "$live_path" = "$self_signed_path" ]
+}
+
+# If this function is run multiple times it will replace the certificate
+# and key if they're already present.
+install_custom_certificate()
+{
+	enable_hsts=$4
+
+	mkdir -p -m 750 $(dirname $CUSTOM_KEY)
+	mkdir -p -m 750 $(dirname $CUSTOM_CERT)
+	mkdir -p -m 750 $(dirname $CUSTOM_CHAIN)
+
+	cp $1 $CUSTOM_CERT
+	cp $2 $CUSTOM_KEY
+	cp $3 $CUSTOM_CHAIN
+
+	if [ "$enable_hsts" = true ]; then
+		touch $CUSTOM_ENABLE_HSTS
+	else
+		rm -f $CUSTOM_ENABLE_HSTS
+	fi
+}
+
+activate_custom_certificate()
+{
+	deactivate_certificates
+	ln -s $CUSTOM_DIRECTORY $LIVE_CERTS_DIRECTORY
+	restart_apache_if_running
+}
+
+custom_certificates_are_active()
+{
+	live_path="$(realpath $LIVE_CERTS_DIRECTORY)"
+	custom_path="$(realpath $CUSTOM_DIRECTORY)"
+
+	[ "$live_path" = "$custom_path" ]
 }
 
 certificates_are_active()
@@ -64,6 +109,22 @@ activate_certbot_certificate()
 	deactivate_certificates
 	ln -s $CERTBOT_LIVE_DIRECTORY/$certdir $LIVE_CERTS_DIRECTORY
 	restart_apache_if_running
+}
+
+should_enable_hsts()
+{
+	# Don't enable HSTS for self-signed certs
+	if self_signed_certificates_are_active; then
+		return 1
+	fi
+
+	# Don't enable HSTS for custom certificates unless requested
+	if custom_certificates_are_active && [ ! -f $CUSTOM_ENABLE_HSTS ]; then
+		return 1
+	fi
+
+	# For everything else (i.e. Let's Encrypt), enable it.
+	return 0
 }
 
 # Run a certbot instance that writes to snap-writable data.

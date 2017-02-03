@@ -7,9 +7,9 @@ if certificates_are_active; then
 	echo "Certificates have been activated: using HTTPS only"
 	params="$params -DEnableHTTPS"
 
-	# Only enable HSTS if the certificate is not self-signed.
-	if ! self_signed_certificates_are_active; then
-		echo "Certificates don't appear self-signed: enabling HSTS"
+	# Enable HSTS if possible
+	if should_enable_hsts; then
+		echo "Certificates look to be in order: enabling HSTS"
 		params="$params -DEnableHSTS"
 	else
 		echo "Certificates appear self-signed: disabling HSTS"

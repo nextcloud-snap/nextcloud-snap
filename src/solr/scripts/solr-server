@@ -1,0 +1,49 @@
+#!/bin/sh
+
+set -e
+set -x
+
+#evaluate input params. Default is "start"
+cmd="$1"
+if [ "$cmd" = "" ]; then 
+	cmd="start"
+fi
+
+PRODUCT=solr
+PRODUCT_COMMON=$SNAP_COMMON/$PRODUCT
+
+JAVA_HOME="$SNAP/usr/lib/jvm/default-java"
+SOLR_INCLUDE="$SNAP/bin/solr.in.sh"
+
+export JAVA_HOME
+export PATH=$PATH:$JAVA_HOME/bin
+export SOLR_INCLUDE
+
+[ -e $PRODUCT_COMMON ] || mkdir -p $PRODUCT_COMMON
+[ -e $PRODUCT_COMMON/logs ] || mkdir -p $PRODUCT_COMMON/logs
+
+case "$cmd" in
+	"start")
+		# copy solr.xml to common folder in case it doesn't exit yet
+		[ -e $PRODUCT_COMMON/solr.xml ] ||	cp $SNAP/$PRODUCT/server/solr/solr.xml $PRODUCT_COMMON
+		
+		# start the server
+		$SNAP/$PRODUCT/bin/solr start -force #forces start as root if needed
+		
+		# using .solr_configured file in current snap version data to know if this is first execution
+		# and thus it is needed to configure the solr home folder. This will be also executed
+		# in case a previous first execution didn't finish projperly
+		if [ ! -e $PRODUCT_COMMON/.solr_configured ]; then
+			# copy configset for nextant to common folder before creating the core in server
+			[ -e $PRODUCT_COMMON/nextant ]	||	cp -rf $SNAP/$PRODUCT/server/solr/configsets/basic_configs $PRODUCT_COMMON/nextant
+		
+			# create nextant core
+			$SNAP/$PRODUCT/bin/solr create -c nextant -force
+			touch $PRODUCT_COMMON/.solr_configured
+		fi
+	;;
+	"stop" | "restart")
+		$SNAP/$PRODUCT/bin/solr $cmd -force
+	;;
+	*)
+esac

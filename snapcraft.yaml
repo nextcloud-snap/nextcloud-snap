@@ -44,6 +44,20 @@ apps:
     restart-condition: always
     plugs: [network, network-bind]
 
+  # Solr server
+  solr:
+    command: solr-server start
+    stop-command: solr-server stop
+    daemon: forking
+    restart-condition: always
+    plugs: [network, network-bind, system-observe, mount-observe]
+
+  nextant:
+    command: nextant-deploy
+    daemon: simple
+    restart-condition: on-failure
+    plugs: [network, network-bind]
+
   # MySQL client
   mysql-client:
     command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
@@ -160,6 +174,7 @@ parts:
       - --enable-intl
       - --with-jpeg-dir=/usr/lib
       - --disable-rpath
+      - --enable-pcntl
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2
@@ -186,6 +201,34 @@ parts:
     plugin: redis
     source: http://download.redis.io/releases/redis-3.2.6.tar.gz
 
+  solr:
+    plugin: dump
+    source: http://apache.rediris.es/lucene/solr/6.3.0/solr-6.3.0.tgz
+    organize:
+      'bin': solr/bin
+      'contrib': solr/contrib
+      'dist': solr/dist
+      'licenses': solr/licenses
+      'server': solr/server
+    stage-packages: 
+      - default-jre-headless
+      - lsof
+    stage:
+      - -*.txt
+      - -example
+      - -docs
+      - -solr/bin/solr
+
+  nextant:
+    plugin: dump
+    source: https://github.com/nextcloud/nextant/releases/download/v1.0.3/nextant-master-1.0.3.tar.gz
+    organize:
+      '*': nextant/
+    stage-packages: 
+      - sed
+    stage:
+      - nextant
+
   redis-customizations:
     plugin: copy
     files:
@@ -206,6 +249,21 @@ parts:
     files:
       src/nextcloud/config/*: htdocs/config/
       src/nextcloud/scripts/*: bin/
+
+  # Copy over our Solr configuration files
+  solr-customizations:
+    plugin: dump
+    source: src/solr
+    organize:
+      'scripts/*': bin/
+      'scripts/custom-solr': solr/bin/solr
+
+  # Deploy nextant app in nextcloud
+  nextant-customizations:
+    plugin: dump
+    source: src/nextant
+    organize:
+      'scripts/*': bin/
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.

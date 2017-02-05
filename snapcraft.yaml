@@ -88,6 +88,8 @@ parts:
       - headers
       - proxy
       - proxy_fcgi
+      - proxy_http
+      - proxy_wstunnel
       - setenvif
       - env
       - rewrite

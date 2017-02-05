@@ -8,7 +8,8 @@ Nextcloud server packaged as a snap. It consists of:
 - MySQL 5.7
 - Redis 3.2
 - mDNS for network discovery
-
+- Solr 6.3.0
+- Nextant (app) 1.0.3
 
 ## How to install
 
@@ -76,6 +77,9 @@ There are a few CLI utilities included:
     - Redis database
     - Nextcloud config
     - Any Nextcloud apps installed by the user
+    - Nextant
+    - Solr
 - `$SNAP_COMMON`
     - Nextcloud data
     - Nextcloud logs
+    - Solr logs

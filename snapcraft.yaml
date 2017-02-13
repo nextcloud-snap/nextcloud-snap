@@ -6,6 +6,13 @@ description: |
  more at home and in your enterprise.
 confinement: strict
 
+slots:
+  nextcloud-data:
+    content: nextcloud-documents
+    interface: content
+    write:
+      - $SNAP_COMMON/nextcloud/data
+
 apps:
   # Apache daemon
   apache:

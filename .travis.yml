@@ -1,5 +1,11 @@
 language: generic
 
+sudo: required
+services: [docker]
+
+script: docker run -v $(pwd):$(pwd) -w $(pwd) -t ubuntu:xenial sh -c
+        "apt update -qq && apt install snapcraft -y && snapcraft"
+
 after_success:
 - ssh-keyscan -t rsa -H git.launchpad.net > ~/.ssh/known_hosts
 

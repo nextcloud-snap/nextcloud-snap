@@ -1,5 +1,14 @@
 #!/bin/sh
 
-export NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
+. $SNAP/utilities/php-utilities
+. $SNAP/utilities/nextcloud-utilities
+
+if [ $(id -u) -ne 0 ]; then
+	echo "This utility needs to run as root"
+	exit 1
+fi
+
+# occ can't do much before PHP FPM is up and running
+wait_for_php
 
 php -c $SNAP/config/php $SNAP/htdocs/occ $*

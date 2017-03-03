@@ -43,6 +43,8 @@
 # If you change base dir, you must also change datadir. These may get
 # overwritten by settings in the MySQL configuration files.
 
+. $SNAP/utilities/mysql-utilities
+
 basedir=$SNAP
 datadir=$SNAP_DATA/mysql
 
@@ -60,7 +62,7 @@ lock_file_path="$lockdir/mysql"
 # The following variables are only set for letting mysql.server find things.
 
 # Set some defaults
-mysqld_pid_file_path=
+mysqld_pid_file_path="$MYSQL_PIDFILE"
 if test -z "$basedir"
 then
   basedir=/
@@ -280,7 +282,7 @@ case "$mode" in
     then
       # Give extra arguments to mysqld with the my.cnf file. This script
       # may be overwritten at next upgrade.
-      $bindir/mysqld_safe --datadir="$datadir" --pid-file="$mysqld_pid_file_path" --lc-messages-dir="$SNAP/share" --socket="$SNAP_DATA/mysql/mysql.sock" $other_args >/dev/null 2>&1 &
+      $bindir/mysqld_safe --datadir="$datadir" --pid-file="$mysqld_pid_file_path" --lc-messages-dir="$SNAP/share" --socket="$MYSQL_SOCKET" $other_args >/dev/null 2>&1 &
       wait_for_pid created "$!" "$mysqld_pid_file_path"; return_value=$?
 
       # Make lock for RedHat / SuSE

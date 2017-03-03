@@ -1,0 +1,24 @@
+#!/bin/sh
+
+export APACHE_PIDFILE="/tmp/pids/httpd.pid"
+
+mkdir -p -m 750 "$(dirname $APACHE_PIDFILE)"
+
+restart_apache_if_running()
+{
+	if [ -f "$APACHE_PIDFILE" ]; then
+		# Restart apache by stopping it and letting systemd start it again.
+		apache_pid=$(cat "$APACHE_PIDFILE")
+		echo -n "Restarting apache... "
+		output=$(httpd-wrapper -k stop 2>&1)
+		if [ $? -eq 0 ]; then
+			while kill -0 $apache_pid 2>/dev/null; do
+				sleep 1
+			done
+			echo "done"
+		else
+			echo "error"
+			echo "$output"
+		fi
+	fi
+}

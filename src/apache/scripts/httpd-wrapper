@@ -1,6 +1,8 @@
 #!/bin/sh
 
 . $SNAP/utilities/https-utilities
+. $SNAP/utilities/apache-utilities
+. $SNAP/utilities/php-utilities
 
 params=""
 if certificates_are_active; then

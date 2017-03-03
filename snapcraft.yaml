@@ -122,6 +122,7 @@ parts:
     files:
       src/apache/scripts/*: bin/
       src/apache/conf/*: conf/
+      src/apache/utilities/*: utilities/
 
   nextcloud:
     plugin: dump
@@ -191,6 +192,7 @@ parts:
     files:
       src/redis/config/*: config/redis/
       src/redis/scripts/*: bin/
+      src/redis/utilities/*: utilities/
 
   # Copy over our PHP configuration file.
   php-customizations:
@@ -198,6 +200,7 @@ parts:
     files:
       src/php/config/*: config/php/
       src/php/scripts/*: bin/
+      src/php/utilities/*: utilities/
     stage-packages: [mawk]
 
   # Copy over our Nextcloud configuration files
@@ -206,6 +209,7 @@ parts:
     files:
       src/nextcloud/config/*: htdocs/config/
       src/nextcloud/scripts/*: bin/
+      src/nextcloud/utilities/*: utilities/
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.
@@ -283,6 +287,7 @@ parts:
       src/mysql/start_mysql: bin/
       src/mysql/my.cnf: my.cnf
       src/mysql/mysql.server: support-files/
+      src/mysql/utilities/*: utilities/
 
   mdns-publisher:
     plugin: go

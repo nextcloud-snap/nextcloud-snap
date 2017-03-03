@@ -3,7 +3,6 @@
 . $SNAP/utilities/mysql-utilities
 
 root_option_file="$SNAP_DATA/mysql/root.ini"
-nextcloud_password_file="$SNAP_DATA/mysql/nextcloud_password"
 new_install=false
 
 # Make sure the database is initialized (this is safe to run if already
@@ -79,7 +78,7 @@ fi
 # before saving off the nextcloud user's password. This way the presence of the
 # file can be used as a signal that mysql is ready to be used.
 if [ $new_install = true ]; then
-	echo "$nextcloud_password" > $nextcloud_password_file
+	mysql_set_nextcloud_password "$nextcloud_password"
 fi
 
 # Wait here until mysql exits (turn a forking service into simple). This is

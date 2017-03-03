@@ -65,6 +65,10 @@ There are a few CLI utilities included:
 - `nextcloud.disable-https`:
     - Disable HTTPS (does not remove certificates). Note that it requires
       `sudo`.
+- `nextcloud.manual-install`:
+    - Manually install Nextcloud instead of visiting it in your browser. This
+      allows you to create the admin user via the CLI. Note that it requires
+      `sudo`.
 
 
 ## Where is my stuff?

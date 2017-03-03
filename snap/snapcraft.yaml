@@ -80,6 +80,11 @@ apps:
     restart-condition: always
     plugs: [network, network-bind, removable-media]
 
+  # Command for manually installing instead of visiting site to create admin.
+  manual-install:
+    command: manual-install
+    plugs: [network, network-bind, removable-media]
+
 parts:
   apache:
     plugin: apache

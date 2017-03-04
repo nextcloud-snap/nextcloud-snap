@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. $SNAP/utilities/apache-utilities
+
 SNAP_CURRENT=$(dirname $SNAP_DATA)/current
 
 LIVE_CERTS_DIRECTORY=$SNAP_CURRENT/certs/live
@@ -20,8 +22,6 @@ CUSTOM_ENABLE_HSTS=$CUSTOM_DIRECTORY/hsts
 
 CERTBOT_DIRECTORY=$SNAP_CURRENT/certs/certbot
 CERTBOT_LIVE_DIRECTORY=$CERTBOT_DIRECTORY/config/live
-
-APACHE_PIDFILE=$SNAP_DATA/apache/httpd.pid
 
 # If this function is run multiple times it will replace the certificate
 # and key if they're already present.
@@ -133,23 +133,4 @@ run_certbot()
 	certbot --text --config-dir $CERTBOT_DIRECTORY/config \
 	               --work-dir $CERTBOT_DIRECTORY/work \
 	               --logs-dir $CERTBOT_DIRECTORY/logs $@
-} 
-
-restart_apache_if_running()
-{
-	if [ -f "$APACHE_PIDFILE" ]; then
-		# Restart apache by stopping it and letting systemd start it again.
-		apache_pid=$(cat "$APACHE_PIDFILE")
-		echo -n "Restarting apache... "
-		output=$(httpd-wrapper -k stop 2>&1)
-		if [ $? -eq 0 ]; then
-			while kill -0 $apache_pid 2>/dev/null; do
-				sleep 1
-			done
-			echo "done"
-		else
-			echo "error"
-			echo "$output"
-		fi
-	fi
 }

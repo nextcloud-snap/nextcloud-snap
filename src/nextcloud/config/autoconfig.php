@@ -12,7 +12,7 @@ $AUTOCONFIG = array(
 
 'dbtype' => 'mysql',
 
-'dbhost' => 'localhost:'.$data_path.'/mysql/mysql.sock',
+'dbhost' => 'localhost:'.getenv('MYSQL_SOCKET'),
 
 'dbname' => 'nextcloud',
 

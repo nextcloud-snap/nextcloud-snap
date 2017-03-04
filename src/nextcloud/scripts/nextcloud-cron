@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
+. $SNAP/utilities/nextcloud-utilities
 
 echo -n "Waiting for Nextcloud config dir... "
 while [ ! -d "$NEXTCLOUD_CONFIG_DIR" ]; do

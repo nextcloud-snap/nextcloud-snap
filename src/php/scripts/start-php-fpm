@@ -1,17 +1,16 @@
 #!/bin/sh
 
+. $SNAP/utilities/mysql-utilities
+. $SNAP/utilities/php-utilities
+. $SNAP/utilities/redis-utilities
+
 mkdir -p -m 750 ${SNAP_DATA}/php
 
-mysqld_pid_file_path=$SNAP_DATA/mysql/`hostname`.pid
-# Wait for mysql to be up and running, since we need to make sure
-# we run the upgrade process.
-echo "Waiting for mysql..."
-while [ ! -f "$mysqld_pid_file_path" ]; do
-	sleep 1
-done
+# We need to make sure mysql is running so we can run the migration process
+wait_for_mysql
 
 # Wait until we have an nextcloud mysql password
-echo "Obtaining nextcloud mysql credentials..."
+echo -n "Obtaining nextcloud mysql credentials... "
 nextcloud_password_path=$SNAP_DATA/mysql/nextcloud_password
 timeout=10
 while [ $timeout -gt 0 -a ! -e $nextcloud_password_path ]; do
@@ -19,11 +18,13 @@ while [ $timeout -gt 0 -a ! -e $nextcloud_password_path ]; do
 	sleep 1
 done
 if [ ! -e $nextcloud_password_path ]; then
+	echo ""
 	echo -n "Timed out while attempting to obtain nextcloud mysql password. "
 	echo -n "This isn't unusual when starting up for the first time after "
 	echo "an install or an upgrade. Will try again."
 	exit 1
 fi
+echo "done"
 
 # Tends to be between 30-50MB
 average_php_memory_requirement=50

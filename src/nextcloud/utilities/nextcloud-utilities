@@ -1,3 +1,20 @@
 #!/bin/sh
 
 export NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
+export NEXTCLOUD_DATA_DIR=$SNAP_COMMON/nextcloud/data
+
+nextcloud_is_configured()
+{
+	[ -d "$NEXTCLOUD_CONFIG_DIR" ]
+}
+
+wait_for_nextcloud_to_be_configured()
+{
+	if ! nextcloud_is_configured; then
+		echo -n "Waiting for Nextcloud to be configured... "
+		while ! nextcloud_is_configured; do
+			sleep 1
+		done
+		echo "done"
+	fi
+}

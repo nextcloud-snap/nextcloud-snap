@@ -1,6 +1,8 @@
 #!/bin/sh
 
+. $SNAP/utilities/mysql-utilities
 . $SNAP/utilities/php-utilities
+. $SNAP/utilities/redis-utilities
 . $SNAP/utilities/nextcloud-utilities
 
 if [ $(id -u) -ne 0 ]; then
@@ -10,5 +12,6 @@ fi
 
 # occ can't do much before PHP FPM is up and running
 wait_for_php
+wait_for_nextcloud_to_be_configured
 
 php -c $SNAP/config/php $SNAP/htdocs/occ $*

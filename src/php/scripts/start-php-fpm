@@ -3,6 +3,7 @@
 . $SNAP/utilities/mysql-utilities
 . $SNAP/utilities/php-utilities
 . $SNAP/utilities/redis-utilities
+. $SNAP/utilities/nextcloud-utilities
 
 mkdir -p -m 750 ${SNAP_DATA}/php
 

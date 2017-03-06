@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 11.0.1
+- Nextcloud 11.0.2
 - Apache 2.4
 - PHP 7
 - MySQL 5.7
@@ -41,7 +41,7 @@ not automatically connected upon install, so if you'd like to use external
 storage (or otherwise use a device in `/media` for data), you need to give the
 snap permission to access removable media by connecting that interface:
 
-    $ sudo snap connect nextcloud:removable-media ubuntu-core:removable-media
+    $ sudo snap connect nextcloud:removable-media
 
 
 ### Included CLI utilities

@@ -133,7 +133,7 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.1.tar.bz2
+    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.2.tar.bz2
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess

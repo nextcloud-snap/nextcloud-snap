@@ -1,6 +1,7 @@
 #!/bin/sh
 
 . $SNAP/utilities/php-utilities
+. $SNAP/utilities/mysql-utilities
 . $SNAP/utilities/nextcloud-utilities
 . $SNAP/utilities/redis-utilities
 
@@ -23,8 +24,12 @@ if [ ! -d "$NEXTCLOUD_CONFIG_DIR" ]; then
 	cp -r $SNAP/htdocs/config $NEXTCLOUD_CONFIG_DIR
 else
 	# This is not a new installation, so we don't want to overwrite the config.
-	# We do, however, want to make sure we incorporate the new capabilities of
-	# this snap version, namely, using Redis for the memcache and file locking.
+	# However, we recently changed the location of sockets in the snap, so we
+	# need to make sure the config is using the new location.
+	sed -ri "s|('host'\s*=>\s*)'/var/snap/nextcloud/.*redis.sock'|\1'$REDIS_SOCKET'|" $NEXTCLOUD_CONFIG_DIR/config.php
+	sed -ri "s|('dbhost'\s*=>\s*)'localhost:/var/snap/nextcloud/.*mysql.sock'|\1'localhost:$MYSQL_SOCKET'|" $NEXTCLOUD_CONFIG_DIR/config.php
+
+	# Also make sure we're using Redis for the memcache and file locking.
 	occ config:system:set redis host --value="$REDIS_SOCKET" --type=string
 	occ config:system:set redis port --value=0 --type=integer
 	occ config:system:set memcache.locking --value="\OC\Memcache\Redis" --type=string

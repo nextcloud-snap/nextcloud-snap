@@ -1,3 +1,11 @@
+v 11.0.2snap2
+  - boost: pull from github instead of sourceforge.
+  - nextcloud: migrate old config to use new sockets.
+  - nextcloud: update to 11.0.2.
+  - Add new command for manually installing.
+  - Begin using snapcraft's snap/ directory.
+  - many: place all pidfiles and sockets in /tmp.
+
 v 11.0.1snap3
   - https: support custom certificates.
 

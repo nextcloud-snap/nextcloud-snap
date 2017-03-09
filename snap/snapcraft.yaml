@@ -222,7 +222,7 @@ parts:
   # be updated if the version of MySQL changes.
   boost:
     plugin: copy
-    source: http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz
+    source: https://github.com/kyrofa/boost_tarball/raw/master/boost_1_59_0.tar.gz
     files:
       '*': boost/
     prime:

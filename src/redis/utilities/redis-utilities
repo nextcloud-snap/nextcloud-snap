@@ -1,0 +1,33 @@
+#!/bin/sh
+
+export REDIS_PIDFILE="/tmp/pids/redis.pid"
+export REDIS_SOCKET="/tmp/sockets/redis.sock"
+
+mkdir -p -m 750 "$(dirname $REDIS_PIDFILE)"
+mkdir -p -m 750 "$(dirname $REDIS_SOCKET)"
+
+redis_is_running()
+{
+	[ -f "$REDIS_PIDFILE" -a -S "$REDIS_SOCKET" ]
+}
+
+wait_for_redis()
+{
+	if ! redis_is_running; then
+		echo -n "Waiting for redis... "
+		while ! redis_is_running; do
+			sleep 1
+		done
+		echo "done"
+	fi
+}
+
+redis_pid()
+{
+	if redis_is_running; then
+		cat "$REDIS_PIDFILE"
+	else
+		echo "Unable to get redis PID as it's not yet running" >&2
+		echo ""
+	fi
+}

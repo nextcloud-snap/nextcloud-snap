@@ -1,0 +1,50 @@
+#!/bin/sh
+
+export MYSQL_PIDFILE="/tmp/pids/mysql.pid"
+export MYSQL_SOCKET="/tmp/sockets/mysql.sock"
+export NEXTCLOUD_PASSWORD_FILE="$SNAP_DATA/mysql/nextcloud_password"
+
+mkdir -p -m 750 "$(dirname $MYSQL_PIDFILE)"
+mkdir -p -m 750 "$(dirname $MYSQL_SOCKET)"
+
+mysql_is_running()
+{
+	[ -f "$MYSQL_PIDFILE" -a -S "$MYSQL_SOCKET" ]
+}
+
+wait_for_mysql()
+{
+	if ! mysql_is_running; then
+		echo -n "Waiting for MySQL... "
+		while ! mysql_is_running; do
+			sleep 1
+		done
+		echo "done"
+	fi
+}
+
+mysql_pid()
+{
+	if mysql_is_running; then
+		cat "$MYSQL_PIDFILE"
+	else
+		echo "Unable to get MySQL PID as it's not yet running" >&2
+		echo ""
+	fi
+}
+
+mysql_set_nextcloud_password()
+{
+	echo "$1" > "$NEXTCLOUD_PASSWORD_FILE"
+	chmod 600 "$NEXTCLOUD_PASSWORD_FILE"
+}
+
+mysql_get_nextcloud_password()
+{
+	if [ -f "$NEXTCLOUD_PASSWORD_FILE" ]; then
+		cat "$NEXTCLOUD_PASSWORD_FILE"
+	else
+		echo "MySQL Nextcloud password has not yet been generated" >&2
+		echo ""
+	fi
+}

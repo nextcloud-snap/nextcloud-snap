@@ -1,9 +1,11 @@
 name: nextcloud
-version: 11.0.1snap3
+version: 11.0.2snap1
 summary: Nextcloud Server
 description: |
  Access, share and protect your files, calendars, contacts, communication and
  more at home and in your enterprise.
+
+grade: stable
 confinement: strict
 
 apps:
@@ -78,6 +80,11 @@ apps:
     restart-condition: always
     plugs: [network, network-bind, removable-media]
 
+  # Command for manually installing instead of visiting site to create admin.
+  manual-install:
+    command: manual-install
+    plugs: [network, network-bind, removable-media]
+
 parts:
   apache:
     plugin: apache
@@ -122,10 +129,11 @@ parts:
     files:
       src/apache/scripts/*: bin/
       src/apache/conf/*: conf/
+      src/apache/utilities/*: utilities/
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.1.tar.bz2
+    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.2.tar.bz2
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -191,6 +199,7 @@ parts:
     files:
       src/redis/config/*: config/redis/
       src/redis/scripts/*: bin/
+      src/redis/utilities/*: utilities/
 
   # Copy over our PHP configuration file.
   php-customizations:
@@ -198,6 +207,7 @@ parts:
     files:
       src/php/config/*: config/php/
       src/php/scripts/*: bin/
+      src/php/utilities/*: utilities/
     stage-packages: [mawk]
 
   # Copy over our Nextcloud configuration files
@@ -206,12 +216,13 @@ parts:
     files:
       src/nextcloud/config/*: htdocs/config/
       src/nextcloud/scripts/*: bin/
+      src/nextcloud/utilities/*: utilities/
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.
   boost:
     plugin: copy
-    source: http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz
+    source: https://github.com/kyrofa/boost_tarball/raw/master/boost_1_59_0.tar.gz
     files:
       '*': boost/
     prime:
@@ -283,6 +294,7 @@ parts:
       src/mysql/start_mysql: bin/
       src/mysql/my.cnf: my.cnf
       src/mysql/mysql.server: support-files/
+      src/mysql/utilities/*: utilities/
 
   mdns-publisher:
     plugin: go

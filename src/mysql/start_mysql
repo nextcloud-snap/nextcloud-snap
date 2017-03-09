@@ -1,9 +1,8 @@
 #!/bin/sh
 
+. $SNAP/utilities/mysql-utilities
+
 root_option_file="$SNAP_DATA/mysql/root.ini"
-nextcloud_password_file="$SNAP_DATA/mysql/nextcloud_password"
-mysqld_pid_file_path=$SNAP_DATA/mysql/`hostname`.pid
-mysql_socket_file_path="/var/snap/$SNAP_NAME/current/mysql/mysql.sock"
 new_install=false
 
 # Make sure the database is initialized (this is safe to run if already
@@ -32,7 +31,7 @@ if [ $new_install = true ]; then
 
 	# Save root user information
 	echo "[client]" >> $root_option_file
-	echo "socket=$mysql_socket_file_path" >> $root_option_file
+	echo "socket=$MYSQL_SOCKET" >> $root_option_file
 	echo "user=root" >> $root_option_file
 	chmod 600 $root_option_file
 
@@ -61,10 +60,7 @@ SQL
 fi
 
 # Wait here until mysql is running
-echo "Waiting for server..."
-while [ ! -f "$mysqld_pid_file_path" -o ! -S "$mysql_socket_file_path" ]; do
-	sleep 1
-done
+wait_for_mysql
 
 # Check and upgrade mysql tables if necessary. This will return 0 if the upgrade
 # succeeded, in which case we need to restart mysql.
@@ -74,22 +70,20 @@ if [ $? -eq 0 ]; then
 	echo "Restarting mysql server after upgrade..."
 	$SNAP/support-files/mysql.server restart
 
-	echo "Waiting for server to come back after upgrade..."
-	while [ ! -f "$mysqld_pid_file_path" -o ! -S "$mysql_socket_file_path" ]; do
-        	sleep 1
-	done
+	# Wait for server to come back after upgrade
+	wait_for_mysql
 fi
 
 # If this was a new installation, wait until the server is all up and running
 # before saving off the nextcloud user's password. This way the presence of the
 # file can be used as a signal that mysql is ready to be used.
 if [ $new_install = true ]; then
-	echo "$nextcloud_password" > $nextcloud_password_file
+	mysql_set_nextcloud_password "$nextcloud_password"
 fi
 
 # Wait here until mysql exits (turn a forking service into simple). This is
 # only needed for Ubuntu Core 15.04, as 16.04 supports forking services.
-mysqld_pid=$(cat "$mysqld_pid_file_path")
-while kill -0 $mysqld_pid 2>/dev/null; do
+pid=$(mysql_pid)
+while kill -0 "$pid" 2>/dev/null; do
 	sleep 1
 done

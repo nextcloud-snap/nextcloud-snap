@@ -47,7 +47,7 @@ $CONFIG = array(
 'memcache.locking' => '\OC\Memcache\Redis',
 'memcache.local' => '\OC\Memcache\Redis',
 'redis' => array(
-    'host' => '/var/snap/'.$snap_name.'/current/redis/redis.sock',
+    'host' => getenv('REDIS_SOCKET'),
     'port' => 0,
 ),
 );

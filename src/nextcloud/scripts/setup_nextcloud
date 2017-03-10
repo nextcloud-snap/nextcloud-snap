@@ -26,8 +26,12 @@ else
 	# This is not a new installation, so we don't want to overwrite the config.
 	# However, we recently changed the location of sockets in the snap, so we
 	# need to make sure the config is using the new location.
-	sed -ri "s|('host'\s*=>\s*)'/var/snap/nextcloud/.*redis.sock'|\1'$REDIS_SOCKET'|" $NEXTCLOUD_CONFIG_DIR/config.php
-	sed -ri "s|('dbhost'\s*=>\s*)'localhost:/var/snap/nextcloud/.*mysql.sock'|\1'localhost:$MYSQL_SOCKET'|" $NEXTCLOUD_CONFIG_DIR/config.php
+	sed -ri "s|('host'\s*=>\s*)'/var/snap/.*redis.sock'|\1'$REDIS_SOCKET'|" $NEXTCLOUD_CONFIG_DIR/config.php
+	sed -ri "s|('dbhost'\s*=>\s*)'localhost:/var/snap/.*mysql.sock'|\1'localhost:$MYSQL_SOCKET'|" $NEXTCLOUD_CONFIG_DIR/config.php
+
+	# We'll also always copy over the autoconfig.php, since it's only used
+	# upon installation. Just in case they haven't done that yet.
+	cp -r $SNAP/htdocs/config/autoconfig.php $NEXTCLOUD_CONFIG_DIR/
 
 	# Also make sure we're using Redis for the memcache and file locking.
 	occ config:system:set redis host --value="$REDIS_SOCKET" --type=string

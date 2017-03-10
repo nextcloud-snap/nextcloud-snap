@@ -1,4 +1,7 @@
 v 11.0.2snap2
+  - mysql: fix socket location in root.ini.
+
+v 11.0.2snap1
   - boost: pull from github instead of sourceforge.
   - nextcloud: migrate old config to use new sockets.
   - nextcloud: update to 11.0.2.

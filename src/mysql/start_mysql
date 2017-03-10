@@ -57,6 +57,11 @@ SQL
 
 	# Now the root mysql user has a password. Save that as well.
 	echo "password=$root_password" >> $root_option_file
+else
+	# Okay, this isn't a new installation. However, we recently changed
+	# the location of MySQL's socket (11.0.2snap1). Make sure the root
+	# option file is updated to look there instead of the old location.
+	sed -ri "s|(socket\s*=\s*)/var/snap/.*mysql.sock|\1$MYSQL_SOCKET|" $root_option_file
 fi
 
 # Wait here until mysql is running

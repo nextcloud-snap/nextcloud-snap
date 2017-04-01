@@ -5,8 +5,8 @@ latest_stable_url="https://download.nextcloud.com/server/daily/latest-stable11.t
 
 rewrite_snapcraft_yaml()
 {
-	sed -ri "s|(source:\s+).*download.nextcloud.com.*$|\1$1|" snapcraft.yaml
-	sed -ri "s|(^version:\s+).*$|\1$2|" snapcraft.yaml
+	sed -ri "s|(source:\s+).*download.nextcloud.com.*$|\1$1|" snap/snapcraft.yaml
+	sed -ri "s|(^version:\s+).*$|\1$2|" snap/snapcraft.yaml
 }
 
 echo "Requesting build of latest master..."

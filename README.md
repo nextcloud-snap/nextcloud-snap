@@ -30,11 +30,8 @@ Upon visiting the Nextcloud installation for the first time, you'll be prompted
 for an admin username and password. After you provide that information you'll be
 logged in and able to create users, install apps, and upload files.
 
-Note that this snap includes a service that runs cron.php every 15 minutes, but
-Nextcloud doesn't currently expose the cron admin setting to autoconfig, so
-there's no way for the snap to change the setting from Ajax to Cron for you.
-You must do that manually in the admin interface if you want to take advantage
-of the performance improvements.
+Note that this snap includes a service that runs cron.php every 15 minutes,
+which will automatically change the cron admin setting to Cron for you.
 
 Also note that the interface providing the ability to access removable media is
 not automatically connected upon install, so if you'd like to use external

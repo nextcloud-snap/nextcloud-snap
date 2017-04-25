@@ -1,3 +1,7 @@
+v 11.0.2snap3
+  - php: upgrade to 7.0.18
+  - CI: make daily builds use snap/snapcraft.yaml
+
 v 11.0.2snap2
   - mysql: fix socket location in root.ini.
 

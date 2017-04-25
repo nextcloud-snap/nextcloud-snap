@@ -1,5 +1,5 @@
 name: nextcloud
-version: 11.0.2snap2
+version: 11.0.2snap3
 summary: Nextcloud Server
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -146,7 +146,7 @@ parts:
 
   php:
     plugin: php
-    source: http://us1.php.net/get/php-7.0.15.tar.bz2/from/this/mirror
+    source: http://us1.php.net/get/php-7.0.18.tar.bz2/from/this/mirror
     source-type: tar
     install-via: prefix
     configflags:

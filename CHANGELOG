@@ -1,3 +1,8 @@
+v 11.0.3snap1
+  - apache: disable HTTP methods TRACE and TRACK
+  - nextcloud: upgrade to 11.0.3
+  - yaml: verify integrity of components
+
 v 11.0.2snap3
   - php: upgrade to 7.0.18
   - CI: make daily builds use snap/snapcraft.yaml

@@ -1,5 +1,5 @@
 name: nextcloud
-version: 11.0.2snap3
+version: 11.0.3snap1
 summary: Nextcloud Server
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -89,6 +89,7 @@ parts:
   apache:
     plugin: apache
     source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.25.tar.bz2
+    source-checksum: sha1/bd6d138c31c109297da2346c6e7b93b9283993d2
 
     # The built-in Apache modules to enable
     modules:
@@ -133,7 +134,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.2.tar.bz2
+    source: https://download.nextcloud.com/server/releases/nextcloud-11.0.3.tar.bz2
+    source-checksum: sha256/28d5ee39f31c6be20f037ad2eb300272ad9bb72a7d428eb0152c7a3fde87d545
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -147,6 +149,7 @@ parts:
   php:
     plugin: php
     source: http://us1.php.net/get/php-7.0.18.tar.bz2/from/this/mirror
+    source-checksum: sha256/b20cc63d507032b39d8bb14cb64784e460b0e47997e90a8704b703bcbb233fd1
     source-type: tar
     install-via: prefix
     configflags:
@@ -193,6 +196,7 @@ parts:
   redis:
     plugin: redis
     source: http://download.redis.io/releases/redis-3.2.6.tar.gz
+    source-checksum: sha1/0c7bc5c751bdbc6fabed178db9cdbdd948915d1b
 
   redis-customizations:
     plugin: copy
@@ -223,6 +227,7 @@ parts:
   boost:
     plugin: copy
     source: https://github.com/kyrofa/boost_tarball/raw/master/boost_1_59_0.tar.gz
+    source-checksum: sha1/5123209db194d66d69a9cfa5af8ff473d5941d97
     files:
       '*': boost/
     prime:

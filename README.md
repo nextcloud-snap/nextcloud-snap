@@ -33,12 +33,36 @@ logged in and able to create users, install apps, and upload files.
 Note that this snap includes a service that runs cron.php every 15 minutes,
 which will automatically change the cron admin setting to Cron for you.
 
+
+### Removable media
+
 Also note that the interface providing the ability to access removable media is
 not automatically connected upon install, so if you'd like to use external
 storage (or otherwise use a device in `/media` for data), you need to give the
 snap permission to access removable media by connecting that interface:
 
     $ sudo snap connect nextcloud:removable-media
+
+
+### HTTP/HTTPS port configuration
+
+By default, the snap will listen on port 80. If you enable HTTPS, it will listen
+on both 80 and 443, and HTTP traffic will be redirected to HTTPS. But perhaps
+you're putting the snap behind a proxy of some kind, in which case you probably
+want to change those ports.
+
+If you'd like to change the HTTP port (say, to port 81), run:
+
+    $ sudo snap set nextcloud ports.http=81
+
+To change the HTTPS port (say, to port 444), run:
+
+    $ sudo snap set nextcloud ports.https=444
+
+Note that, assuming HTTPS is enabled, this will cause HTTP traffic to be
+redirected to port 444. You can specify both of these simultaneously as well:
+
+    $ sudo snap set nextcloud ports.http=81 ports.https=444
 
 
 ### Included CLI utilities

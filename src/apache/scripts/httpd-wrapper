@@ -20,4 +20,7 @@ else
 	echo "No certificates are active: using HTTP only"
 fi
 
+export HTTP_PORT="$(apache_http_port)"
+export HTTPS_PORT="$(apache_https_port)"
+
 httpd -d $SNAP $params $@

@@ -150,15 +150,6 @@ parts:
     prime:
       - -htdocs/apps/updatenotification
 
-  # libsmbclient is needed by the SMB PHP module but it depends upon python.
-  # Pulling in python via stage-packages conflicts with the python from the
-  # python plugin used in certbot, so we'll use the python plugin too to
-  # install libsmbclient.
-  libsmbclient:
-    plugin: python
-    python-version: python2
-    stage-packages: [libsmbclient]
-
   php:
     plugin: php
     source: http://us1.php.net/get/php-7.0.18.tar.bz2/from/this/mirror
@@ -195,7 +186,6 @@ parts:
       - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
-      - libsmbclient-dev
     prime:
      - -sbin/
      - -etc/
@@ -206,9 +196,6 @@ parts:
       # Build the redis PHP module
       - source: https://github.com/phpredis/phpredis.git
         source-branch: php7
-      # Build the php-smbclient module
-      - source: https://github.com/eduardok/libsmbclient-php.git
-        source-tag: 0.9.0
 
   redis:
     plugin: redis

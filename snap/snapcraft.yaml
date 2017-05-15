@@ -85,10 +85,6 @@ apps:
     command: manual-install
     plugs: [network, network-bind, removable-media]
 
-hooks:
-  configure:
-    plugs: [network, network-bind]
-
 parts:
   apache:
     plugin: apache
@@ -329,9 +325,3 @@ parts:
     stage-packages: [openssl]
     stage: [-etc/ssl]
     prime: [-etc/ssl]
-
-  hooks:
-    plugin: dump
-    source: src/hooks
-    organize:
-      '*': snap/hooks/

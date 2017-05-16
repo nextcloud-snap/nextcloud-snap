@@ -5,7 +5,8 @@ latest_stable_url="https://download.nextcloud.com/server/daily/latest-stable11.t
 
 rewrite_snapcraft_yaml()
 {
-	sed -ri "s|(source:\s+).*download.nextcloud.com.*$|\1$1|" snap/snapcraft.yaml
+	# Since we're rewriting the source, we need to also remove the source-checksum.
+        perl -0777 -i -pe "s|(.*source:\s+).*download.nextcloud.com.*?(\n.*?source-checksum:).*?\n|\1$1\2 ''\n|igs" snap/snapcraft.yaml
 	sed -ri "s|(^version:\s+).*$|\1$2|" snap/snapcraft.yaml
 }
 

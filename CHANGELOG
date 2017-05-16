@@ -1,3 +1,8 @@
+v 11.0.3snap2
+  - redis: upgrade to 3.2.8
+  - apache: remove weak 3DES SSL algorithms
+  - ci: don't verify checksum for daily builds
+
 v 11.0.3snap1
   - apache: disable HTTP methods TRACE and TRACK
   - nextcloud: upgrade to 11.0.3

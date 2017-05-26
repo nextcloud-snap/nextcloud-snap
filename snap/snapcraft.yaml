@@ -1,5 +1,5 @@
 name: nextcloud
-version: 11.0.3snap2
+version: 11.0.3snap3
 summary: Nextcloud Server
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -237,7 +237,7 @@ parts:
     plugin: cmake
     source: https://github.com/kyrofa/mysql-server.git
     source-type: git
-    source-branch: feature/support_no_setpriority
+    source-branch: mysql-5.7.18_support_no_setpriority
     after: [boost]
     configflags:
       - -DWITH_BOOST=$SNAPCRAFT_STAGE/boost

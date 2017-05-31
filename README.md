@@ -80,3 +80,26 @@ There are a few CLI utilities included:
 - `$SNAP_COMMON`
     - Nextcloud data
     - Nextcloud logs
+
+
+## Hacking
+
+If you change something in the snap, build it, install it, and you can run a
+suite of acceptance tests against it. The tests are written in ruby, using
+capybara and rspec. To run the tests, you first need to install a few
+dependencies:
+
+    $ sudo apt install gcc g++ make qt5-default libqt5webkit5-dev ruby-dev zlib1g-dev
+    $ gem install bundle
+    $ cd tests/
+    $ bundle install
+
+Make sure the snap has a user called "admin" with password "admin" (used for
+login tests):
+
+    $ sudo nextcloud.manual-install admin admin
+
+And finally, run the tests:
+
+    $ cd tests/
+    $ rake test

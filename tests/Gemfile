@@ -1,0 +1,16 @@
+source 'https://rubygems.org'
+
+# Test driver
+gem 'capybara'
+
+# Webdriver
+gem 'capybara-webkit'
+
+# Create xvfb from ruby
+gem 'headless'
+
+# Use nice acceptance tests DSL
+gem 'rspec'
+
+# Run tests nicely
+gem 'rake'

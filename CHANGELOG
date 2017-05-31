@@ -1,3 +1,7 @@
+v 11.0.3snap4
+  - php: update to 7.0.19
+  - ci: integrate with Circle CI
+
 v 11.0.3snap3
   - certbot: update to 0.14.1
   - mysql: update to 5.7.18

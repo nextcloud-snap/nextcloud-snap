@@ -1,3 +1,7 @@
+v 11.0.3snap5
+  - php: update to 7.0.20
+  - start building daily v12 in 12/edge channel
+
 v 11.0.3snap4
   - php: update to 7.0.19
   - ci: integrate with Circle CI

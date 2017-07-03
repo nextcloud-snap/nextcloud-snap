@@ -6,3 +6,4 @@ __pycache__/
 prime/
 stage/
 .travis/deploy_key
+snap/.snapcraft/

@@ -1,3 +1,7 @@
+v 11.0.3snap6
+  - mdns-publisher: use godeps to manage dependencies
+  - apache: update to 2.4.26
+
 v 11.0.3snap5
   - php: update to 7.0.20
   - start building daily v12 in 12/edge channel

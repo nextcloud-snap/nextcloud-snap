@@ -302,8 +302,9 @@ parts:
       src/mysql/utilities/*: utilities/
 
   mdns-publisher:
-    plugin: go
-    go-packages: [github.com/kyrofa/mdns-publisher]
+    plugin: godeps
+    source: https://github.com/kyrofa/mdns-publisher.git
+    go-importpath: github.com/kyrofa/mdns-publisher
 
   delay-on-failure:
     plugin: copy

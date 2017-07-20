@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
-export NEXTCLOUD_DATA_DIR=$SNAP_COMMON/nextcloud/data
+export NEXTCLOUD_DATA_DIR=/media/unix/nc_data
 
 nextcloud_is_configured()
 {

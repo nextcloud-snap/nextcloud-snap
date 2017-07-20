@@ -28,8 +28,11 @@ fi
 echo "done"
 
 # Tends to be between 30-50MB
-average_php_memory_requirement=50
+average_php_memory_requirement=30
 total_memory=$(mawk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo)
 export PHP_FPM_MAX_CHILDREN=$(($total_memory/$average_php_memory_requirement))
+export PHP_FPM_START_SERVERS=16
+export PHP_FPM_MIN_SPARE_SERVERS=8
+export PHP_FPM_MAX_SPARE_SERVERS=16
 
 php-fpm -R -F --fpm-config ${SNAP}/config/php/php-fpm.conf -c ${SNAP}/config/php

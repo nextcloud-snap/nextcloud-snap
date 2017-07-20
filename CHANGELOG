@@ -1,3 +1,7 @@
+v 11.0.3snap7
+  - php: update to 7.0.21
+  - apache: update to 2.4.27
+
 v 11.0.3snap6
   - mdns-publisher: use godeps to manage dependencies
   - apache: update to 2.4.26

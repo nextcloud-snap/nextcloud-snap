@@ -254,9 +254,13 @@ parts:
 
   mysql:
     plugin: cmake
-    source: https://github.com/kyrofa/mysql-server.git
-    source-branch: mysql-5.7.18_support_no_setpriority
-    after: [boost]
+    source: https://github.com/mysql/mysql-server.git
+    source-tag: mysql-5.7.22
+    source-depth: 1
+    override-pull: |
+      snapcraftctl pull
+      git apply $SNAPCRAFT_STAGE/support-compile-time-disabling-of-setpriority.patch
+    after: [boost, patches]
     configflags:
       - -DWITH_BOOST=$SNAPCRAFT_STAGE
       - -DWITH_INNODB_PAGE_CLEANER_PRIORITY=OFF
@@ -264,7 +268,6 @@ parts:
       - -DBUILD_CONFIG=mysql_release
       - -DWITH_UNIT_TESTS=OFF
       - -DWITH_EMBEDDED_SERVER=OFF
-      - -DWITH_EMBEDDED_SHARED_LIBRARY=OFF
       - -DWITH_ARCHIVE_STORAGE_ENGINE=OFF
       - -DWITH_BLACKHOLE_STORAGE_ENGINE=OFF
       - -DWITH_FEDERATED_STORAGE_ENGINE=OFF
@@ -314,6 +317,12 @@ parts:
   mysql-customizations:
     plugin: dump
     source: src/mysql/
+
+  patches:
+    source: src/patches
+    plugin: dump
+    prime:
+      - -*
 
   mdns-publisher:
     plugin: godeps

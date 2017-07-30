@@ -235,10 +235,11 @@ parts:
 
   mysql:
     plugin: cmake
-    source: https://github.com/kyrofa/mysql-server.git
+    source: https://github.com/mysql/mysql-server
     source-type: git
-    source-branch: mysql-5.7.18_support_no_setpriority
-    after: [boost]
+    source-tag: mysql-5.7.18
+    prepare: git apply $SNAPCRAFT_STAGE/support-compile-time-disabling-of-setpriority.patch
+    after: [boost, patches]
     configflags:
       - -DWITH_BOOST=$SNAPCRAFT_STAGE/boost
       - -DWITH_INNODB_PAGE_CLEANER_PRIORITY=OFF
@@ -300,6 +301,12 @@ parts:
       src/mysql/my.cnf: my.cnf
       src/mysql/mysql.server: support-files/
       src/mysql/utilities/*: utilities/
+
+  patches:
+    source: snap/patches
+    plugin: dump
+    prime:
+      - -*
 
   mdns-publisher:
     plugin: godeps

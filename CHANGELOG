@@ -1,3 +1,8 @@
+v 11.0.4snap1
+  - php: update to 7.0.22
+  - nextcloud: update to 11.0.4
+  - snapcraft.yaml: update summary
+
 v 11.0.3snap7
   - php: update to 7.0.21
   - apache: update to 2.4.27

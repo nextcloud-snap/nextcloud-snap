@@ -5,17 +5,33 @@ jobs:
     machine: true
     steps:
      - checkout
+
      - run:
+         # Build the snap
          command: |
            sudo apt update
            sudo apt install -y snapd
            docker run -v $(pwd):$(pwd) -e LC_ALL=C.UTF-8 -e LANG=C.UTF-8 -t ubuntu:xenial sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
+
      - run:
+         # Install the snap and create an admin user
          command: |
            sudo snap install *.snap --dangerous
-           sudo apt install gcc g++ make qt5-default libqt5webkit5-dev ruby-dev zlib1g-dev -y
-           sudo gem install bundle
-           cd tests
-           bundle install --deployment
            sudo nextcloud.manual-install admin admin
-           bundle exec rake test
+
+     - run:
+         # Install the test gems and run the tests
+         command: |
+           # Install dependencies for the gems
+           sudo apt install qt5-default libqt5webkit5-dev xvfb -y
+           # In order to use rvm, we need a login shell. We need to install
+           # Ruby v2.4.0 (the older version that is the default doesn't handle
+           # the redirection that we test)
+           bash --login -c '
+               rvm install 2.4.0
+               rvm use 2.4.0
+               cd tests
+               gem install bundler
+               bundle install --deployment
+               bundle exec rake test
+           '

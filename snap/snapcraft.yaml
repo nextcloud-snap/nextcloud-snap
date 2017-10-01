@@ -195,12 +195,12 @@ parts:
     extensions:
       # Build the redis PHP module
       - source: https://github.com/phpredis/phpredis.git
-        source-branch: php7
+        source-tag: 3.1.4
 
   redis:
     plugin: redis
-    source: http://download.redis.io/releases/redis-3.2.8.tar.gz
-    source-checksum: sha1/6780d1abb66f33a97aad0edbe020403d0a15b67f
+    source: http://download.redis.io/releases/redis-4.0.2.tar.gz
+    source-checksum: sha256/b1a0915dbc91b979d06df1977fe594c3fa9b189f1f3d38743a2948c9f7634813
 
   redis-customizations:
     plugin: copy

@@ -1,10 +1,12 @@
+require 'open-uri'
+require 'openssl'
+require 'timeout'
+
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara/rspec'
 require 'capybara-webkit'
 require 'headless'
-
-include Capybara::DSL
 
 Capybara.configure do | config |
 	# Set javascript driver to webkit (selenium is the default)
@@ -127,12 +129,71 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 
-	config.before(:all) do
-		@headless = Headless.new
-		@headless.start
+	config.include Capybara::DSL, :type => :feature
+
+	config.add_setting :headless
+
+	config.before(:suite) do
+		RSpec.configuration.headless = Headless.new
+		RSpec.configuration.headless.start
+	end
+
+	config.after(:suite) do
+		RSpec.configuration.headless.destroy
 	end
 
 	config.after(:all) do
-		@headless.destroy
+		# After each test, make sure the ports are reset
+		`sudo snap set nextcloud ports.http=80 ports.https=443`
+		expect($?.to_i).to eq 0
+
+		# Also make sure HTTPS is disabled
+		disable_https
+
+		# Make sure we're usin the normal, HTTP host again
+		Capybara.app_host = 'http://localhost'
+	end
+
+	def enable_https(port: nil)
+		`sudo nextcloud.enable-https self-signed`
+		expect($?.to_i).to eq 0
+		wait_for_nextcloud(https: true, port: port)
+	end
+
+	def disable_https
+		# Don't verify the output of this command: it will fail if
+		# HTTPS wasn't enabled, which will be the case sometimes.
+		`sudo nextcloud.disable-https`
+		wait_for_nextcloud
+	end
+
+	def wait_for_nextcloud(https: false, port: nil)
+		url = 'http://localhost'
+		if https
+			url = 'https://localhost'
+		end
+
+		uri = URI.parse(url)
+		if port
+			uri.port = port
+		end
+
+		success = false
+
+		begin
+			Timeout.timeout(30) do
+				while not success
+					begin
+						output = open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE})
+						success = output.readlines.join('').include? 'Nextcloud'
+					rescue Errno::ECONNREFUSED
+						# Do nothing: try again
+					end
+					sleep 1
+				end
+			end
+		rescue Timeout::Error
+			fail "Timed out trying to access Nextcloud: #{uri.to_s}"
+		end
 	end
 end

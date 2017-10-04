@@ -1,3 +1,9 @@
+v 11.0.5snap1
+  - redis: update to 4.0.2
+  - nextcloud: update to v11.0.5
+  - php: update to v7.0.23
+  - apache: support changing ports
+
 v 11.0.4snap1
   - php: update to 7.0.22
   - nextcloud: update to 11.0.4

@@ -42,9 +42,16 @@ storage (or otherwise use a device in `/media` for data), you need to give the
 snap permission to access removable media by connecting that interface:
 
     $ sudo snap connect nextcloud:removable-media
+    
+    
+### Configuration
+
+Beyond the typical Nextcloud configuration (either by using `nextcloud.occ` or
+editing `/var/snap/nextcloud/current/nextcloud/config/config.php`), the snap
+exposes extra configuration options via the `snap set` command.
 
 
-### HTTP/HTTPS port configuration
+#### HTTP/HTTPS port configuration
 
 By default, the snap will listen on port 80. If you enable HTTPS, it will listen
 on both 80 and 443, and HTTP traffic will be redirected to HTTPS. But perhaps
@@ -74,6 +81,21 @@ a proxy; you might notice it redirecting incorrectly. If this happens, override
 the automatic detection (including the port if necessary), e.g.:
 
     $ sudo nextcloud.occ config:set overwritehost --value="example.com:81"
+    
+
+#### PHP Memory limit configuration
+
+By default, PHP will use 128M as the memory limit. If you notice images not
+getting previews generated, or errors about memory exhaustion in your Nextcloud
+log, you may need to set this to a higher value.
+
+If you'd like to set the memory limit to a higher value (say, 512M), run:
+
+    $ sudo snap set nextcloud php.memory-limit=512M
+    
+To set it to be unlimited (not recommended), use -1:
+
+    $ sudo snap set nextcloud php.memory-limit=-1
 
 
 ### Included CLI utilities
@@ -125,7 +147,7 @@ capybara and rspec. To run the tests, you first need to install a few
 dependencies:
 
     $ sudo apt install gcc g++ make qt5-default libqt5webkit5-dev ruby-dev zlib1g-dev
-    $ gem install bundle
+    $ sudo gem install bundle
     $ cd tests/
     $ bundle install
 

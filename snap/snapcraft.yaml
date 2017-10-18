@@ -194,8 +194,8 @@ parts:
       sbin/php-fpm: bin/php-fpm
     extensions:
       # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis.git
-        source-tag: 3.1.4
+      - source: https://github.com/phpredis/phpredis/archive/3.1.4.tar.gz
+        source-checksum: sha256/656cab2eb93bd30f30701c1280707c60e5736c5420212d5d547ebe0d3f4baf71
 
   redis:
     plugin: redis

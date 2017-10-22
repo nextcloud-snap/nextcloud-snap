@@ -335,4 +335,4 @@ parts:
     plugin: dump
     source: src/hooks
     organize:
-      '*': snap/hooks/
+      'bin/': snap/hooks/

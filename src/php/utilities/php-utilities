@@ -1,10 +1,31 @@
 #!/bin/sh
 
+DEFAULT_MEMORY_LIMIT="128M"
 export PHP_FPM_PIDFILE="/tmp/pids/php-fpm.pid"
 export PHP_FPM_SOCKET="/tmp/sockets/php-fpm.sock"
 
 mkdir -p -m 750 "$(dirname $PHP_FPM_PIDFILE)"
 mkdir -p -m 750 "$(dirname $PHP_FPM_SOCKET)"
+
+restart_php_if_running()
+{
+	if php_is_running; then
+		# Restart PHP by stopping it and letting systemd start it again.
+		pid="$(php_pid)"
+		echo -n "Restarting PHP... "
+		output=$(kill -15 $pid 2>&1)
+		if [ $? -eq 0 ]; then
+			while kill -0 $pid 2>/dev/null; do
+				sleep 1
+			done
+			echo "done"
+		else
+			echo "error"
+			echo "$output"
+			return 1
+		fi
+	fi
+}
 
 php_is_running()
 {
@@ -30,4 +51,31 @@ php_pid()
 		echo "Unable to get PHP PID as it's not yet running" >&2
 		echo ""
 	fi
+}
+
+php_memory_limit()
+{
+	memory_limit="$(snapctl get php.memory-limit)"
+	if [ -z "$memory_limit" ]; then
+		memory_limit="$DEFAULT_MEMORY_LIMIT"
+		php_set_memory_limit "$memory_limit"
+		php_set_previous_memory_limit "$memory_limit"
+	fi
+
+	echo "$memory_limit"
+}
+
+php_set_memory_limit()
+{
+	snapctl set php.memory-limit="$1"
+}
+
+php_previous_memory_limit()
+{
+	echo "$(snapctl get private.php.memory-limit)"
+}
+
+php_set_previous_memory_limit()
+{
+	snapctl set private.php.memory-limit="$1"
 }

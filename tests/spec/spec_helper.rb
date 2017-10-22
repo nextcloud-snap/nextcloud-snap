@@ -147,6 +147,10 @@ RSpec.configure do |config|
 		`sudo snap set nextcloud ports.http=80 ports.https=443`
 		expect($?.to_i).to eq 0
 
+		# After each test, make sure the PHP memory limit is reset
+		`sudo snap set nextcloud php.memory-limit=128M`
+                expect($?.to_i).to eq 0
+
 		# Also make sure HTTPS is disabled
 		disable_https
 
@@ -188,6 +192,11 @@ RSpec.configure do |config|
 						success = output.readlines.join('').include? 'Nextcloud'
 					rescue Errno::ECONNREFUSED
 						# Do nothing: try again
+					rescue OpenURI::HTTPError => error
+						# Ignore 503s, wait for PHP to come up and try again
+						if error.io.status[0] != '503'
+							raise
+						end
 					end
 					sleep 1
 				end

@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# Supported keys:
+# - ports.http (integer)
+#   Port on which the snap will listen for HTTP traffic.
+#
+# - ports.https (integer)
+#   Port on which the snap will listen for HTTPS traffic (only applies if HTTPS
+#   is enabled).
+#
+# - php.memory-limit (string)
+#   Memory limit for PHP workers. String can include units, e.g. 32M is 32
+#   megabytes.
+
+. $SNAP/utilities/apache-utilities
+. $SNAP/utilities/php-utilities
+. $SNAP/utilities/hook-utilities
+
+handle_apache_port_config()
+{
+	http_port="$(apache_http_port)"
+	https_port="$(apache_https_port)"
+	previous_http_port="$(apache_previous_http_port)"
+	previous_https_port="$(apache_previous_https_port)"
+
+	# If no changes were requested, then there's nothing to do here.
+	if [ "$http_port" = "$previous_http_port" -a "$https_port" = "$previous_https_port" ]; then
+		return 0
+	fi
+
+	# Validate HTTP port
+	if ! expr "$http_port" : '^[0-9]\+$' > /dev/null; then
+		echo "\"$http_port\" is not a valid HTTP port" >&2
+		return 1
+	fi
+
+	# Validate HTTPS port
+	if ! expr "$https_port" : '^[0-9]\+$' > /dev/null; then
+		echo "\"$https_port\" is not a valid HTTPS port" >&2
+		return 2
+	fi
+
+	apache_set_http_port "$http_port"
+	apache_set_https_port "$https_port"
+
+	if ! restart_apache_if_running; then
+		return 3
+	fi
+
+	# Since snapctl only gives us new values, keep track of the current values
+	# so we know when they change.
+	apache_set_previous_http_port "$http_port"
+	apache_set_previous_https_port "$https_port"
+}
+
+handle_php_memory_limit()
+{
+	memory_limit="$(php_memory_limit)"
+	previous_memory_limit="$(php_previous_memory_limit)"
+
+	# If no changes were requested, then there's nothing to do here.
+	if [ "$memory_limit" = "$previous_memory_limit" ]; then
+		return 0
+	fi
+
+	# Validate memory limit. -1, raw bytes, and K/M/G shorthand allowed.
+	if ! expr "$memory_limit" : '^-\?[0-9]\+[KMG]\?$' > /dev/null; then
+		echo "\"$memory_limit\" is not a valid PHP memory limit" >&2
+		return 4
+	fi
+
+	php_set_memory_limit "$memory_limit"
+
+	if ! restart_php_if_running; then
+		return 5
+	fi
+
+	# Since snapctl only gives us new values, keep track of the current values
+	# so we know when they change.
+	php_set_previous_memory_limit "$memory_limit"
+}
+
+# Signal to services that the configure hook is running. Useful to ensure
+# services don't restart until the configuration transaction has completed.
+set_configure_hook_running
+trap 'set_configure_hook_not_running' EXIT
+
+handle_apache_port_config && handle_php_memory_limit

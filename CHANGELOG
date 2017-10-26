@@ -1,3 +1,8 @@
+v 11.0.5snap2
+  - php: support changing memory limit
+  - apache: update to 2.4.28
+  - phpredis: use 3.1.4 tarball and checksum
+
 v 11.0.5snap1
   - redis: update to 4.0.2
   - nextcloud: update to v11.0.5

@@ -1,5 +1,11 @@
 #!/bin/sh
 
+. $SNAP/utilities/hook-utilities
+
+# Make sure the configure hook isn't running (otherwise we'll run on old
+# configuration data)
+wait_for_configure_hook
+
 mkdir -p -m 750 $SNAP_DATA/apache/logs
 
 # Make sure Nextcloud is installed and running

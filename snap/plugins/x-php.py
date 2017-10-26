@@ -43,6 +43,9 @@ class PhpPlugin(autotools.AutotoolsPlugin):
                     'source-subdir': {
                         'type': 'string'
                     },
+                    'source-checksum': {
+                        'type': 'string'
+                    },
                     'configflags': {
                         'type': 'array',
                         'minitems': 1,

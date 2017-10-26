@@ -4,8 +4,13 @@
 . $SNAP/utilities/php-utilities
 . $SNAP/utilities/redis-utilities
 . $SNAP/utilities/nextcloud-utilities
+. $SNAP/utilities/hook-utilities
 
 mkdir -p -m 750 ${SNAP_DATA}/php
+
+# Make sure the configure hook isn't running (otherwise we'll run on old
+# configuration data)
+wait_for_configure_hook
 
 # We need to make sure mysql is running so we can run the migration process
 wait_for_mysql
@@ -31,5 +36,6 @@ echo "done"
 average_php_memory_requirement=50
 total_memory=$(mawk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo)
 export PHP_FPM_MAX_CHILDREN=$(($total_memory/$average_php_memory_requirement))
+export PHP_MEMORY_LIMIT="$(php_memory_limit)"
 
 php-fpm -R -F --fpm-config ${SNAP}/config/php/php-fpm.conf -c ${SNAP}/config/php

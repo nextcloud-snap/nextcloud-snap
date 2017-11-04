@@ -20,18 +20,97 @@ jobs:
            sudo nextcloud.manual-install admin admin
 
      - run:
-         # Install the test gems and run the tests
-         command: |
-           # Install dependencies for the gems
-           sudo apt install qt5-default libqt5webkit5-dev xvfb -y
-           # In order to use rvm, we need a login shell. We need to install
-           # Ruby v2.4.0 (the older version that is the default doesn't handle
-           # the redirection that we test)
-           bash --login -c '
-               rvm install 2.4.0
-               rvm use 2.4.0
-               cd tests
-               gem install bundler
-               bundle install --deployment
-               bundle exec rake test
-           '
+         # Run the tests
+         command: ./.circleci/runtests.sh
+
+  test-daily-master:
+    working_directory: ~/nextcloud-snap
+    machine: true
+    steps:
+      - checkout
+
+      - run:
+          # Install the snap and create an admin user
+          command: |
+            sudo apt update
+            sudo apt install -y snapd
+            sudo snap install --edge nextcloud
+            sudo nextcloud.manual-install admin admin
+
+      - run:
+          # Run the tests
+          command: ./.circleci/runtests.sh
+
+  test-daily-v12:
+    working_directory: ~/nextcloud-snap
+    machine: true
+    steps:
+      - checkout
+
+      - run:
+          # Install the snap and create an admin user
+          command: |
+            sudo apt update
+            sudo apt install -y snapd
+            sudo snap install nextcloud --channel=12/edge
+            sudo nextcloud.manual-install admin admin
+
+      - run:
+          # Run the tests
+          command: ./.circleci/runtests.sh
+
+  test-daily-v11:
+    working_directory: ~/nextcloud-snap
+    machine: true
+    steps:
+      - checkout
+
+      - run:
+          # Install the snap and create an admin user
+          command: |
+            sudo apt update
+            sudo apt install -y snapd
+            sudo snap install nextcloud --channel=11/edge
+            sudo nextcloud.manual-install admin admin
+
+      - run:
+          # Run the tests
+          command: ./.circleci/runtests.sh
+
+workflows:
+  version: 2
+  commit:
+    jobs: [build]
+
+  daily-master:
+    triggers:
+      - schedule:
+          # 0700 UTC == 0000 PSC
+          cron: "0 7 * * *"
+          filters:
+            branches:
+              only: develop
+
+    jobs: [test-daily-master]
+
+  daily-v12:
+    triggers:
+      - schedule:
+          # 0700 UTC == 0000 PSC
+          cron: "0 7 * * *"
+          filters:
+            branches:
+              only: develop
+
+    jobs: [test-daily-v12]
+
+  daily-v11:
+    triggers:
+      - schedule:
+          # 0700 UTC == 0000 PSC
+          cron: "0 7 * * *"
+          filters:
+            branches:
+              only: develop
+
+    jobs: [test-daily-v11]

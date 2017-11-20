@@ -152,8 +152,8 @@ parts:
 
   php:
     plugin: php
-    source: http://us2.php.net/get/php-7.0.23.tar.bz2/from/this/mirror
-    source-checksum: sha256/6fe94cefc7d2c60ee2c1648b977beed756ad9cd0a7e4ea8bb8cf521d9355a09c
+    source: http://us2.php.net/get/php-7.0.25.tar.bz2/from/this/mirror
+    source-checksum: sha256/95a24d96d126a196e1550e394182b43a6460cdd2026f1a77bef01e422415cc25
     source-type: tar
     install-via: prefix
     configflags:

@@ -1,3 +1,8 @@
+v 12.0.4snap1
+  - nextcloud: update to 12.0.4
+  - php: update to 7.0.25
+  - CI: test daily snaps on a daily basis
+
 v 11.0.5snap2
   - php: support changing memory limit
   - apache: update to 2.4.28

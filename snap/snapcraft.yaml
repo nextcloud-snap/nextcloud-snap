@@ -189,6 +189,9 @@ parts:
       # These are only included here until the OS snap stabilizes
       - libxml2
       - libpng12-0
+      # Needed by the SMB PHP module
+      - libsmbclient
+      - smbclient
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
@@ -198,6 +201,7 @@ parts:
       - libmcrypt-dev
       - libldap2-dev
       - libfreetype6-dev
+      - libsmbclient-dev
     prime:
      - -sbin/
      - -etc/
@@ -208,6 +212,9 @@ parts:
       # Build the redis PHP module
       - source: https://github.com/phpredis/phpredis/archive/3.1.4.tar.gz
         source-checksum: sha256/656cab2eb93bd30f30701c1280707c60e5736c5420212d5d547ebe0d3f4baf71
+      # Build the php-smbclient module
+      - source: https://github.com/eduardok/libsmbclient-php.git
+        source-tag: 0.9.0
 
   redis:
     plugin: redis

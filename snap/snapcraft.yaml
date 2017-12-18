@@ -173,6 +173,7 @@ parts:
       - --with-mcrypt
       - --enable-exif
       - --enable-intl
+      - --enable-pcntl
       - --with-jpeg-dir=/usr/lib
       - --disable-rpath
     stage-packages:

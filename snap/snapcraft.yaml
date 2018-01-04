@@ -176,6 +176,10 @@ parts:
       - --enable-pcntl
       - --with-jpeg-dir=/usr/lib
       - --disable-rpath
+
+      # Enable ldap.
+      - --with-libdir=lib/ARCH_TRIPLET
+      - --with-ldap
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2
@@ -187,6 +191,7 @@ parts:
       - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
+      - libldap2-dev
     prime:
      - -sbin/
      - -etc/

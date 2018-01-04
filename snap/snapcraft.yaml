@@ -164,6 +164,8 @@ parts:
       - --enable-ctype
       - --enable-mbstring
       - --enable-zip
+      - --with-libdir=
+      - --with-ldap
       - --with-pdo-mysql
       - --with-zlib
       - --with-gd
@@ -187,6 +189,8 @@ parts:
       - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
+      - libldap2-dev
+      - lsb-release
     prime:
      - -sbin/
      - -etc/

@@ -99,7 +99,75 @@ class PhpPlugin(autotools.AutotoolsPlugin):
         if os.path.exists(self.extensions_directory):
             shutil.rmtree(self.extensions_directory)
 
+    def __fix_libpath_getDist(self):
+        # Because my alternative to the missing "endif" is goto....
+        # Get the current distro.
+        distCheck_raw = subprocess.check_output("if [ \"`lsb_release -is`\" = \'Ubuntu\' ] ; then echo 1; else echo 0; fi;", shell=True)
+        distCheck = int(distCheck_raw.decode('utf-8'))
+        return distCheck
+
+    def __fix_libpath_getPath(self, distCheck):
+        # Because my alternative to the missing "endif" is goto....
+        # Get the current library path. (If needed)
+        if distCheck == 1:
+            # Ubuntu. We need to set the lib directory to the correct tupple for the system arch.
+            libPath_raw = subprocess.check_output("gcc -dumpmachine", shell=True)
+            libPath = ('lib/' + libPath_raw.decode('utf-8')).rstrip('\r\n')
+            return libPath
+        else:
+            # The default is to not modifiy anything.
+            libPath = ''
+            return libPath
+
+    def __fix_libpath_fixFlag(self, flag, libPath, count):
+        # Check for the correct flag and fix it if found.
+        if "--with-libdir=" in flag:
+            # Got a match fix the flag.
+            fixed_flag = '--with-libdir=' + libPath
+            logger.info('Fixing libdir flag at configflag index ' + str(count) + ' to: \'' + fixed_flag + '\'')
+            del self.options.configflags[count]
+            self.options.configflags.insert(count, fixed_flag)
+
+    def __fix_libpath_fixFlag_loop(self, libPath):
+        # Create a counter.
+        count = 0
+
+        # Check for pre-existing flags.
+        for flag in self.options.configflags:
+            self.__fix_libpath_fixFlag(flag, libPath, count)
+
+            # Increment count.
+            count = count + 1
+
+    def __fix_library_path(self):
+        # Set up the vars.
+        libPath = ''
+        distCheck = 0
+
+        # Get the current library path.
+        distCheck = self.__fix_libpath_getDist()
+        libPath = self.__fix_libpath_getPath(distCheck)
+
+        # Check to see if we need to continue. (We abort if distCheck is zero.)
+        if not distCheck == 0:
+            logger.info('Modifications to --with-libdir flag may be required.')
+            if not libPath == "":
+                if self.options.configflags:
+                    logger.info('Checking configflags....')
+
+                    # Call loop function.
+                    self.__fix_libpath_fixFlag_loop(libPath)
+                else: # self.options.configflags
+                    logger.info('No configflags defined???')
+            else: #not libPath == ""
+                logger.info('No libPath defined, cannot fix --with-libdir flag without it. The build may fail.')
+        else: # not distCheck == 0
+            logger.info('No modifications to --with-libdir flag required.')
+
     def build(self):
+        # Check for a broken libpath.
+        self.__fix_library_path()
+
         super().build()
 
         if self.extensions:

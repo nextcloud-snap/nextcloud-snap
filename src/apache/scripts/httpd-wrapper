@@ -20,6 +20,13 @@ else
 	echo "No certificates are active: using HTTP only"
 fi
 
+# If no listen address is specified, listen on all IPv4 addresses (0.0.0.0)
+if [ $(apache_listen_address) ]; then
+    export LISTEN_ADDRESS="$(apache_listen_address)"
+else
+    export LISTEN_ADDRESS="0.0.0.0"
+fi
+
 export HTTP_PORT="$(apache_http_port)"
 export HTTPS_PORT="$(apache_https_port)"
 

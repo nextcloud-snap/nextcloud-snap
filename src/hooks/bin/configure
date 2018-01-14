@@ -16,6 +16,33 @@
 . $SNAP/utilities/php-utilities
 . $SNAP/utilities/hook-utilities
 
+handle_apache_listen_address_config()
+{
+    listen_address="$(apache_listen_address)"
+    
+    # If no Listen address is submitted, then nothing to be done
+    if [ -z "$listen_address" ]; then
+        return 0
+    fi
+    
+    # Validate IP address using basic IPv4 regex
+    valid_ip4=$(echo $listen_address | awk -F"\." '$0 ~ /^([0-9]{1,3}\.){3}[0-9]{1,3}$/ && $1 <=255 && $2 <= 255 && $3 <= 255 && $4 <= 254' 2>/dev/null)
+
+    # Validate IP address using basic IPv6 regex
+    #valid_ip6=$(echo $listen_address | awk '$0 ~ /^([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{1,4}$/' 2>/dev/null)
+
+    if [ $valid_ip4 ];then
+        apache_set_listen_address "$listen_address"
+    else
+        echo "\"$listen_address\" is not a valid IP address" >&2
+        return 0
+    fi
+    
+    if ! restart_apache_if_running; then
+		return 6
+	fi
+}
+
 handle_apache_port_config()
 {
 	http_port="$(apache_http_port)"
@@ -40,6 +67,7 @@ handle_apache_port_config()
 		return 2
 	fi
 
+    
 	apache_set_http_port "$http_port"
 	apache_set_https_port "$https_port"
 
@@ -85,4 +113,4 @@ handle_php_memory_limit()
 set_configure_hook_running
 trap 'set_configure_hook_not_running' EXIT
 
-handle_apache_port_config && handle_php_memory_limit
+handle_apache_listen_address_config && handle_apache_port_config && handle_php_memory_limit

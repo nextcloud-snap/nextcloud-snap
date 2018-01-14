@@ -52,6 +52,21 @@ apache_pid()
 	fi
 }
 
+apache_listen_address()
+{
+    address="$(snapctl get listen-address)"
+    if [ -z $address ]; then
+        address=""
+    else
+        echo "$address"
+    fi
+}
+
+apache_set_listen_address()
+{
+    snapctl set listen-address="$1"
+}
+
 apache_http_port()
 {
 	port="$(snapctl get ports.http)"

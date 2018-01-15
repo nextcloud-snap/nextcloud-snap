@@ -175,6 +175,7 @@ parts:
       - --enable-intl
       - --enable-pcntl
       - --with-jpeg-dir=/usr/lib
+      - --with-freetype-dir=/usr/lib
       - --disable-rpath
 
       # Enable ldap.
@@ -192,6 +193,7 @@ parts:
       - libbz2-dev
       - libmcrypt-dev
       - libldap2-dev
+      - libfreetype6-dev
     prime:
      - -sbin/
      - -etc/

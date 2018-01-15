@@ -51,6 +51,18 @@ editing `/var/snap/nextcloud/current/nextcloud/config/config.php`), the snap
 exposes extra configuration options via the `snap set` command.
 
 
+#### Listen address configuration
+
+By default, the snap will listen on all IPv4 addresses (0.0.0.0) enabled on your system.
+If you wish to put your snap behind a reverse proxy, you can do so by e.g. configuring the snap
+to listen to the loopback interface at IP address 127.0.0.1 and then have the reverse proxy server
+forward all connections from the outside network to that IP address.
+
+To change the listening address for the nextcloud snap, you run:
+
+    $ sudo snap set nextcloud listen-address=127.0.0.1
+
+
 #### HTTP/HTTPS port configuration
 
 By default, the snap will listen on port 80. If you enable HTTPS, it will listen

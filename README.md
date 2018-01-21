@@ -62,6 +62,10 @@ To change the listening address for the nextcloud snap, you run:
 
     $ sudo snap set nextcloud listen-address=127.0.0.1
 
+If you wish to have your nextcloud snap listening to the IPv6 loopback address, you would do:
+
+    $ sudo snap set nextcloud listen-address=::1
+
 
 #### HTTP/HTTPS port configuration
 

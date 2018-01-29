@@ -1,5 +1,5 @@
 name: nextcloud
-version: 12.0.4snap1
+version: 12.0.4snap2
 summary: Nextcloud Server - A safe home for all your data
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -152,8 +152,8 @@ parts:
 
   php:
     plugin: php
-    source: http://us2.php.net/get/php-7.0.25.tar.bz2/from/this/mirror
-    source-checksum: sha256/95a24d96d126a196e1550e394182b43a6460cdd2026f1a77bef01e422415cc25
+    source: http://us2.php.net/get/php-7.1.13.tar.bz2/from/this/mirror
+    source-checksum: sha256/35fda51d2d44600940185fd5818d336a79e77ab3c98e2bd075091f2f91cf98a1
     source-type: tar
     install-via: prefix
     configflags:
@@ -173,8 +173,14 @@ parts:
       - --with-mcrypt
       - --enable-exif
       - --enable-intl
+      - --enable-pcntl
       - --with-jpeg-dir=/usr/lib
+      - --with-freetype-dir=/usr/lib
       - --disable-rpath
+
+      # Enable ldap.
+      - --with-libdir=lib/ARCH_TRIPLET
+      - --with-ldap
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2
@@ -186,6 +192,8 @@ parts:
       - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
+      - libldap2-dev
+      - libfreetype6-dev
     prime:
      - -sbin/
      - -etc/

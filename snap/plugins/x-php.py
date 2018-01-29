@@ -99,7 +99,19 @@ class PhpPlugin(autotools.AutotoolsPlugin):
         if os.path.exists(self.extensions_directory):
             shutil.rmtree(self.extensions_directory)
 
+    def _replace_arch_triplet(self):
+        pattern = re.compile(r'ARCH_TRIPLET')
+
+        old_configflags = self.options.configflags
+        self.options.configflags = []
+        for flag in old_configflags:
+            self.options.configflags.append(
+                pattern.sub(self.project.arch_triplet, flag))
+
     def build(self):
+        # Replace ARCH_TRIPLET in options
+        self._replace_arch_triplet()
+
         super().build()
 
         if self.extensions:

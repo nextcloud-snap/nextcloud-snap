@@ -1,3 +1,6 @@
+v 12.0.5snap1
+  - nextcloud: update to 12.0.5
+
 v 12.0.4snap2
   - php: add freetype support
   - apache: remove extra semicolon from hsts header

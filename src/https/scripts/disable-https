@@ -13,6 +13,6 @@ if certificates_are_active; then
 	echo "done"
 	restart_apache_if_running
 else
-	echo "HTTPS doesn't seem enabled"
+	echo "HTTPS doesn't seem to be enabled"
 	exit 1
 fi

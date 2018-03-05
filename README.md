@@ -151,6 +151,11 @@ dependencies:
     $ cd tests/
     $ bundle install
 
+Additionally, if you do not have X configured, install the following for a
+'fake' X server.
+
+    $ sudo apt install xvfb
+
 Make sure the snap has a user called "admin" with password "admin" (used for
 login tests):
 

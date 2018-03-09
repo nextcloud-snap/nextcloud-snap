@@ -1,3 +1,9 @@
+v 12.0.5snap2
+  - php: update to 7.1.15
+  - docs: add xvfb to test dependencies in README
+  - ci: build daily v13 snaps
+  - tests: update all gems
+
 v 12.0.5snap1
   - nextcloud: update to 12.0.5
 

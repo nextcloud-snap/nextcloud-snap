@@ -80,7 +80,7 @@ be unable to verify ownership of your domain and will not grant certificates.
 a proxy; you might notice it redirecting incorrectly. If this happens, override
 the automatic detection (including the port if necessary), e.g.:
 
-    $ sudo nextcloud.occ config:set overwritehost --value="example.com:81"
+    $ sudo nextcloud.occ config:system.set overwritehost --value="example.com:81"
     
 
 #### PHP Memory limit configuration

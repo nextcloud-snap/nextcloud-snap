@@ -14,4 +14,4 @@ fi
 wait_for_php
 wait_for_nextcloud_to_be_configured
 
-php -c $SNAP/config/php $SNAP/htdocs/occ "$*"
+php -c $SNAP/config/php $SNAP/htdocs/occ "$@"

@@ -92,8 +92,15 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.29.tar.bz2
-    source-checksum: sha256/777753a5a25568a2a27428b2214980564bc1c38c1abf9ccc7630b639991f7f00
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.33.tar.bz2
+    source-checksum: sha256/de02511859b00d17845b9abdd1f975d5ccb5d0b280c567da5bf2ad4b70846f05
+
+    override-build: |
+      # For some reason, all directories in (and after) 2.4.32 are setgid.
+      # Reported as https://bz.apache.org/bugzilla/show_bug.cgi?id=62298
+      # Work around by unsetting setgid. FIXME: Remove when bug is fixed.
+      find . -perm -g+s -exec chmod g-s {} \;
+      snapcraftctl build
 
     # The built-in Apache modules to enable
     modules:
@@ -267,6 +274,7 @@ parts:
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
+      - -COPYING
     prime:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server

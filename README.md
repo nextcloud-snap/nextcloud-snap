@@ -42,8 +42,8 @@ storage (or otherwise use a device in `/media` for data), you need to give the
 snap permission to access removable media by connecting that interface:
 
     $ sudo snap connect nextcloud:removable-media
-    
-    
+
+
 ### Configuration
 
 Beyond the typical Nextcloud configuration (either by using `nextcloud.occ` or
@@ -81,7 +81,7 @@ a proxy; you might notice it redirecting incorrectly. If this happens, override
 the automatic detection (including the port if necessary), e.g.:
 
     $ sudo nextcloud.occ config:set overwritehost --value="example.com:81"
-    
+
 
 #### PHP Memory limit configuration
 
@@ -92,7 +92,7 @@ log, you may need to set this to a higher value.
 If you'd like to set the memory limit to a higher value (say, 512M), run:
 
     $ sudo snap set nextcloud php.memory-limit=512M
-    
+
 To set it to be unlimited (not recommended), use -1:
 
     $ sudo snap set nextcloud php.memory-limit=-1

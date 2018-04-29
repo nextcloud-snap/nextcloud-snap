@@ -12,7 +12,7 @@ apps:
   # Apache daemon
   apache:
     command: run-httpd -k start -DFOREGROUND
-    stop-command: run-httpd -k stop
+    stop-command: httpd-wrapper -k stop
     daemon: simple
     restart-condition: always
     plugs: [network, network-bind]

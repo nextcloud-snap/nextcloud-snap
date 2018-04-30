@@ -1,5 +1,5 @@
 name: nextcloud
-version: 12.0.5snap2
+version: 12.0.5snap3
 summary: Nextcloud Server - A safe home for all your data
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -12,7 +12,7 @@ apps:
   # Apache daemon
   apache:
     command: run-httpd -k start -DFOREGROUND
-    stop-command: run-httpd -k stop
+    stop-command: httpd-wrapper -k stop
     daemon: simple
     restart-condition: always
     plugs: [network, network-bind]
@@ -92,8 +92,15 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.28.tar.bz2
-    source-checksum: sha256/c1197a3a62a4ab5c584ab89b249af38cf28b4adee9c0106b62999fd29f920666
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.33.tar.bz2
+    source-checksum: sha256/de02511859b00d17845b9abdd1f975d5ccb5d0b280c567da5bf2ad4b70846f05
+
+    override-build: |
+      # For some reason, all directories in (and after) 2.4.32 are setgid.
+      # Reported as https://bz.apache.org/bugzilla/show_bug.cgi?id=62298
+      # Work around by unsetting setgid. FIXME: Remove when bug is fixed.
+      find . -perm -g+s -exec chmod g-s {} \;
+      snapcraftctl build
 
     # The built-in Apache modules to enable
     modules:
@@ -130,11 +137,8 @@ parts:
       - $exclude
 
   apache-customizations:
-    plugin: copy
-    files:
-      src/apache/scripts/*: bin/
-      src/apache/conf/*: conf/
-      src/apache/utilities/*: utilities/
+    plugin: dump
+    source: src/apache/
 
   nextcloud:
     plugin: dump
@@ -152,8 +156,8 @@ parts:
 
   php:
     plugin: php
-    source: http://us2.php.net/get/php-7.1.15.tar.bz2/from/this/mirror
-    source-checksum: sha256/e117a54738e9485de5fc75673d39dbe937dd87f0f9cc9e281960ef9b961adcbd
+    source: http://us2.php.net/get/php-7.1.16.tar.bz2/from/this/mirror
+    source-checksum: sha256/348e2af9c7c0f327a57a972674078777dfde189e2598acbcb8618b9645b0e7e5
     source-type: tar
     install-via: prefix
     configflags:
@@ -211,48 +215,50 @@ parts:
     source-checksum: sha256/b1a0915dbc91b979d06df1977fe594c3fa9b189f1f3d38743a2948c9f7634813
 
   redis-customizations:
-    plugin: copy
-    files:
-      src/redis/config/*: config/redis/
-      src/redis/scripts/*: bin/
-      src/redis/utilities/*: utilities/
+    plugin: dump
+    source: src/redis/
+    organize:
+      config/*: config/redis/
 
   # Copy over our PHP configuration file.
   php-customizations:
-    plugin: copy
-    files:
-      src/php/config/*: config/php/
-      src/php/scripts/*: bin/
-      src/php/utilities/*: utilities/
+    plugin: dump
+    source: src/php/
+    organize:
+      config/*: config/php/
     stage-packages: [mawk]
 
   # Copy over our Nextcloud configuration files
   nextcloud-customizations:
-    plugin: copy
-    files:
-      src/nextcloud/config/*: htdocs/config/
-      src/nextcloud/scripts/*: bin/
-      src/nextcloud/utilities/*: utilities/
+    plugin: dump
+    source: src/nextcloud/
+    organize:
+      config/: htdocs/config/
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.
   boost:
-    plugin: copy
+    plugin: dump
     source: https://github.com/kyrofa/boost_tarball/raw/master/boost_1_59_0.tar.gz
     source-checksum: sha1/5123209db194d66d69a9cfa5af8ff473d5941d97
-    files:
-      '*': boost/
+    # When building MySQL, the headers in the source directory 'boost/' are
+    # required. Previously, using the 'copy' plugin, the whole archive was put
+    # under 'boost/', making the headers reside in 'boost/boost/'. Due to a bug,
+    # we now only stage the 'boost/' directory without moving it.
+    #
+    # Bug: https://bugs.launchpad.net/snapcraft/+bug/1757093
+    stage:
+      - boost/
     prime:
       - -*
 
   mysql:
     plugin: cmake
     source: https://github.com/kyrofa/mysql-server.git
-    source-type: git
     source-branch: mysql-5.7.18_support_no_setpriority
     after: [boost]
     configflags:
-      - -DWITH_BOOST=$SNAPCRAFT_STAGE/boost
+      - -DWITH_BOOST=$SNAPCRAFT_STAGE
       - -DWITH_INNODB_PAGE_CLEANER_PRIORITY=OFF
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
@@ -274,6 +280,7 @@ parts:
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
+      - -COPYING
     prime:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
@@ -305,13 +312,8 @@ parts:
 
   # Copy over our MySQL scripts
   mysql-customizations:
-    plugin: copy
-    files:
-      # This one is what creates the initial database and account for Nextcloud.
-      src/mysql/start_mysql: bin/
-      src/mysql/my.cnf: my.cnf
-      src/mysql/mysql.server: support-files/
-      src/mysql/utilities/*: utilities/
+    plugin: dump
+    source: src/mysql/
 
   mdns-publisher:
     plugin: godeps
@@ -319,9 +321,8 @@ parts:
     go-importpath: github.com/kyrofa/mdns-publisher
 
   delay-on-failure:
-    plugin: copy
-    files:
-      src/delay-on-failure/delay-on-failure: bin/
+    plugin: dump
+    source: src/delay-on-failure/
 
   certbot-nextcloud-plugin:
     plugin: python
@@ -331,16 +332,14 @@ parts:
     python-packages: [cffi]
 
   setup-https:
-    plugin: copy
-    files:
-      src/https/scripts/*: bin/
-      src/https/utilities/*: utilities/
+    plugin: dump
+    source: src/https/
     stage-packages: [openssl]
     stage: [-etc/ssl]
     prime: [-etc/ssl]
 
   hooks:
     plugin: dump
-    source: src/hooks
+    source: src/hooks/
     organize:
-      'bin/': snap/hooks/
+      bin/: snap/hooks/

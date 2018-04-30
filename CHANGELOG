@@ -1,3 +1,10 @@
+v 11.0.7snap1
+  - apache: stop waiting for services when stopping
+  - php: update to 7.1.16
+  - apache: upgrade to 2.4.33
+  - occ: add apices and use "$@" to pass arguments
+  - nextcloud: update to 11.0.7
+
 v 11.0.6snap1
   - php: enable pcntl
   - nextcloud: update to 11.0.6

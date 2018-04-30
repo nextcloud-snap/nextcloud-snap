@@ -17,6 +17,9 @@ This Nextcloud snap is available in the store for release series 16 (e.g. Ubuntu
 
     $ sudo snap install nextcloud
 
+There are a [number of releases available][1]. By default you'll get the newest
+stable one, but you may be interested in others.
+
 
 ## How to use
 
@@ -80,7 +83,7 @@ be unable to verify ownership of your domain and will not grant certificates.
 a proxy; you might notice it redirecting incorrectly. If this happens, override
 the automatic detection (including the port if necessary), e.g.:
 
-    $ sudo nextcloud.occ config:set overwritehost --value="example.com:81"
+    $ sudo nextcloud.occ config:system:set overwritehost --value="example.com:81"
 
 
 #### PHP Memory limit configuration
@@ -165,3 +168,5 @@ And finally, run the tests:
 
     $ cd tests/
     $ rake test
+
+[1]: https://github.com/nextcloud/nextcloud-snap/wiki/Release-strategy

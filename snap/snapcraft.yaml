@@ -117,6 +117,7 @@ parts:
       - alias
       - ssl
       - socache_shmcb
+      - mod_http2
 
     filesets:
       exclude:

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+. $SNAP/utilities/php-utilities
+
+export PHP_MEMORY_LIMIT="$(php_memory_limit)"
+
+php -c $SNAP/config/php "$@"

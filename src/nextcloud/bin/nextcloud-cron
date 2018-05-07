@@ -10,6 +10,6 @@ done
 echo "done"
 
 while true; do
-	php -c $SNAP/config/php $SNAP/htdocs/cron.php
+	run-php $SNAP/htdocs/cron.php
 	sleep 15m
 done

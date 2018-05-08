@@ -1,8 +1,11 @@
 #!/bin/sh
 
-. $SNAP/utilities/php-utilities
-. $SNAP/utilities/mysql-utilities
-. $SNAP/utilities/nextcloud-utilities
+# shellcheck source=src/php/utilities/php-utilities
+. "$SNAP/utilities/php-utilities"
+# shellcheck source=src/mysql/utilities/mysql-utilities
+. "$SNAP/utilities/mysql-utilities"
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
 
 COMMAND="nextcloud.manual-install"
 
@@ -36,7 +39,7 @@ if [ $# != 2 ]; then
 	exit 1
 fi
 
-if [ $(id -u) -ne 0 ]; then
+if [ "$(id -u)" -ne 0 ]; then
 	echo "This utility needs to run as root"
 	exit 1
 fi

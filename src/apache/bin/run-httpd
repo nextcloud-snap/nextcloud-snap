@@ -1,17 +1,18 @@
 #!/bin/sh
 
-. $SNAP/utilities/hook-utilities
+# shellcheck source=src/hooks/utilities/hook-utilities
+. "$SNAP/utilities/hook-utilities"
 
 # Make sure the configure hook isn't running (otherwise we'll run on old
 # configuration data)
 wait_for_configure_hook
 
-mkdir -p -m 750 $SNAP_DATA/apache/logs
+mkdir -p "$SNAP_DATA/apache/logs"
+chmod 750 "$SNAP_DATA/apache/logs"
 
 # Make sure Nextcloud is installed and running
 echo "Making sure nextcloud is setup..."
-setup_nextcloud
-if [ $? -ne 0 ]; then
+if ! setup_nextcloud; then
 	echo "Failed to setup nextcloud"
         exit 1
 fi
@@ -23,9 +24,9 @@ echo "All set! Running httpd..."
 # Rewrite live cert symlinks that aren't using the current symlink.
 # FIXME: Remove this migration once epochs and upgrade hooks are available.
 if certificates_are_active; then
-	live_basename="$(basename $(realpath $LIVE_CERTS_DIRECTORY))"
-	self_signed_basename="$(basename $SELF_SIGNED_DIRECTORY)"
-	custom_basename="$(basename $CUSTOM_DIRECTORY)"
+	live_basename="$(basename "$(realpath "$LIVE_CERTS_DIRECTORY")")"
+	self_signed_basename="$(basename "$SELF_SIGNED_DIRECTORY")"
+	custom_basename="$(basename "$CUSTOM_DIRECTORY")"
 	if [ "$live_basename" = "$self_signed_basename" ]; then
 		activate_self_signed_certificate
 	elif [ "$live_basename" = "$custom_basename" ]; then
@@ -35,4 +36,4 @@ if certificates_are_active; then
 	fi
 fi
 
-httpd-wrapper $@
+httpd-wrapper "$@"

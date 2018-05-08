@@ -4,22 +4,24 @@ export MYSQL_PIDFILE="/tmp/pids/mysql.pid"
 export MYSQL_SOCKET="/tmp/sockets/mysql.sock"
 export NEXTCLOUD_PASSWORD_FILE="$SNAP_DATA/mysql/nextcloud_password"
 
-mkdir -p -m 750 "$(dirname $MYSQL_PIDFILE)"
-mkdir -p -m 750 "$(dirname $MYSQL_SOCKET)"
+mkdir -p "$(dirname "$MYSQL_PIDFILE")"
+mkdir -p "$(dirname "$MYSQL_SOCKET")"
+chmod 750 "$(dirname "$MYSQL_PIDFILE")"
+chmod 750 "$(dirname "$MYSQL_SOCKET")"
 
 mysql_is_running()
 {
-	[ -f "$MYSQL_PIDFILE" -a -S "$MYSQL_SOCKET" ]
+	[ -f "$MYSQL_PIDFILE" ] && [ -S "$MYSQL_SOCKET" ]
 }
 
 wait_for_mysql()
 {
 	if ! mysql_is_running; then
-		echo -n "Waiting for MySQL... "
+		printf "Waiting for MySQL... "
 		while ! mysql_is_running; do
 			sleep 1
 		done
-		echo "done"
+		printf "done\n"
 	fi
 }
 

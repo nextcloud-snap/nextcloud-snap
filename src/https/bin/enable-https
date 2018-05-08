@@ -1,6 +1,7 @@
 #!/bin/sh
 
-. $SNAP/utilities/https-utilities
+# shellcheck source=src/https/utilities/https-utilities
+. "$SNAP/utilities/https-utilities"
 
 COMMAND="nextcloud.enable-https"
 
@@ -87,7 +88,8 @@ handle_lets_encrypt()
 	echo ""
 
 	while true; do
-		read -p "Have you met these requirements? (y/n) " answer
+		printf "Have you met these requirements? (y/n) "
+		read -r answer
 		case $answer in
 			[Yy]* ) break;;
 			[Nn]* ) exit;;
@@ -95,27 +97,30 @@ handle_lets_encrypt()
 		esac
 	done
 
-	read -p "Please enter an email address (for urgent notices or key recovery): " email
+	printf "Please enter an email address (for urgent notices or key recovery): "
+	read -r email
 
 	domains=""
-	read -p "Please enter your domain name(s) (space-separated): " answer
+	printf "Please enter your domain name(s) (space-separated): "
+	read -r answer
 	for domain in $answer; do
 		domains="$domains -d $domain"
 	done
 
-	echo -n "Attempting to obtain certificates... "
-	output=$(run_certbot certonly $extra_params \
-	         --authenticator nextcloud:webroot \
-	         --nextcloud:webroot-path $CERTBOT_DIRECTORY \
-	         --rsa-key-size 4096 \
-	         --email $email \
-	         --non-interactive \
-	         --agree-tos \
-	         --force-renewal \
-	         $domains 2>&1)
-	if [ $? -ne 0 ]; then
-		echo "error running certbot:" >&2
-		echo "" >&2
+	printf "Attempting to obtain certificates... "
+	# Building CLI commands, so we don't WANT to quote some of these (they need
+	# to be separated by whitespace): disable the check
+	# shellcheck disable=SC2086
+	if ! output="$(run_certbot certonly $extra_params \
+	             --authenticator nextcloud:webroot \
+	             --nextcloud:webroot-path "$CERTBOT_DIRECTORY" \
+	             --rsa-key-size 4096 \
+	             --email "$email" \
+	             --non-interactive \
+	             --agree-tos \
+	             --force-renewal \
+	             $domains 2>&1)"; then
+		printf "error running certbot:\n\n" >&2
 		echo "$output" >&2
 		exit 1
 	fi
@@ -150,15 +155,14 @@ handle_self_signed()
 		esac
 	done
 
-	echo -n "Generating key and self-signed certificate... "
-	output=$(generate_self_signed_certificate 2>&1)
-	if [ $? -ne 0 ]; then
-		echo "error:" >&2
+	printf "Generating key and self-signed certificate... "
+	if ! output="$(generate_self_signed_certificate 2>&1)"; then
+		printf "error:\n" >&2
 		echo "$output" >&2
 		exit 1
 	fi
 
-	echo "done"
+	printf "done\n"
 	activate_self_signed_certificate
 }
 
@@ -202,8 +206,8 @@ handle_custom()
 	shift $((OPTIND-1))
 
 	if [ $# -ne 3 ]; then
-		echo -n "This subcommand requires three positional parameters: " >&2
-		echo "<cert> <key> <chain>" >&2
+		printf "This subcommand requires three positional parameters: " >&2
+		printf "<cert> <key> <chain>\n" >&2
 		exit 1
 	fi
 
@@ -211,20 +215,20 @@ handle_custom()
 	private_key=$2
 	chain=$3
 
-	echo -n "Installing custom certificate... "
-	output=$(install_custom_certificate \
-	         $certificate $private_key $chain $enable_hsts 2>&1)
-	if [ $? -ne 0 ]; then
+	printf "Installing custom certificate... "
+	if ! output="$(install_custom_certificate \
+	               "$certificate" "$private_key" "$chain" \
+	               "$enable_hsts" 2>&1)"; then
 		echo "error:" >&2
 		echo "$output" >&2
 		exit 1
 	fi
 
-	echo "done"
+	printf "done\n"
 	activate_custom_certificate
 }
 
-if [ $(id -u) -ne 0 ]; then
+if [ "$(id -u)" -ne 0 ]; then
 	echo "This utility needs to run as root"
 	exit 1
 fi

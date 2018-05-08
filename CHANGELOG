@@ -1,3 +1,9 @@
+v 13.0.2snap1
+  - nextcloud: update to 13.0.2
+  - php: use configured memory limit for PHP CLI utilities
+  - php: update to 7.1.17
+  - redis: update to 4.0.9
+
 v 12.0.5snap3
   - apache: upgrade to 2.4.33
   - apache: stop waiting for services when stopping

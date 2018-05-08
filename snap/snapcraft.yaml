@@ -15,7 +15,7 @@ apps:
     stop-command: httpd-wrapper -k stop
     daemon: simple
     restart-condition: always
-    plugs: [network, network-bind]
+    plugs: [network, network-bind, removable-media]
 
   # MySQL daemon
   mysql:
@@ -142,8 +142,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-12.0.7.tar.bz2
-    source-checksum: sha256/24d769fb49741fb19da42ca90af8465ceacb6f7d45f2dfd90efe1c5f06028f0a
+    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.2.tar.bz2
+    source-checksum: sha256/7396f98a1a53a9f4b144f55360d87c89cb6ee899feef1cfbf29a736219f9c47d
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess

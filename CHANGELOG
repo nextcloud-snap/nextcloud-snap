@@ -1,3 +1,6 @@
+v 11.0.8snap1
+  - nextcloud: update to 11.0.8
+
 v 11.0.7snap1
   - apache: stop waiting for services when stopping
   - php: update to 7.1.16

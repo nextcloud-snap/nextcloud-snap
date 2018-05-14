@@ -90,6 +90,7 @@ handle_http2_setting()
 		return 0;
 	fi
 
+	# Validate input
 	if [ "$http2_status" == "true" ] || [ "$http2_status" == "false" ] ; then
 		apache_set_http2_status "$http2_status"
 	fi

@@ -80,9 +80,28 @@ handle_php_memory_limit()
 	php_set_previous_memory_limit "$memory_limit"
 }
 
+handle_http2_setting()
+{
+	http2_status="$(snapctl get apache.http2)"
+	previous_http2_status ="$(apache_previous_http2_status)"
+
+	# Return if no new changes were requested
+	if [[ "$http2_status" == "$previous_http2_status" ]]; then
+		return 0;
+	fi
+
+	# Validate input
+	if [ "$http2_status" == "true" ] || [ "$http2_status" == "false" ] ; then
+		apache_set_http2_status "$http2_status"
+	fi
+
+}
+
+
+
 # Signal to services that the configure hook is running. Useful to ensure
 # services don't restart until the configuration transaction has completed.
 set_configure_hook_running
 trap 'set_configure_hook_not_running' EXIT
 
-handle_apache_port_config && handle_php_memory_limit
+handle_apache_port_config && handle_php_memory_limit && handle_http2_setting

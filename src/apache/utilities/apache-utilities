@@ -126,6 +126,15 @@ apache_server_protocols()
 {
 	http2="$(snapctl get apache.http2)"
 
+	if [[ -z "$http2" ]]; then
+		http2="false"
+		apache_set_http2_status "false"
+		apache_set_previous_https_port "false"
+
+		echo $DEFAULT_SERVER_PROTOCOLS
+		return 0
+	fi
+
 	if [[ "$http2" -eq "true" ]]; then
 		echo "h2 h2c http/1.1"
 	else

@@ -328,15 +328,22 @@ parts:
     plugin: python
     python-version: python2
     source: src/https/
-    build-packages: [python-dev, libffi-dev]
-    python-packages: [cffi]
+    requirements: requirements.txt
+    build-packages: [libffi-dev]
+
+  fix-certbot:
+    plugin: nil
+    source: src/https/patches
+    after: [certbot-nextcloud-plugin]
+    override-pull: |
+      snapcraftctl pull
+      patch -p1 -d $SNAPCRAFT_STAGE/lib/python2.7/site-packages/certbot < remove_default_config_files.patch
 
   setup-https:
     plugin: dump
     source: src/https/
     stage-packages: [openssl]
-    stage: [-etc/ssl]
-    prime: [-etc/ssl]
+    stage: [-etc/ssl, -patches]
 
   hooks:
     plugin: dump

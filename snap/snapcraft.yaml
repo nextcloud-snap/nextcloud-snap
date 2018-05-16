@@ -95,6 +95,11 @@ parts:
     source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.33.tar.bz2
     source-checksum: sha256/de02511859b00d17845b9abdd1f975d5ccb5d0b280c567da5bf2ad4b70846f05
 
+    build-packages:
+    - libnghttp2-14
+    - libnghttp2-dev
+    - nghttp2
+
     override-build: |
       # For some reason, all directories in (and after) 2.4.32 are setgid.
       # Reported as https://bz.apache.org/bugzilla/show_bug.cgi?id=62298
@@ -117,6 +122,7 @@ parts:
       - alias
       - ssl
       - socache_shmcb
+      - http2
 
     filesets:
       exclude:

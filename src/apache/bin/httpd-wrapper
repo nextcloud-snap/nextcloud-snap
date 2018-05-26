@@ -27,9 +27,11 @@ echo "Server protocols are: $(apache_server_protocols)"
 
 HTTP_PORT="$(apache_http_port)"
 HTTPS_PORT="$(apache_https_port)"
+SERVER_PROTOCOLS="$(apache_server_protocols)"
+
 export HTTP_PORT
 export HTTPS_PORT
-export SERVER_PROTOCOLS="$(apache_server_protocols)"
+export SERVER_PROTOCOLS
 
 # Disable shellcheck for quoting params, since we're building a command line
 # and these need to be separated by spaces

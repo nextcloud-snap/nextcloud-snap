@@ -108,7 +108,7 @@ apache_set_previous_https_port()
 
 apache_previous_http2_status()
 {
-	echo "$(snapctl get private.apache.http2)"
+	snapctl get private.apache.http2
 }
 
 apache_set_previous_http2_status()

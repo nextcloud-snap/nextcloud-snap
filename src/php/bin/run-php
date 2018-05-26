@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# shellcheck source=src/php/utilities/php-utilities
+. "$SNAP/utilities/php-utilities"
+
+PHP_MEMORY_LIMIT="$(php_memory_limit)"
+export PHP_MEMORY_LIMIT
+
+php -c "$SNAP/config/php" "$@"

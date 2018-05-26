@@ -16,9 +16,12 @@
 #   Setting if http/2 should be enabled as ServerProtocol. String can be true or false.
 
 
-. $SNAP/utilities/apache-utilities
-. $SNAP/utilities/php-utilities
-. $SNAP/utilities/hook-utilities
+# shellcheck source=src/apache/utilities/apache-utilities
+. "$SNAP/utilities/apache-utilities"
+# shellcheck source=src/php/utilities/php-utilities
+. "$SNAP/utilities/php-utilities"
+# shellcheck source=src/hooks/utilities/hook-utilities
+. "$SNAP/utilities/hook-utilities"
 
 handle_apache_port_config()
 {
@@ -28,7 +31,7 @@ handle_apache_port_config()
 	previous_https_port="$(apache_previous_https_port)"
 
 	# If no changes were requested, then there's nothing to do here.
-	if [ "$http_port" = "$previous_http_port" -a "$https_port" = "$previous_https_port" ]; then
+	if [ "$http_port" = "$previous_http_port" ] && [ "$https_port" = "$previous_https_port" ]; then
 		return 0
 	fi
 

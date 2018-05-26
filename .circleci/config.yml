@@ -1,5 +1,19 @@
 version: 2
 jobs:
+  static-tests:
+    working_directory: ~/nextcloud-snap
+    docker:
+      - image: ubuntu:bionic
+    steps:
+      - checkout
+
+      - run:
+         # Run the static tests
+         command: |
+           apt update -qq
+           apt install shellcheck -y
+           ./tests/static.sh
+
   build:
     working_directory: ~/nextcloud-snap
     machine: true
@@ -20,7 +34,7 @@ jobs:
            sudo nextcloud.manual-install admin admin
 
      - run:
-         # Run the tests
+         # Run the integration tests
          command: ./.circleci/runtests.sh
 
   test-daily-master:
@@ -35,24 +49,6 @@ jobs:
             sudo apt update
             sudo apt install -y snapd
             sudo snap install --edge nextcloud
-            sudo nextcloud.manual-install admin admin
-
-      - run:
-          # Run the tests
-          command: ./.circleci/runtests.sh
-
-  test-daily-v11:
-    working_directory: ~/nextcloud-snap
-    machine: true
-    steps:
-      - checkout
-
-      - run:
-          # Install the snap and create an admin user
-          command: |
-            sudo apt update
-            sudo apt install -y snapd
-            sudo snap install nextcloud --channel=11/edge
             sudo nextcloud.manual-install admin admin
 
       - run:
@@ -98,7 +94,7 @@ jobs:
 workflows:
   version: 2
   commit:
-    jobs: [build]
+    jobs: [static-tests, build]
 
   daily-master:
     triggers:
@@ -110,17 +106,6 @@ workflows:
               only: develop
 
     jobs: [test-daily-master]
-
-  daily-v11:
-    triggers:
-      - schedule:
-          # 0700 UTC == 0000 PSC
-          cron: "0 7 * * *"
-          filters:
-            branches:
-              only: develop
-
-    jobs: [test-daily-v11]
 
   daily-v12:
     triggers:

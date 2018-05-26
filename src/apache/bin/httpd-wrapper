@@ -1,8 +1,11 @@
 #!/bin/sh
 
-. $SNAP/utilities/https-utilities
-. $SNAP/utilities/apache-utilities
-. $SNAP/utilities/php-utilities
+# shellcheck source=src/https/utilities/https-utilities
+. "$SNAP/utilities/https-utilities"
+# shellcheck source=src/apache/utilities/apache-utilities
+. "$SNAP/utilities/apache-utilities"
+# shellcheck source=src/php/utilities/php-utilities
+. "$SNAP/utilities/php-utilities"
 
 params=""
 if certificates_are_active; then
@@ -22,8 +25,13 @@ fi
 
 echo "Server protocols are: $(apache_server_protocols)"
 
-export HTTP_PORT="$(apache_http_port)"
-export HTTPS_PORT="$(apache_https_port)"
+HTTP_PORT="$(apache_http_port)"
+HTTPS_PORT="$(apache_https_port)"
+export HTTP_PORT
+export HTTPS_PORT
 export SERVER_PROTOCOLS="$(apache_server_protocols)"
 
-httpd -d $SNAP $params $@
+# Disable shellcheck for quoting params, since we're building a command line
+# and these need to be separated by spaces
+# shellcheck disable=SC2086
+httpd -d "$SNAP" $params "$@"

@@ -1,12 +1,18 @@
 #!/bin/sh
 
-. $SNAP/utilities/mysql-utilities
-. $SNAP/utilities/php-utilities
-. $SNAP/utilities/redis-utilities
-. $SNAP/utilities/nextcloud-utilities
-. $SNAP/utilities/hook-utilities
+# shellcheck source=src/mysql/utilities/mysql-utilities
+. "$SNAP/utilities/mysql-utilities"
+# shellcheck source=src/php/utilities/php-utilities
+. "$SNAP/utilities/php-utilities"
+# shellcheck source=src/redis/utilities/redis-utilities
+. "$SNAP/utilities/redis-utilities"
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
+# shellcheck source=src/hooks/utilities/hook-utilities
+. "$SNAP/utilities/hook-utilities"
 
-mkdir -p -m 750 ${SNAP_DATA}/php
+mkdir -p "${SNAP_DATA}/php"
+chmod 750 "${SNAP_DATA}/php"
 
 # Make sure the configure hook isn't running (otherwise we'll run on old
 # configuration data)
@@ -16,26 +22,27 @@ wait_for_configure_hook
 wait_for_mysql
 
 # Wait until we have an nextcloud mysql password
-echo -n "Obtaining nextcloud mysql credentials... "
+printf "Obtaining nextcloud mysql credentials... "
 nextcloud_password_path=$SNAP_DATA/mysql/nextcloud_password
 timeout=10
-while [ $timeout -gt 0 -a ! -e $nextcloud_password_path ]; do
+while [ $timeout -gt 0 ] && [ ! -e "$nextcloud_password_path" ]; do
 	timeout=$((timeout-1))
 	sleep 1
 done
-if [ ! -e $nextcloud_password_path ]; then
-	echo ""
-	echo -n "Timed out while attempting to obtain nextcloud mysql password. "
-	echo -n "This isn't unusual when starting up for the first time after "
-	echo "an install or an upgrade. Will try again."
+if [ ! -e "$nextcloud_password_path" ]; then
+	printf "\nTimed out while attempting to obtain nextcloud mysql password. "
+	printf "This isn't unusual when starting up for the first time after "
+	printf "an install or an upgrade. Will try again.\n"
 	exit 1
 fi
-echo "done"
+printf "done\n"
 
 # Tends to be between 30-50MB
 average_php_memory_requirement=50
 total_memory=$(mawk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo)
-export PHP_FPM_MAX_CHILDREN=$(($total_memory/$average_php_memory_requirement))
-export PHP_MEMORY_LIMIT="$(php_memory_limit)"
+PHP_FPM_MAX_CHILDREN=$((total_memory/average_php_memory_requirement))
+PHP_MEMORY_LIMIT="$(php_memory_limit)"
+export PHP_FPM_MAX_CHILDREN
+export PHP_MEMORY_LIMIT
 
-php-fpm -R -F --fpm-config ${SNAP}/config/php/php-fpm.conf -c ${SNAP}/config/php
+php-fpm -R -F --fpm-config "${SNAP}/config/php/php-fpm.conf" -c "${SNAP}/config/php"

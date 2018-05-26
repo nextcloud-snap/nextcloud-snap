@@ -5,7 +5,7 @@ setup(
 	name='nextcloud',
 	packages=find_packages(),
 	install_requires=[
-		'certbot==0.14.1',
+		'certbot',
 		'zope.interface',
 	],
 	entry_points={

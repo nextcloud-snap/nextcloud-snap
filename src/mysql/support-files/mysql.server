@@ -43,10 +43,11 @@
 # If you change base dir, you must also change datadir. These may get
 # overwritten by settings in the MySQL configuration files.
 
-. $SNAP/utilities/mysql-utilities
+# shellcheck source=src/mysql/utilities/mysql-utilities
+. "$SNAP/utilities/mysql-utilities"
 
-basedir=$SNAP
-datadir=$SNAP_DATA/mysql
+basedir="$SNAP"
+datadir="$SNAP_DATA/mysql"
 
 # Default value, in seconds, afterwhich the script should timeout waiting
 # for server start.
@@ -71,7 +72,6 @@ then
   then
     datadir=//data
   fi
-  sbindir=//bin
   libexecdir=//bin
 else
   bindir="$basedir/bin"
@@ -79,7 +79,6 @@ else
   then
     datadir="$basedir/data"
   fi
-  sbindir="$basedir/sbin"
   libexecdir="$basedir/libexec"
 fi
 
@@ -96,11 +95,11 @@ if test -f $lsb_functions ; then
 else
   log_success_msg()
   {
-    echo " SUCCESS! $@"
+    echo " SUCCESS! $*"
   }
   log_failure_msg()
   {
-    echo " ERROR! $@"
+    echo " ERROR! $*"
   }
 fi
 
@@ -117,28 +116,29 @@ other_args="$*"   # uncommon, but needed when called from an RPM upgrade action
            # They are not checked here, intentionally, as it is the resposibility
            # of the "spec" file author to give correct arguments only.
 
-case `echo "testing\c"`,`echo -n testing` in
-    *c*,-n*) echo_n=   echo_c=     ;;
-    *c*,*)   echo_n=-n echo_c=     ;;
-    *)       echo_n=   echo_c='\c' ;;
+# Upstream mysql stuff, no need to fix this
+# shellcheck disable=SC2116,SC2039
+case "$(echo "testing\c")","$(echo -n testing)" in
+    *c*,-n*) echo_n=""   echo_c=""     ;;
+    *c*,*)   echo_n=-n echo_c=""     ;;
+    *)       echo_n=""   echo_c='\c' ;;
 esac
 
 parse_server_arguments() {
   for arg do
     case "$arg" in
-      --basedir=*)  basedir=`echo "$arg" | sed -e 's/^[^=]*=//'`
+      --basedir=*)  basedir="$(echo "$arg" | sed -e 's/^[^=]*=//')"
                     bindir="$basedir/bin"
 		    if test -z "$datadir_set"; then
 		      datadir="$basedir/data"
 		    fi
-		    sbindir="$basedir/sbin"
 		    libexecdir="$basedir/libexec"
         ;;
-      --datadir=*)  datadir=`echo "$arg" | sed -e 's/^[^=]*=//'`
+      --datadir=*)  datadir="$(echo "$arg" | sed -e 's/^[^=]*=//')"
 		    datadir_set=1
 	;;
-      --pid-file=*) mysqld_pid_file_path=`echo "$arg" | sed -e 's/^[^=]*=//'` ;;
-      --service-startup-timeout=*) service_startup_timeout=`echo "$arg" | sed -e 's/^[^=]*=//'` ;;
+      --pid-file=*) mysqld_pid_file_path="$(echo "$arg" | sed -e 's/^[^=]*=//')" ;;
+      --service-startup-timeout=*) service_startup_timeout="$(echo "$arg" | sed -e 's/^[^=]*=//')" ;;
     esac
   done
 }
@@ -151,7 +151,7 @@ wait_for_pid () {
   i=0
   avoid_race_condition="by checking again"
 
-  while test $i -ne $service_startup_timeout ; do
+  while test "$i" -ne "$service_startup_timeout" ; do
 
     case "$verb" in
       'created')
@@ -186,7 +186,7 @@ wait_for_pid () {
     fi
 
     echo $echo_n ".$echo_c"
-    i=`expr $i + 1`
+    i=$((i + 1))
     sleep 1
 
   done
@@ -205,23 +205,23 @@ wait_for_pid () {
 if test -x ./bin/my_print_defaults
 then
   print_defaults="./bin/my_print_defaults"
-elif test -x $bindir/my_print_defaults
+elif test -x "$bindir/my_print_defaults"
 then
   print_defaults="$bindir/my_print_defaults"
-elif test -x $bindir/mysql_print_defaults
+elif test -x "$bindir/mysql_print_defaults"
 then
   print_defaults="$bindir/mysql_print_defaults"
 else
   # Try to find basedir in /etc/my.cnf
   conf=/etc/my.cnf
   print_defaults=
-  if test -r $conf
+  if test -r "$conf"
   then
     subpat='^[^=]*basedir[^=]*=\(.*\)$'
-    dirs=`sed -e "/$subpat/!d" -e 's//\1/' $conf`
+    dirs="$(sed -e "/$subpat/!d" -e 's//\1/' "$conf")"
     for d in $dirs
     do
-      d=`echo $d | sed -e 's/[ 	]//g'`
+      d="$(echo "$d" | sed -e 's/[ 	]//g')"
       if test -x "$d/bin/my_print_defaults"
       then
         print_defaults="$d/bin/my_print_defaults"
@@ -255,14 +255,14 @@ else
   fi
 fi
 
-parse_server_arguments `$print_defaults $extra_args mysqld server mysql_server mysql.server`
+parse_server_arguments "$("$print_defaults" "$extra_args" mysqld server mysql_server mysql.server)"
 
 #
 # Set pid file if not given
 #
 if test -z "$mysqld_pid_file_path"
 then
-  mysqld_pid_file_path=$datadir/`hostname`.pid
+  mysqld_pid_file_path="$datadir"/"$(hostname)".pid
 else
   case "$mysqld_pid_file_path" in
     /* ) ;;
@@ -275,14 +275,14 @@ case "$mode" in
     # Start daemon
 
     # Safeguard (relative paths, core dumps..)
-    cd $basedir
+    cd "$basedir" || exit
 
     echo $echo_n "Starting MySQL"
-    if test -x $bindir/mysqld_safe
+    if test -x "$bindir/mysqld_safe"
     then
       # Give extra arguments to mysqld with the my.cnf file. This script
       # may be overwritten at next upgrade.
-      $bindir/mysqld_safe --datadir="$datadir" --pid-file="$mysqld_pid_file_path" --lc-messages-dir="$SNAP/share" --socket="$MYSQL_SOCKET" $other_args >/dev/null 2>&1 &
+      "$bindir/mysqld_safe" --datadir="$datadir" --pid-file="$mysqld_pid_file_path" --lc-messages-dir="$SNAP/share" --socket="$MYSQL_SOCKET" "$other_args" >/dev/null 2>&1 &
       wait_for_pid created "$!" "$mysqld_pid_file_path"; return_value=$?
 
       # Make lock for RedHat / SuSE
@@ -306,12 +306,12 @@ case "$mode" in
       # signal mysqld_safe that it needs to stop
       touch "$mysqld_pid_file_path.shutdown"
 
-      mysqld_pid=`cat "$mysqld_pid_file_path"`
+      mysqld_pid="$(cat "$mysqld_pid_file_path")"
 
-      if (kill -0 $mysqld_pid 2>/dev/null)
+      if (kill -0 "$mysqld_pid" 2>/dev/null)
       then
         echo $echo_n "Shutting down MySQL"
-        kill $mysqld_pid
+        kill "$mysqld_pid"
         # mysqld should remove the pid file when it exits, so wait for it.
         wait_for_pid removed "$mysqld_pid" "$mysqld_pid_file_path"; return_value=$?
       else
@@ -333,8 +333,8 @@ case "$mode" in
   'restart')
     # Stop the service and regardless of whether it was
     # running or not, start it again.
-    if $0 stop  $other_args; then
-      $0 start $other_args
+    if $0 stop  "$other_args"; then
+      $0 start "$other_args"
     else
       log_failure_msg "Failed to stop running server, so refusing to try to start."
       exit 1
@@ -343,8 +343,8 @@ case "$mode" in
 
   'reload'|'force-reload')
     if test -s "$mysqld_pid_file_path" ; then
-      read mysqld_pid <  "$mysqld_pid_file_path"
-      kill -HUP $mysqld_pid && log_success_msg "Reloading service MySQL"
+      read -r mysqld_pid <  "$mysqld_pid_file_path"
+      kill -HUP "$mysqld_pid" && log_success_msg "Reloading service MySQL"
       touch "$mysqld_pid_file_path"
     else
       log_failure_msg "MySQL PID file could not be found!"
@@ -354,8 +354,8 @@ case "$mode" in
   'status')
     # First, check to see if pid file exists
     if test -s "$mysqld_pid_file_path" ; then
-      read mysqld_pid < "$mysqld_pid_file_path"
-      if kill -0 $mysqld_pid 2>/dev/null ; then
+      read -r mysqld_pid < "$mysqld_pid_file_path"
+      if kill -0 "$mysqld_pid" 2>/dev/null ; then
         log_success_msg "MySQL running ($mysqld_pid)"
         exit 0
       else
@@ -364,14 +364,14 @@ case "$mode" in
       fi
     else
       # Try to find appropriate mysqld process
-      mysqld_pid=`pidof $libexecdir/mysqld`
+      mysqld_pid="$(pidof "$libexecdir/mysqld")"
 
       # test if multiple pids exist
-      pid_count=`echo $mysqld_pid | wc -w`
-      if test $pid_count -gt 1 ; then
+      pid_count="$(echo "$mysqld_pid" | wc -w)"
+      if test "$pid_count" -gt 1 ; then
         log_failure_msg "Multiple MySQL running but PID file could not be found ($mysqld_pid)"
         exit 5
-      elif test -z $mysqld_pid ; then
+      elif test -z "$mysqld_pid" ; then
         if test -f "$lock_file_path" ; then
           log_failure_msg "MySQL is not running, but lock file ($lock_file_path) exists"
           exit 2
@@ -386,7 +386,7 @@ case "$mode" in
     ;;
     *)
       # usage
-      basename=`basename "$0"`
+      basename="$(basename "$0")"
       echo "Usage: $basename  {start|stop|restart|reload|force-reload|status}  [ MySQL server options ]"
       exit 1
     ;;

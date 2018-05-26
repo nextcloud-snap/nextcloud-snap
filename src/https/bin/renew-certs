@@ -1,18 +1,19 @@
 #!/bin/sh
 
-. $SNAP/utilities/https-utilities
+# shellcheck source=src/https/utilities/https-utilities
+. "$SNAP/utilities/https-utilities"
 
 # The number of seconds remaining in the validity of the certificate
 # before renewing it. 2592000 seconds is 30 days.
 seconds_to_renew=2592000
 
 while true; do
-	if [ -f $SELF_SIGNED_CERT ]; then
+	if [ -f "$SELF_SIGNED_CERT" ]; then
 		# Check the self-signed certificate. Does it need to be renewed?
-		cert_date=$(openssl x509 -noout -enddate -in $SELF_SIGNED_CERT | sed -e 's/.*=\(.*\)$/\1/')
-		cert_date=$(date -d "$cert_date" "+%s")
+		cert_date="$(openssl x509 -noout -enddate -in "$SELF_SIGNED_CERT" | sed -e 's/.*=\(.*\)$/\1/')"
+		cert_date="$(date -d "$cert_date" "+%s")"
 		current_date=$(date "+%s")
-		difference=$(($cert_date-$current_date))
+		difference=$((cert_date-current_date))
 		if [ $difference -lt $seconds_to_renew ]; then
 			echo "Renewing self-signed certificate"
 			generate_self_signed_certificate

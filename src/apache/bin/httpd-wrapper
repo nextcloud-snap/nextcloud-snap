@@ -23,15 +23,20 @@ else
 	echo "No certificates are active: using HTTP only"
 fi
 
-echo "Server protocols are: $(apache_server_protocols)"
+
+if should_enable_http2; then
+	echo "http/2 is enabled"
+	params="$params -DEnableHttp2"
+else
+	echo "http/2 is disabled. Using http/1.1 only"
+fi
+
 
 HTTP_PORT="$(apache_http_port)"
 HTTPS_PORT="$(apache_https_port)"
-SERVER_PROTOCOLS="$(apache_server_protocols)"
 
 export HTTP_PORT
 export HTTPS_PORT
-export SERVER_PROTOCOLS
 
 # Disable shellcheck for quoting params, since we're building a command line
 # and these need to be separated by spaces

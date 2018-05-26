@@ -106,6 +106,7 @@ apache_set_previous_https_port()
 	snapctl set private.ports.https="$1"
 }
 
+
 apache_previous_http2_status()
 {
 	snapctl get private.apache.http2
@@ -121,19 +122,24 @@ apache_set_http2_status()
 	snapctl set apache.http2="$1"
 }
 
-apache_server_protocols()
+apache_http2()
 {
 	http2="$(snapctl get apache.http2)"
 
 	if [ -z "$http2" ]; then
 		http2="false"
 		apache_set_http2_status "false"
-		apache_set_previous_https_port "false"
+		apache_set_previous_http2_status "false"
 	fi
 
-	if [ "$http2" = "true" ]; then
-		echo "h2 h2c http/1.1"
+  echo "$http2"
+}
+
+should_enable_http2()
+{
+	if [ "$(apache_http2)" = "true" ]; then
+		return 0
 	else
-		echo "http/1.1"
+		return 1
 	fi
 }

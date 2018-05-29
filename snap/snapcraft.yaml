@@ -31,6 +31,8 @@ apps:
     daemon: simple
     restart-condition: always
     plugs: [network, network-bind, removable-media]
+    environment:
+        LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu/samba
 
   # redis server daemon
   redis-server:

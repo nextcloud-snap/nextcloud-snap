@@ -82,10 +82,6 @@ else
   libexecdir="$basedir/libexec"
 fi
 
-# datadir_set is used to determine if datadir was set (and so should be
-# *not* set inside of the --basedir= handler.)
-datadir_set=
-
 #
 # Use LSB init script functions for printing messages, if possible
 #
@@ -123,25 +119,6 @@ case "$(echo "testing\c")","$(echo -n testing)" in
     *c*,*)   echo_n=-n echo_c=""     ;;
     *)       echo_n=""   echo_c='\c' ;;
 esac
-
-parse_server_arguments() {
-  for arg do
-    case "$arg" in
-      --basedir=*)  basedir="$(echo "$arg" | sed -e 's/^[^=]*=//')"
-                    bindir="$basedir/bin"
-		    if test -z "$datadir_set"; then
-		      datadir="$basedir/data"
-		    fi
-		    libexecdir="$basedir/libexec"
-        ;;
-      --datadir=*)  datadir="$(echo "$arg" | sed -e 's/^[^=]*=//')"
-		    datadir_set=1
-	;;
-      --pid-file=*) mysqld_pid_file_path="$(echo "$arg" | sed -e 's/^[^=]*=//')" ;;
-      --service-startup-timeout=*) service_startup_timeout="$(echo "$arg" | sed -e 's/^[^=]*=//')" ;;
-    esac
-  done
-}
 
 wait_for_pid () {
   verb="$1"           # created | removed
@@ -199,63 +176,6 @@ wait_for_pid () {
     return 1
   fi
 }
-
-# Get arguments from the my.cnf file,
-# the only group, which is read from now on is [mysqld]
-if test -x ./bin/my_print_defaults
-then
-  print_defaults="./bin/my_print_defaults"
-elif test -x "$bindir/my_print_defaults"
-then
-  print_defaults="$bindir/my_print_defaults"
-elif test -x "$bindir/mysql_print_defaults"
-then
-  print_defaults="$bindir/mysql_print_defaults"
-else
-  # Try to find basedir in /etc/my.cnf
-  conf=/etc/my.cnf
-  print_defaults=
-  if test -r "$conf"
-  then
-    subpat='^[^=]*basedir[^=]*=\(.*\)$'
-    dirs="$(sed -e "/$subpat/!d" -e 's//\1/' "$conf")"
-    for d in $dirs
-    do
-      d="$(echo "$d" | sed -e 's/[ 	]//g')"
-      if test -x "$d/bin/my_print_defaults"
-      then
-        print_defaults="$d/bin/my_print_defaults"
-        break
-      fi
-      if test -x "$d/bin/mysql_print_defaults"
-      then
-        print_defaults="$d/bin/mysql_print_defaults"
-        break
-      fi
-    done
-  fi
-
-  # Hope it's in the PATH ... but I doubt it
-  test -z "$print_defaults" && print_defaults="my_print_defaults"
-fi
-
-#
-# Read defaults file from 'basedir'.   If there is no defaults file there
-# check if it's in the old (depricated) place (datadir) and read it from there
-#
-
-extra_args=""
-if test -r "$basedir/my.cnf"
-then
-  extra_args="-e $basedir/my.cnf"
-else
-  if test -r "$datadir/my.cnf"
-  then
-    extra_args="-e $datadir/my.cnf"
-  fi
-fi
-
-parse_server_arguments "$("$print_defaults" "$extra_args" mysqld server mysql_server mysql.server)"
 
 #
 # Set pid file if not given

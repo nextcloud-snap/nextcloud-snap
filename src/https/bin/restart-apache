@@ -1,5 +1,6 @@
 #!/bin/sh
 
-. $SNAP/utilities/https-utilities
+# shellcheck source=src/https/utilities/https-utilities
+. "$SNAP/utilities/https-utilities"
 
 restart_apache_if_running

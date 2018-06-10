@@ -1,18 +1,25 @@
 #!/bin/sh
 
-. $SNAP/utilities/php-utilities
-. $SNAP/utilities/mysql-utilities
-. $SNAP/utilities/nextcloud-utilities
-. $SNAP/utilities/redis-utilities
+# shellcheck source=src/php/utilities/php-utilities
+. "$SNAP/utilities/php-utilities"
+# shellcheck source=src/mysql/utilities/mysql-utilities
+. "$SNAP/utilities/mysql-utilities"
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
+# shellcheck source=src/redis/utilities/redis-utilities
+. "$SNAP/utilities/redis-utilities"
 
 # Make sure nextcloud directory exists
-mkdir -p -m 750 $SNAP_COMMON/nextcloud
+mkdir -p "$SNAP_COMMON/nextcloud"
+chmod 750 "$SNAP_COMMON/nextcloud"
 
 # Make sure nextcloud tmp directory exists
-mkdir -p -m 750 $SNAP_COMMON/nextcloud/tmp
+mkdir -p "$SNAP_COMMON/nextcloud/tmp"
+chmod 750 "$SNAP_COMMON/nextcloud/tmp"
 
 # Make sure nextcloud extra-apps directory exists (for user apps)
-mkdir -p -m 750 $SNAP_DATA/nextcloud/extra-apps
+mkdir -p "$SNAP_DATA/nextcloud/extra-apps"
+chmod 750 "$SNAP_DATA/nextcloud/extra-apps"
 
 # We need both PHP and redis up and running before we can use occ
 wait_for_php
@@ -21,17 +28,17 @@ wait_for_redis
 # If this is a new install, make sure it's configured correctly
 if [ ! -d "$NEXTCLOUD_CONFIG_DIR" ]; then
 	echo "Configuring nextcloud..."
-	cp -r $SNAP/htdocs/config $NEXTCLOUD_CONFIG_DIR
+	cp -r "$SNAP/htdocs/config" "$NEXTCLOUD_CONFIG_DIR"
 else
 	# This is not a new installation, so we don't want to overwrite the config.
 	# However, we recently changed the location of sockets in the snap, so we
 	# need to make sure the config is using the new location.
-	sed -ri "s|('host'\s*=>\s*)'/var/snap/.*redis.sock'|\1'$REDIS_SOCKET'|" $NEXTCLOUD_CONFIG_DIR/config.php
-	sed -ri "s|('dbhost'\s*=>\s*)'localhost:/var/snap/.*mysql.sock'|\1'localhost:$MYSQL_SOCKET'|" $NEXTCLOUD_CONFIG_DIR/config.php
+	sed -ri "s|('host'\s*=>\s*)'/var/snap/.*redis.sock'|\1'$REDIS_SOCKET'|" "$NEXTCLOUD_CONFIG_DIR/config.php"
+	sed -ri "s|('dbhost'\s*=>\s*)'localhost:/var/snap/.*mysql.sock'|\1'localhost:$MYSQL_SOCKET'|" "$NEXTCLOUD_CONFIG_DIR/config.php"
 
 	# We'll also always copy over the autoconfig.php, since it's only used
 	# upon installation. Just in case they haven't done that yet.
-	cp -r $SNAP/htdocs/config/autoconfig.php $NEXTCLOUD_CONFIG_DIR/
+	cp -r "$SNAP/htdocs/config/autoconfig.php" "$NEXTCLOUD_CONFIG_DIR/"
 
 	# Also make sure we're using Redis for the memcache and file locking.
 	occ config:system:set redis host --value="$REDIS_SOCKET" --type=string

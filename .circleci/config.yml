@@ -1,5 +1,19 @@
 version: 2
 jobs:
+  static-tests:
+    working_directory: ~/nextcloud-snap
+    docker:
+      - image: ubuntu:bionic
+    steps:
+      - checkout
+
+      - run:
+         # Run the static tests
+         command: |
+           apt update -qq
+           apt install shellcheck -y
+           ./tests/static.sh
+
   build:
     working_directory: ~/nextcloud-snap
     machine: true
@@ -20,7 +34,7 @@ jobs:
            sudo nextcloud.manual-install admin admin
 
      - run:
-         # Run the tests
+         # Run the integration tests
          command: ./.circleci/runtests.sh
 
   test-daily-master:
@@ -98,7 +112,7 @@ jobs:
 workflows:
   version: 2
   commit:
-    jobs: [build]
+    jobs: [static-tests, build]
 
   daily-master:
     triggers:

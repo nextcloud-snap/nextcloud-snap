@@ -1,0 +1,17 @@
+diff -Naur a/constants.py b/constants.py
+--- a/constants.py    2018-05-12 22:08:50.233116726 +0000
++++ b/constants.py    2018-05-12 21:54:54.127861465 +0000
+@@ -13,12 +13,7 @@
+ """Plugins Setuptools entry point before rename."""
+ 
+ CLI_DEFAULTS = dict(
+-    config_files=[
+-        "/etc/letsencrypt/cli.ini",
+-        # http://freedesktop.org/wiki/Software/xdg-user-dirs/
+-        os.path.join(os.environ.get("XDG_CONFIG_HOME", "~/.config"),
+-                     "letsencrypt", "cli.ini"),
+-    ],
++    config_files=[],
+ 
+     # Main parser
+     verbose_count=-int(logging.INFO / 10),

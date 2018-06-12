@@ -12,6 +12,8 @@ if mysqld --initialize-insecure --basedir="$SNAP" --datadir="$SNAP_DATA/mysql" -
 	new_install=true
 fi
 
+set_mysql_setup_running
+
 # Start mysql
 "$SNAP/support-files/mysql.server" start
 
@@ -65,7 +67,7 @@ else
 fi
 
 # Wait here until mysql is running
-wait_for_mysql
+wait_for_mysql -f
 
 # Check and upgrade mysql tables if necessary. This will return 0 if the upgrade
 # succeeded, in which case we need to restart mysql.
@@ -75,7 +77,7 @@ if mysql_upgrade --defaults-file="$root_option_file"; then
 	"$SNAP/support-files/mysql.server" restart
 
 	# Wait for server to come back after upgrade
-	wait_for_mysql
+	wait_for_mysql -f
 fi
 
 # If this was a new installation, wait until the server is all up and running
@@ -84,6 +86,8 @@ fi
 if [ $new_install = true ]; then
 	mysql_set_nextcloud_password "$nextcloud_password"
 fi
+
+set_mysql_setup_not_running
 
 # Wait here until mysql exits (turn a forking service into simple). This is
 # only needed for Ubuntu Core 15.04, as 16.04 supports forking services.

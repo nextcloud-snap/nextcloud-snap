@@ -49,6 +49,8 @@ password=$2
 
 # We can't do anything until PHP and MySQL are up and running
 wait_for_php
+
+# shellcheck disable=SC2119
 wait_for_mysql
 
 # Now we can use 'occ maintenance:install'

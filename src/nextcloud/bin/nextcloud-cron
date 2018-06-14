@@ -11,6 +11,11 @@ done
 printf "done\n"
 
 while true; do
+	# Exit the entire job if the requested interval is -1
+	if [ "$(cronjob_interval)" = "-1" ]; then
+		exit 0
+	fi
+
 	run-php "$SNAP/htdocs/cron.php"
-	sleep 15m
+	sleep "$(cronjob_interval)"
 done

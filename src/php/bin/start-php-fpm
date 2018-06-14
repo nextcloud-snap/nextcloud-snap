@@ -19,6 +19,7 @@ chmod 750 "${SNAP_DATA}/php"
 wait_for_configure_hook
 
 # We need to make sure mysql is running so we can run the migration process
+# shellcheck disable=SC2119
 wait_for_mysql
 
 # Wait until we have an nextcloud mysql password

@@ -115,6 +115,21 @@ To set it to be unlimited (not recommended), use -1:
     $ sudo snap set nextcloud php.memory-limit=-1
 
 
+#### Cronjob interval configuration
+
+By default the cronjob interval is 15 minutes.
+
+To adjust it (say, 10 minutes) simply run:
+
+    $ sudo snap set nextcloud nextcloud.cron-interval=10m
+
+If you want to disable the cronjob completely, run:
+
+    $ sudo snap set nextcloud nextcloud.cron-interval=-1
+
+To reenable it again simply set the `nextcloud.cron-interval` snap variable to a value that isn't `-1`
+
+
 ### Included CLI utilities
 
 There are a few CLI utilities included:

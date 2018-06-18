@@ -1,7 +1,8 @@
 #!/bin/sh
 
-export NEXTCLOUD_CONFIG_DIR=$SNAP_DATA/nextcloud/config
-export NEXTCLOUD_DATA_DIR=$SNAP_COMMON/nextcloud/data
+export NEXTCLOUD_CONFIG_DIR="$SNAP_DATA/nextcloud/config"
+export NEXTCLOUD_DATA_DIR="$SNAP_COMMON/nextcloud/data"
+DEFAULT_CRONJOB_INTERVAL="15m"
 
 nextcloud_is_configured()
 {
@@ -11,10 +12,37 @@ nextcloud_is_configured()
 wait_for_nextcloud_to_be_configured()
 {
 	if ! nextcloud_is_configured; then
-		echo -n "Waiting for Nextcloud to be configured... "
+		printf "Waiting for Nextcloud to be configured... "
 		while ! nextcloud_is_configured; do
 			sleep 1
 		done
-		echo "done"
+		printf "done\n"
 	fi
+}
+
+cronjob_interval()
+{
+	interval="$(snapctl get nextcloud.cron-interval)"
+	if [ -z "$interval" ]; then
+		interval="$DEFAULT_CRONJOB_INTERVAL"
+		set_cronjob_interval "$interval"
+		set_previous_cronjob_interval "$interval"
+	fi
+
+	echo "$interval"
+}
+
+previous_cronjob_interval()
+{
+	snapctl get private.nextcloud.cron-interval
+}
+
+set_cronjob_interval()
+{
+	snapctl set nextcloud.cron-interval="$1"
+}
+
+set_previous_cronjob_interval()
+{
+	snapctl set private.nextcloud.cron-interval="$1"
 }

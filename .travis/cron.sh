@@ -1,7 +1,6 @@
 #!/bin/bash
 
 latest_master_url="https://download.nextcloud.com/server/daily/latest-master.tar.bz2"
-latest_stable11_url="https://download.nextcloud.com/server/daily/latest-stable11.tar.bz2"
 latest_stable12_url="https://download.nextcloud.com/server/daily/latest-stable12.tar.bz2"
 latest_stable13_url="https://download.nextcloud.com/server/daily/latest-stable13.tar.bz2"
 
@@ -36,13 +35,6 @@ echo "Requesting build of latest master..."
 request_build \
 	"latest-master" "$latest_master_url" "master-$today" \
 	"From CI: Use Nextcloud latest master"
-
-
-echo "Requesting build of latest 11..."
-request_build \
-	"latest-11" "$latest_stable11_url" "11-$today" \
-	"From CI: Use Nextcloud latest 11"
-
 
 echo "Requesting build of latest 12..."
 request_build \

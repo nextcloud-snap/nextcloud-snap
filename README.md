@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 13.0.2
+- Nextcloud 13.0.4
 - Apache 2.4
 - PHP 7.1
 - MySQL 5.7
@@ -99,6 +99,21 @@ If you'd like to set the memory limit to a higher value (say, 512M), run:
 To set it to be unlimited (not recommended), use -1:
 
     $ sudo snap set nextcloud php.memory-limit=-1
+
+
+#### Cronjob interval configuration
+
+By default the cronjob interval is 15 minutes.
+
+To adjust it (say, 10 minutes) simply run:
+
+    $ sudo snap set nextcloud nextcloud.cron-interval=10m
+
+If you want to disable the cronjob completely, run:
+
+    $ sudo snap set nextcloud nextcloud.cron-interval=-1
+
+To reenable it again simply set the `nextcloud.cron-interval` snap variable to a value that isn't `-1`
 
 
 ### Included CLI utilities

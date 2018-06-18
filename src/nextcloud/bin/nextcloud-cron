@@ -1,15 +1,21 @@
 #!/bin/sh
 
-. $SNAP/utilities/nextcloud-utilities
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
 
-echo -n "Waiting for Nextcloud config dir... "
+printf "Waiting for Nextcloud config dir... "
 while [ ! -d "$NEXTCLOUD_CONFIG_DIR" ]; do
 	sleep 1
 done
 
-echo "done"
+printf "done\n"
 
 while true; do
-	run-php $SNAP/htdocs/cron.php
-	sleep 15m
+	# Exit the entire job if the requested interval is -1
+	if [ "$(cronjob_interval)" = "-1" ]; then
+		exit 0
+	fi
+
+	run-php "$SNAP/htdocs/cron.php"
+	sleep "$(cronjob_interval)"
 done

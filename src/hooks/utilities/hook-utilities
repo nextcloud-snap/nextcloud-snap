@@ -2,7 +2,8 @@
 
 CONFIGURE_LOCKFILE="/tmp/locks/configure-hook"
 
-mkdir -p -m 750 "$(dirname $CONFIGURE_LOCKFILE)"
+mkdir -p "$(dirname $CONFIGURE_LOCKFILE)"
+chmod 750 "$(dirname $CONFIGURE_LOCKFILE)"
 
 configure_hook_running()
 {
@@ -22,10 +23,10 @@ set_configure_hook_not_running()
 wait_for_configure_hook()
 {
 	if configure_hook_running; then
-		echo -n "Waiting for configure hook... "
+		printf "Waiting for configure hook... "
 		while configure_hook_running; do
 			sleep 1
 		done
-		echo "done"
+		printf "done\n"
 	fi
 }

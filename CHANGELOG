@@ -1,3 +1,11 @@
+v 13.0.4snap1
+  - nextcloud: update to 13.0.4
+  - nextcloud: make cron interval adjustable
+  - mysql: don't consider mysql available until after restart
+  - mysql: update to 5.7.22
+  - many: implement static checks
+  - https: patch certbot to ignore system config
+
 v 13.0.2snap1
   - nextcloud: update to 13.0.2
   - php: use configured memory limit for PHP CLI utilities

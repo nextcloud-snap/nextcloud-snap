@@ -15,6 +15,9 @@
 # - nextcloud.cron-interval (string)
 #   Interval of the internal Nextcloud cronjob
 #
+# - apache.oldtls (string)
+#   Specify if older tls versions and ciphers should be allowed
+#
 
 # shellcheck source=src/apache/utilities/apache-utilities
 . "$SNAP/utilities/apache-utilities"
@@ -112,9 +115,38 @@ handle_cronjob_interval()
 	snapctl restart nextcloud.nextcloud-cron
 }
 
+
+handle_tls_settings()
+{
+	old_tls="$(apache_old_tls)"
+	previous_old_tls="$(apache_get_previous_old_tls)"
+
+	# If no changes were requested, then there's nothing to do here.
+	if [ "$old_tls" = "$previous_old_tls" ]; then
+		return 0
+	fi
+
+	# Validate input
+	if [ "$old_tls" = "true" ] || [ "$old_tls" = "false" ] ; then
+		apache_set_old_tls "$old_tls"
+	else
+		echo "$old_tls is not a valid option"
+		return 1
+	fi
+
+
+	# restart apache
+	if ! restart_apache_if_running; then
+		return 1
+	fi
+
+	# set previous value
+	apache_set_previous_old_tls "$old_tls"
+}
+
 # Signal to services that the configure hook is running. Useful to ensure
 # services don't restart until the configuration transaction has completed.
 set_configure_hook_running
 trap 'set_configure_hook_not_running' EXIT
 
-handle_apache_port_config && handle_php_memory_limit && handle_cronjob_interval
+handle_apache_port_config && handle_php_memory_limit && handle_cronjob_interval && handle_tls_settings

@@ -86,6 +86,21 @@ the automatic detection (including the port if necessary), e.g.:
     $ sudo nextcloud.occ config:system:set overwritehost --value="example.com:81"
 
 
+#### TLS configuration
+
+By default apache accepts the Tlsv1, Tlsv1.1 and Tlsv1.2 versions and a cipher list that is compatible with most browsers.
+
+To disable Tlsv1 and Tlsv1.1 and use a newer cipher list, run:
+
+    $ sudo snap set nextcloud apache.oldtls=false
+
+To enable older TLS protocols and ciphers again (increased compability), run:
+
+    $ sudo snap set nextcloud apache.oldtls=true
+
+Note that, if you disable older TLS versions and ciphers, certain (outdated) browsers won't be able to visit your Nextcloud instance anymore.
+
+
 #### PHP Memory limit configuration
 
 By default, PHP will use 128M as the memory limit. If you notice images not

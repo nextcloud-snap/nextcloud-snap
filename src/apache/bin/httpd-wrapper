@@ -23,6 +23,11 @@ else
 	echo "No certificates are active: using HTTP only"
 fi
 
+if [ "$(apache_old_tls)" = "false" ] ; then
+	params="$params -DDisableOldTls"
+	echo "Old TLS protocols and ciphers are disabled"
+fi
+
 HTTP_PORT="$(apache_http_port)"
 HTTPS_PORT="$(apache_https_port)"
 export HTTP_PORT

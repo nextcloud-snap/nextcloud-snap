@@ -105,3 +105,31 @@ apache_set_previous_https_port()
 {
 	snapctl set private.ports.https="$1"
 }
+
+
+apache_old_tls()
+{
+	old_tls="$(snapctl get apache.oldtls)"
+	if [ -z "$old_tls" ]; then
+		old_tls="true"
+		apache_set_old_tls $old_tls
+		apache_set_previous_old_tls $old_tls
+	fi
+
+	echo "$old_tls"
+}
+
+apache_set_old_tls()
+{
+	snapctl set apache.oldtls="$1"
+}
+
+apache_get_previous_old_tls()
+{
+	snapctl get private.apache.oldtls
+}
+
+apache_set_previous_old_tls()
+{
+	snapctl set private.apache.oldtls="$1"
+}

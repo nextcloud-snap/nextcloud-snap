@@ -1,0 +1,92 @@
+From bb6c86ca997b2ca1b052cb83e91152220fe149ad Mon Sep 17 00:00:00 2001
+From: Kyle Fazzari <oracle@status.e4ward.com>
+Date: Fri, 25 Mar 2016 15:03:38 +0000
+Subject: [PATCH] Support compile-time disabling of setpriority().
+
+This is to support running on systems such as Snappy Ubuntu Core,
+e.g. heavily confined using seccomp filters. In such a situation,
+without this commit, MySQL is aborted as soon as it tries to call
+setpriority(). With this commit, MySQL can be built without
+setpriority() by using -DWITH_INNODB_PAGE_CLEANER_PRIORITY=OFF,
+thus supporting such systems.
+
+Signed-off-by: Kyle Fazzari <oracle@status.e4ward.com>
+---
+ storage/innobase/buf/buf0flu.cc | 12 ++++++------
+ storage/innobase/innodb.cmake   |  5 +++++
+ 2 files changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/storage/innobase/buf/buf0flu.cc b/storage/innobase/buf/buf0flu.cc
+index 5a8a3567e0f..0961f757b1a 100644
+--- a/storage/innobase/buf/buf0flu.cc
++++ b/storage/innobase/buf/buf0flu.cc
+@@ -2952,7 +2952,7 @@ pc_wait_finished(
+ 	return(all_succeeded);
+ }
+ 
+-#ifdef UNIV_LINUX
++#if defined(UNIV_LINUX) && defined(SET_PAGE_CLEANER_PRIORITY)
+ /**
+ Set priority for page_cleaner threads.
+ @param[in]	priority	priority intended to set
+@@ -2967,7 +2967,7 @@ buf_flush_page_cleaner_set_priority(
+ 	return(getpriority(PRIO_PROCESS, (pid_t)syscall(SYS_gettid))
+ 	       == priority);
+ }
+-#endif /* UNIV_LINUX */
++#endif /* UNIV_LINUX && SET_PAGE_CLEANER_PRIORITY */
+ 
+ #ifdef UNIV_DEBUG
+ /** Loop used to disable page cleaner threads. */
+@@ -3113,7 +3113,7 @@ DECLARE_THREAD(buf_flush_page_cleaner_coordinator)(
+ 		<< os_thread_pf(os_thread_get_curr_id());
+ #endif /* UNIV_DEBUG_THREAD_CREATION */
+ 
+-#ifdef UNIV_LINUX
++#if defined(UNIV_LINUX) && defined(SET_PAGE_CLEANER_PRIORITY)
+ 	/* linux might be able to set different setting for each thread.
+ 	worth to try to set high priority for page cleaner threads */
+ 	if (buf_flush_page_cleaner_set_priority(
+@@ -3126,7 +3126,7 @@ DECLARE_THREAD(buf_flush_page_cleaner_coordinator)(
+ 		" page cleaner thread priority can be changed."
+ 		" See the man page of setpriority().";
+ 	}
+-#endif /* UNIV_LINUX */
++#endif /* UNIV_LINUX && SET_PAGE_CLEANER_PRIORITY */
+ 
+ 	buf_page_cleaner_is_active = true;
+ 
+@@ -3481,7 +3481,7 @@ DECLARE_THREAD(buf_flush_page_cleaner_worker)(
+ 	page_cleaner->n_workers++;
+ 	mutex_exit(&page_cleaner->mutex);
+ 
+-#ifdef UNIV_LINUX
++#if defined(UNIV_LINUX) && defined(SET_PAGE_CLEANER_PRIORITY)
+ 	/* linux might be able to set different setting for each thread
+ 	worth to try to set high priority for page cleaner threads */
+ 	if (buf_flush_page_cleaner_set_priority(
+@@ -3490,7 +3490,7 @@ DECLARE_THREAD(buf_flush_page_cleaner_worker)(
+ 		ib::info() << "page_cleaner worker priority: "
+ 			<< buf_flush_page_cleaner_priority;
+ 	}
+-#endif /* UNIV_LINUX */
++#endif /* UNIV_LINUX && SET_PAGE_CLEANER_PRIORITY */
+ 
+ 	while (true) {
+ 		os_event_wait(page_cleaner->is_requested);
+diff --git a/storage/innobase/innodb.cmake b/storage/innobase/innodb.cmake
+index a90fe67f492..0d0a3ad7e3b 100644
+--- a/storage/innobase/innodb.cmake
++++ b/storage/innobase/innodb.cmake
+@@ -38,6 +38,11 @@ IF(UNIX)
+       LINK_LIBRARIES(aio)
+     ENDIF()
+ 
++    OPTION(WITH_INNODB_PAGE_CLEANER_PRIORITY "Set a high priority for page cleaner threads" ON)
++    IF(WITH_INNODB_PAGE_CLEANER_PRIORITY)
++      ADD_DEFINITIONS("-DSET_PAGE_CLEANER_PRIORITY")
++    ENDIF()
++
+   ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
+     ADD_DEFINITIONS("-DUNIV_SOLARIS")
+   ENDIF()

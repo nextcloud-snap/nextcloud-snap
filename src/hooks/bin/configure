@@ -105,6 +105,7 @@ handle_http2_setting()
 	# Validate input
 	if [ "$http2_status" = "true" ] || [ "$http2_status" = "false" ] ; then
 		apache_set_http2_status "$http2_status"
+		apache_set_previous_http2_status "$http2_status"
 	fi
 
 	if ! restart_apache_if_running; then

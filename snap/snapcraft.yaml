@@ -174,7 +174,6 @@ parts:
       - --with-curl
       - --with-openssl
       - --with-bz2
-      - --with-mcrypt
       - --enable-exif
       - --enable-intl
       - --enable-pcntl
@@ -195,9 +194,9 @@ parts:
       - libpng12-dev
       - libjpeg9-dev
       - libbz2-dev
-      - libmcrypt-dev
       - libldap2-dev
       - libfreetype6-dev
+      - php7.0-dev
     prime:
      - -sbin/
      - -etc/
@@ -208,6 +207,9 @@ parts:
       # Build the redis PHP module
       - source: https://github.com/phpredis/phpredis/archive/3.1.4.tar.gz
         source-checksum: sha256/656cab2eb93bd30f30701c1280707c60e5736c5420212d5d547ebe0d3f4baf71
+      # Build the mcrypt PHP module  
+      - source: https://pecl.php.net/get/mcrypt-1.0.1.tgz
+        source-checksum: sha256/a3b0e5493b5cd209ab780ee54733667293d369e6b7052b4a7dab9dd0def46ac6  
 
   redis:
     plugin: redis

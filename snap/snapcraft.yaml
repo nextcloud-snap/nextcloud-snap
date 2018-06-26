@@ -98,7 +98,6 @@ parts:
     build-packages:
     - libnghttp2-14
     - libnghttp2-dev
-    - nghttp2
 
     override-build: |
       # For some reason, all directories in (and after) 2.4.32 are setgid.

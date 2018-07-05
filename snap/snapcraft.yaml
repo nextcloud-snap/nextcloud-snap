@@ -189,6 +189,7 @@ parts:
       # These are only included here until the OS snap stabilizes
       - libxml2
       - libpng12-0
+      - imagemagick
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
@@ -208,6 +209,9 @@ parts:
       # Build the redis PHP module
       - source: https://github.com/phpredis/phpredis/archive/3.1.4.tar.gz
         source-checksum: sha256/656cab2eb93bd30f30701c1280707c60e5736c5420212d5d547ebe0d3f4baf71
+      # Build the imagick module
+      - source: https://github.com/mkoppanen/imagick/
+        source-tag: 3.4.3
 
   redis:
     plugin: redis

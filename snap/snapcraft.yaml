@@ -202,6 +202,8 @@ parts:
       - libfreetype6-dev
       - libmagickwand-6.q16-dev
       - libmagickcore-6.q16-dev
+      # Don't really know why this dependency cannot be met
+      - libjpeg8-dev
     prime:
      - -sbin/
      - -etc/

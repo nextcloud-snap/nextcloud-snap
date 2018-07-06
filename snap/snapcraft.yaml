@@ -199,6 +199,7 @@ parts:
       - libmcrypt-dev
       - libldap2-dev
       - libfreetype6-dev
+      - libmagickwand-dev
     prime:
      - -sbin/
      - -etc/

@@ -195,15 +195,14 @@ parts:
       - libxml2-dev
       - libcurl4-openssl-dev
       - libpng12-dev
-      - libjpeg9-dev
+      # This causes a conflict with libmagick* deps, that need libjpeg8-dev
+      #- libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
       - libldap2-dev
       - libfreetype6-dev
       - libmagickwand-6.q16-dev
       - libmagickcore-6.q16-dev
-      # Don't really know why this dependency cannot be met
-      - libjpeg8-dev
     prime:
      - -sbin/
      - -etc/

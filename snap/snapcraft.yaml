@@ -189,7 +189,8 @@ parts:
       # These are only included here until the OS snap stabilizes
       - libxml2
       - libpng12-0
-      - imagemagick
+      - libmagickwand-6.q16-2
+      - libmagickcore-6.q16-2
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
@@ -199,7 +200,8 @@ parts:
       - libmcrypt-dev
       - libldap2-dev
       - libfreetype6-dev
-      - libmagickwand-dev
+      - libmagickwand-6.q16-dev
+      - libmagickcore-6.q16-dev
     prime:
      - -sbin/
      - -etc/

@@ -171,6 +171,22 @@ RSpec.configure do |config|
 		wait_for_nextcloud
 	end
 
+	def enable_http2
+		`sudo snap set nextcloud apache.http2 true`
+		expect($?.to_i).to eq 0
+		wait_for_nextcloud
+	end
+
+	def disable_http2
+		`sudo snap set nextcloud apache.http2 false`
+		expect($?.to_i).to eq 0
+		wait_for_nextcloud
+	end
+
+	def install_http2_cli
+		`sudo npm install -g is-http2-cli`
+	end
+
 	def wait_for_nextcloud(https: false, port: nil)
 		url = 'http://localhost'
 		if https

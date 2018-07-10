@@ -1,7 +1,10 @@
 #!/bin/sh
 
+# Add up to date nodejs repository
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+
 # Install dependencies for the gems
-sudo apt install qt5-default libqt5webkit5-dev xvfb nodejs npm -y
+sudo apt install qt5-default libqt5webkit5-dev xvfb nodejs -y
 
 # In order to use rvm, we need a login shell. We need to install
 # Ruby v2.4.0 (the older version that is the default doesn't handle

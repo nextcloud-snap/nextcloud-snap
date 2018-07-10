@@ -151,8 +151,9 @@ RSpec.configure do |config|
 		`sudo snap set nextcloud php.memory-limit=128M`
                 expect($?.to_i).to eq 0
 
-		# Also make sure HTTPS is disabled
+		# Also make sure HTTPS and HTTP2 are disabled
 		disable_https
+		disable_http2
 
 		# Make sure we're usin the normal, HTTP host again
 		Capybara.app_host = 'http://localhost'
@@ -172,14 +173,15 @@ RSpec.configure do |config|
 	end
 
 	def enable_http2
-		`sudo snap set nextcloud apache.http2 true`
+		`sudo snap set nextcloud apache.http2=true`
 		expect($?.to_i).to eq 0
 		wait_for_nextcloud
 	end
 
 	def disable_http2
-		`sudo snap set nextcloud apache.http2 false`
-		expect($?.to_i).to eq 0
+		# Don't verify the output of this command: it will fail if
+		# HTTP2 wasn't enabled, which will be the case sometimes.
+		`sudo snap set nextcloud apache.http2=false`
 		wait_for_nextcloud
 	end
 

@@ -6,7 +6,7 @@ feature "HTTP2" do
 		enable_http2
 
 		# test if http/2 is supported using a curl docker image (with http/2 support compiled in)
-		http_version = `docker run -t --rm registry.gitlab.com/bn4t/curl-http2-docker -sI https://localhost -o/dev/null -w '%{http_version}'`
+		http_version = `docker run -t --rm registry.gitlab.com/bn4t/curl-http2-docker -sI --insecure https://localhost -o/dev/null -w '%{http_version}'`
 		expect(http_version).to eq "2"
 	end
 
@@ -16,7 +16,7 @@ feature "HTTP2" do
 		disable_http2
 
 		# test if http/2 is supported using a curl docker image (with http/2 support compiled in)
-		http_version = `docker run -t --rm registry.gitlab.com/bn4t/curl-http2-docker -sI https://localhost -o/dev/null -w '%{http_version}'`
+		http_version = `docker run -t --rm registry.gitlab.com/bn4t/curl-http2-docker -sI --insecure https://localhost -o/dev/null -w '%{http_version}'`
 		expect(http_version).to eq "1.1"
 	end
 end

@@ -185,10 +185,6 @@ RSpec.configure do |config|
 		wait_for_nextcloud
 	end
 
-	def install_http2_cli
-		`sudo npm install -g is-http2-cli`
-	end
-
 	def wait_for_nextcloud(https: false, port: nil)
 		url = 'http://localhost'
 		if https

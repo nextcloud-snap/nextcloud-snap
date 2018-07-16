@@ -183,10 +183,13 @@ dependencies:
     $ cd tests/
     $ bundle install
 
+For the http/2 test to work you also need docker installed. See [here](https://docs.docker.com/install/) on how to install docker.
+
 Additionally, if you do not have X configured, install the following for a
 'fake' X server.
 
     $ sudo apt install xvfb
+
 
 Make sure the snap has a user called "admin" with password "admin" (used for
 login tests):

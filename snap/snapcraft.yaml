@@ -208,7 +208,8 @@ parts:
       - source: https://github.com/phpredis/phpredis/archive/3.1.4.tar.gz
         source-checksum: sha256/656cab2eb93bd30f30701c1280707c60e5736c5420212d5d547ebe0d3f4baf71
       # Build the mcrypt PHP module  
-      - source: https://github.com/php/pecl-encryption-mcrypt.git
+      - source: https://github.com/php/pecl-encryption-mcrypt/archive/972b71145cb36f794451f7dd0ba3a25c7f534468.tar.gz
+        source-checksum: sha256/af82161f3f8b8a4e77ac5b74f81b5ca37b67847ab9f75b91ae3c17cb298222d4
 
   redis:
     plugin: redis

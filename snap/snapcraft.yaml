@@ -92,15 +92,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.33.tar.bz2
-    source-checksum: sha256/de02511859b00d17845b9abdd1f975d5ccb5d0b280c567da5bf2ad4b70846f05
-
-    override-build: |
-      # For some reason, all directories in (and after) 2.4.32 are setgid.
-      # Reported as https://bz.apache.org/bugzilla/show_bug.cgi?id=62298
-      # Work around by unsetting setgid. FIXME: Remove when bug is fixed.
-      find . -perm -g+s -exec chmod g-s {} \;
-      snapcraftctl build
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.34.tar.bz2
+    source-checksum: sha256/fa53c95631febb08a9de41fd2864cfff815cf62d9306723ab0d4b8d7aa1638f0
 
     # The built-in Apache modules to enable
     modules:
@@ -181,6 +174,7 @@ parts:
       - --with-jpeg-dir=/usr/lib
       - --with-freetype-dir=/usr/lib
       - --disable-rpath
+      - --enable-ftp
 
       # Enable ldap.
       - --with-libdir=lib/ARCH_TRIPLET

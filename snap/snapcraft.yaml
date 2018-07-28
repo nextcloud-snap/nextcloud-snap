@@ -183,14 +183,12 @@ parts:
       # These are only included here until the OS snap stabilizes
       - libxml2
       - libpng12-0
-      - libmagickwand-6.q16-2
-      - libmagickcore-6.q16-2
+        #- libmagickwand-6.q16-2
+        #- libmagickcore-6.q16-2
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
       - libpng12-dev
-      # This causes a conflict with libmagick* deps, that need libjpeg8-dev
-      #- libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
       - libldap2-dev

@@ -7,7 +7,7 @@ sudo add-apt-repository --yes ppa:beineri/opt-qt551-trusty
 sudo apt update
 
 # Also install xvfb since we're running headless in CI
-sudo apt install --yes qt55-meta-minimal qt55webkit xvfb
+sudo apt install --yes qt55-meta-full qt55webkit xvfb
 
 # Finally, activate the Qt installation
 source /opt/qt55/bin/qt55-env.sh

@@ -180,11 +180,11 @@ parts:
       - --with-libdir=lib/ARCH_TRIPLET
       - --with-ldap
     stage-packages:
+      - libmagickwand-6.q16-2
+      - libmagickcore-6.q16-2
       # These are only included here until the OS snap stabilizes
       - libxml2
       - libpng12-0
-        #- libmagickwand-6.q16-2
-        #- libmagickcore-6.q16-2
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev

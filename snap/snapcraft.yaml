@@ -1,5 +1,5 @@
 name: nextcloud
-version: 13.0.4snap1
+version: 13.0.5snap1
 summary: Nextcloud Server - A safe home for all your data
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -135,8 +135,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.4.tar.bz2
-    source-checksum: sha256/18d514145fcddc86f48d0a5fa4a0d4b07617135a1b23107137a6ea3ed519bd54
+    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.5.tar.bz2
+    source-checksum: sha256/a110d32849259ab79813af3078123a09057fc659ee414e5f3ed75451ec9e80ea
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -149,8 +149,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.1.17.tar.bz2/from/this/mirror
-    source-checksum: sha256/e124e3ac552c50f3890ed981d07b2ee473cac961885e75186ded0bbb5b78dbcf
+    source: https://php.net/get/php-7.1.20.tar.bz2/from/this/mirror
+    source-checksum: sha256/3a1b476c88fb81254ea572e891a1d65053ab54068348e00c75e8b54fae691d45
     source-type: tar
     install-via: prefix
     configflags:

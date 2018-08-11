@@ -95,6 +95,10 @@ parts:
     source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.34.tar.bz2
     source-checksum: sha256/fa53c95631febb08a9de41fd2864cfff815cf62d9306723ab0d4b8d7aa1638f0
 
+    build-packages:
+      - libnghttp2-14
+      - libnghttp2-dev
+
     # The built-in Apache modules to enable
     modules:
       - headers

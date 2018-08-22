@@ -68,17 +68,17 @@ install_custom_certificate()
 	chmod 750 "$(dirname "$CUSTOM_CHAIN")"
 
 	if [ ! -r "$1" ]; then
-    		echo "File $1 not readable!\n Note that the files provided to this command must be readable by the snap, which means they must contained in one of four directory trees:\n - /var/snap/nextcloud/current\n - /var/snap/nextcloud/common\n - /root/snap/nextcloud/1284\n - /root/snap/nextcloud/common"
+    		printf "File $1 not readable!\n Note that the files provided to this command must be readable by the snap, which means they must contained in one of four directory trees:\n - /var/snap/nextcloud/current\n - /var/snap/nextcloud/common\n - /root/snap/nextcloud/1284\n - /root/snap/nextcloud/common"
 		return 1
 	fi
 
 	if [ ! -r "$2" ]; then
-    		echo "File $2 not readable!\n Note that the files provided to this command must be readable by the snap, which means they must contained in one of four directory trees:\n - /var/snap/nextcloud/current\n - /var/snap/nextcloud/common\n - /root/snap/nextcloud/1284\n - /root/snap/nextcloud/common"
+    		printf "File $2 not readable!\n Note that the files provided to this command must be readable by the snap, which means they must contained in one of four directory trees:\n - /var/snap/nextcloud/current\n - /var/snap/nextcloud/common\n - /root/snap/nextcloud/1284\n - /root/snap/nextcloud/common"
 		return 1
 	fi
 	
 	if [ ! -r "$3" ]; then
-    		echo "File $3 not readable!\n Note that the files provided to this command must be readable by the snap, which means they must contained in one of four directory trees:\n - /var/snap/nextcloud/current\n - /var/snap/nextcloud/common\n - /root/snap/nextcloud/1284\n - /root/snap/nextcloud/common"
+    		printf "File $3 not readable!\n Note that the files provided to this command must be readable by the snap, which means they must contained in one of four directory trees:\n - /var/snap/nextcloud/current\n - /var/snap/nextcloud/common\n - /root/snap/nextcloud/1284\n - /root/snap/nextcloud/common"
 		return 1
 	fi
 

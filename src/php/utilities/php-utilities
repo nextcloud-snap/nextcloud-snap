@@ -80,3 +80,18 @@ php_set_previous_memory_limit()
 {
 	snapctl set private.php.memory-limit="$1"
 }
+
+php_invalidate_opcache()
+{
+	tmpfile="$(mktemp --tmpdir tmp_XXXXXXXXXX.php)"
+	echo "<?php opcache_invalidate('$1'); ?>" > "$tmpfile"
+
+	export SCRIPT_FILENAME="$tmpfile"
+	export REQUEST_METHOD="GET"
+	if ! output="$(cgi-fcgi -bind -connect "$PHP_FPM_SOCKET")"; then
+		echo "Unable to invalidate opcache: $output" >&2
+	fi
+
+	# Dash doesn't support trap RETURN
+	rm -f "$tmpfile"
+}

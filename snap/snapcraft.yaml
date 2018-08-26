@@ -219,7 +219,7 @@ parts:
     source: src/php/
     organize:
       config/*: config/php/
-    stage-packages: [mawk]
+    stage-packages: [mawk, libfcgi0ldbl]
 
   # Copy over our Nextcloud configuration files
   nextcloud-customizations:

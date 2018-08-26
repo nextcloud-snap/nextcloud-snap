@@ -19,3 +19,7 @@ wait_for_php
 wait_for_nextcloud_to_be_configured
 
 run-php "$SNAP/htdocs/occ" "$@"
+
+# occ may have modified the config. Invalidate its cache just in case, otherwise
+# PHP won't see the changes.
+php_invalidate_opcache "$NEXTCLOUD_CONFIG_DIR/config.php"

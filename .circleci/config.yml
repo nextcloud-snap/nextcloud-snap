@@ -23,13 +23,16 @@ jobs:
      - run:
          # Build the snap
          command: |
-           sudo apt update
-           sudo apt install -y snapd
-           docker run -v $(pwd):$(pwd) -e LC_ALL=C.UTF-8 -e LANG=C.UTF-8 -t ubuntu:xenial sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
+           docker run -v $(pwd):$(pwd) \
+                      -e SNAPCRAFT_MANAGED_HOST=yes \
+                      -t snapcore/snapcraft:stable \
+                      sh -c "cd $(pwd) && snapcraft"
 
      - run:
          # Install the snap and create an admin user
          command: |
+           sudo apt update -qq
+           sudo apt install -y snapd
            sudo snap install *.snap --dangerous
            sudo nextcloud.manual-install admin admin
 

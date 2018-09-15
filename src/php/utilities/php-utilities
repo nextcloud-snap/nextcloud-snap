@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DEFAULT_MEMORY_LIMIT="128M"
+DEFAULT_MEMORY_LIMIT="512M"
 export PHP_FPM_PIDFILE="/tmp/pids/php-fpm.pid"
 export PHP_FPM_SOCKET="/tmp/sockets/php-fpm.sock"
 

@@ -179,6 +179,9 @@ parts:
       # Enable ldap.
       - --with-libdir=lib/ARCH_TRIPLET
       - --with-ldap
+      
+      # Enable readline for elastic full text search
+      - --with-readline
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2
@@ -192,6 +195,7 @@ parts:
       - libmcrypt-dev
       - libldap2-dev
       - libfreetype6-dev
+      - libreadline-dev
     prime:
      - -sbin/
      - -etc/

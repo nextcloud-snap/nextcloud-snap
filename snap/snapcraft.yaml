@@ -180,6 +180,8 @@ parts:
       - --with-libdir=lib/ARCH_TRIPLET
       - --with-ldap
     stage-packages:
+      - libmagickwand-6.q16-2
+      - libmagickcore-6.q16-2
       # These are only included here until the OS snap stabilizes
       - libxml2
       - libpng12-0
@@ -187,11 +189,12 @@ parts:
       - libxml2-dev
       - libcurl4-openssl-dev
       - libpng12-dev
-      - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
       - libldap2-dev
       - libfreetype6-dev
+      - libmagickwand-6.q16-dev
+      - libmagickcore-6.q16-dev
     prime:
      - -sbin/
      - -etc/
@@ -202,6 +205,9 @@ parts:
       # Build the redis PHP module
       - source: https://github.com/phpredis/phpredis/archive/3.1.4.tar.gz
         source-checksum: sha256/656cab2eb93bd30f30701c1280707c60e5736c5420212d5d547ebe0d3f4baf71
+      # Build the imagick module
+      - source: https://github.com/mkoppanen/imagick.git
+        source-tag: 3.4.3
 
   redis:
     plugin: redis

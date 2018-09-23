@@ -6,7 +6,7 @@ feature "Maintenance mode" do
         expect(page).not_to have_content('maintenance mode')
 
         # Enable maintenance mode
-		`sudo nextcloud.occ maintenance:mode --on`
+		`sudo nextcloud.occ maintenance:mode --on 2>&1`
         expect($?.to_i).to eq 0
 
         # Now verify that maintenance mode is active
@@ -14,7 +14,7 @@ feature "Maintenance mode" do
         expect(page).to have_content('maintenance mode')
 
         # Now disable maintenance mode
-        `sudo nextcloud.occ maintenance:mode --off`
+        `sudo nextcloud.occ maintenance:mode --off 2>&1`
         expect($?.to_i).to eq 0
 
         # Finally, verify that maintenance mode is not active again

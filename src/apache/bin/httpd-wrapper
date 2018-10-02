@@ -6,6 +6,8 @@
 . "$SNAP/utilities/apache-utilities"
 # shellcheck source=src/php/utilities/php-utilities
 . "$SNAP/utilities/php-utilities"
+# shellcheck source=src/hooks/utilities/configuration-utilities
+. "$SNAP/utilities/configuration-utilities"
 
 params=""
 if certificates_are_active; then
@@ -29,6 +31,10 @@ if should_enable_http2; then
 	params="$params -DEnableHttp2"
 else
 	echo "http/2 is disabled. Using http/1.1 only"
+fi
+
+if debug_mode_enabled; then
+	params="$params -DDebug"
 fi
 
 

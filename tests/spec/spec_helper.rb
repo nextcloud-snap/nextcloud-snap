@@ -149,7 +149,15 @@ RSpec.configure do |config|
 
 		# After each test, make sure the PHP memory limit is reset
 		`sudo snap set nextcloud php.memory-limit=128M`
-                expect($?.to_i).to eq 0
+		expect($?.to_i).to eq 0
+
+		# After each test, make sure maintenance mode is reset
+		`sudo nextcloud.occ maintenance:mode --off 2>&1`
+		expect($?.to_i).to eq 0
+
+		# After each test, make sure the snap operating mode is reset
+		`sudo snap set nextcloud mode=production`
+		expect($?.to_i).to eq 0
 
 		# Also make sure HTTPS and HTTP2 are disabled
 		disable_https

@@ -23,10 +23,10 @@
 . "$SNAP/utilities/apache-utilities"
 # shellcheck source=src/php/utilities/php-utilities
 . "$SNAP/utilities/php-utilities"
-# shellcheck source=src/hooks/utilities/hook-utilities
-. "$SNAP/utilities/hook-utilities"
 # shellcheck source=src/nextcloud/utilities/nextcloud-utilities
-. $SNAP/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
+# shellcheck source=src/hooks/utilities/configuration-utilities
+. "$SNAP/utilities/configuration-utilities"
 
 handle_apache_port_config()
 {
@@ -49,20 +49,18 @@ handle_apache_port_config()
 	# Validate HTTPS port
 	if ! expr "$https_port" : '^[0-9]\+$' > /dev/null; then
 		echo "\"$https_port\" is not a valid HTTPS port" >&2
-		return 2
+		return 1
 	fi
 
+	# Set new values. Since snapctl only gives us new values, also keep track
+	# of the current values so we know when they change.
 	apache_set_http_port "$http_port"
 	apache_set_https_port "$https_port"
-
-	if ! restart_apache_if_running; then
-		return 3
-	fi
-
-	# Since snapctl only gives us new values, keep track of the current values
-	# so we know when they change.
 	apache_set_previous_http_port "$http_port"
 	apache_set_previous_https_port "$https_port"
+
+	# Restart Apache to apply new config
+	snapctl restart nextcloud.apache
 }
 
 handle_php_memory_limit()
@@ -78,18 +76,16 @@ handle_php_memory_limit()
 	# Validate memory limit. -1, raw bytes, and K/M/G shorthand allowed.
 	if ! expr "$memory_limit" : '^-\?[0-9]\+[KMG]\?$' > /dev/null; then
 		echo "\"$memory_limit\" is not a valid PHP memory limit" >&2
-		return 4
+		return 1
 	fi
 
+	# Set new value. Since snapctl only gives us new values, also keep track of
+	# the current value so we know when it changes.
 	php_set_memory_limit "$memory_limit"
-
-	if ! restart_php_if_running; then
-		return 5
-	fi
-
-	# Since snapctl only gives us new values, keep track of the current values
-	# so we know when they change.
 	php_set_previous_memory_limit "$memory_limit"
+
+	# Restart PHP to apply new config
+	snapctl restart nextcloud.php-fpm
 }
 
 handle_http2_setting()
@@ -127,19 +123,42 @@ handle_cronjob_interval()
 	# Validate time interval seconds (s), minutes (m), hours (h), "-1" or no specified type(by default seconds) are allowed
 	if ! expr "$interval" : '^\(\(\([0-9]*\.\)\?[0-9]\+[smhd]\?\)\|\(\-1\)\)$' > /dev/null; then
 		echo "\"$interval\" is not a valid timespan" >&2
-		return 4
+		return 1
 	fi
 
+	# Set new value. Since snapctl only gives us new values, also keep track of
+	# the current value so we know when it changes.
 	set_cronjob_interval "$interval"
 	set_previous_cronjob_interval "$interval"
 
-	# restart cronjob
+	# Restart cronjob to apply new config
 	snapctl restart nextcloud.nextcloud-cron
 }
 
-# Signal to services that the configure hook is running. Useful to ensure
-# services don't restart until the configuration transaction has completed.
-set_configure_hook_running
-trap 'set_configure_hook_not_running' EXIT
+handle_mode()
+{
+	# If no changes were requested, then there's nothing to do here.
+	if ! mode_has_changed; then
+		return 0
+	fi
 
-handle_apache_port_config && handle_php_memory_limit && handle_cronjob_interval && handle_http2_setting
+	if debug_mode_enabled; then
+		enable_debug_mode
+	elif production_mode_enabled; then
+		enable_production_mode
+	else
+		echo "mode must be either 'debug' or 'production'"
+		return 1
+	fi
+
+	# Restart all affected services. As of now that's Apache and PHP.
+	snapctl restart nextcloud.apache
+	snapctl restart nextcloud.php-fpm
+}
+
+
+handle_apache_port_config && \
+handle_php_memory_limit && \
+handle_cronjob_interval && \
+handle_http2_setting && \
+handle_mode

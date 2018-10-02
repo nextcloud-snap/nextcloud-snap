@@ -1,5 +1,5 @@
 name: nextcloud
-version: 13.0.4snap1
+version: 13.0.6snap1
 summary: Nextcloud Server - A safe home for all your data
 description: |
  Access, share and protect your files, calendars, contacts, communication and
@@ -140,8 +140,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.4.tar.bz2
-    source-checksum: sha256/18d514145fcddc86f48d0a5fa4a0d4b07617135a1b23107137a6ea3ed519bd54
+    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.6.tar.bz2
+    source-checksum: sha256/90fc9e960b6a477bb14ee87042b3d158bde95c3f0157677cb4547ca7649968d4
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -154,8 +154,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.1.17.tar.bz2/from/this/mirror
-    source-checksum: sha256/e124e3ac552c50f3890ed981d07b2ee473cac961885e75186ded0bbb5b78dbcf
+    source: https://php.net/get/php-7.1.22.tar.bz2/from/this/mirror
+    source-checksum: sha256/c8e91f19c8aa810ae95f228ff31cf0e4805cb89f4c10870ee12c85491b26e763
     source-type: tar
     install-via: prefix
     configflags:
@@ -210,8 +210,8 @@ parts:
 
   redis:
     plugin: redis
-    source: http://download.redis.io/releases/redis-4.0.9.tar.gz
-    source-checksum: sha256/df4f73bc318e2f9ffb2d169a922dec57ec7c73dd07bccf875695dbeecd5ec510
+    source: http://download.redis.io/releases/redis-4.0.11.tar.gz
+    source-checksum: sha256/fc53e73ae7586bcdacb4b63875d1ff04f68c5474c1ddeda78f00e5ae2eed1bbb
 
   redis-customizations:
     plugin: dump
@@ -225,7 +225,7 @@ parts:
     source: src/php/
     organize:
       config/*: config/php/
-    stage-packages: [mawk]
+    stage-packages: [mawk, libfcgi0ldbl]
 
   # Copy over our Nextcloud configuration files
   nextcloud-customizations:

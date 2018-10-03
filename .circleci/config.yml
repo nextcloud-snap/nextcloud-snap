@@ -46,7 +46,7 @@ jobs:
            mkdir /tmp/
            cp *.snap /tmp/nextcloud.snap
 
-      - store_artifacts:
+     - store_artifacts:
           path: /tmp/nextcloud.snap
 
   test-daily-master:

@@ -37,14 +37,14 @@ jobs:
            sudo nextcloud.manual-install admin admin
 
      - run:
-         # Run the integration tests
-         command: ./.circleci/runtests.sh
-
-     - run:
          # Copy artifacts
          command: |
            mkdir /tmp/
            cp *.snap /tmp/nextcloud.snap
+
+     - run:
+         # Run the integration tests
+         command: ./.circleci/runtests.sh
 
      - store_artifacts:
           path: /tmp/nextcloud.snap

@@ -45,7 +45,7 @@ jobs:
          command: |
            mkdir /tmp/
            cp *.snap /tmp/nextcloud.snap
-   
+
       - store_artifacts:
           path: /tmp/nextcloud.snap
 

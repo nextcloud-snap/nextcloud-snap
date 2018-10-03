@@ -40,6 +40,15 @@ jobs:
          # Run the integration tests
          command: ./.circleci/runtests.sh
 
+     - run:
+         # Copy artifacts
+         command: |
+           mkdir /tmp/
+           cp *.snap /tmp/nextcloud.snap
+   
+      - store_artifacts:
+          path: /tmp/nextcloud.snap
+
   test-daily-master:
     working_directory: ~/nextcloud-snap
     machine: true

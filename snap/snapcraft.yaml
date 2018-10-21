@@ -92,8 +92,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.34.tar.bz2
-    source-checksum: sha256/fa53c95631febb08a9de41fd2864cfff815cf62d9306723ab0d4b8d7aa1638f0
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.35.tar.bz2
+    source-checksum: sha256/2607c6fdd4d12ac3f583127629291e9432b247b782396a563bec5678aae69b56
 
     # The built-in Apache modules to enable
     modules:
@@ -135,8 +135,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.6.tar.bz2
-    source-checksum: sha256/90fc9e960b6a477bb14ee87042b3d158bde95c3f0157677cb4547ca7649968d4
+    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.7.tar.bz2
+    source-checksum: sha256/be7adaa9d1ade58f221cdabd093bdc7ddfe614d936f43f59f5311f6e904841ef
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess

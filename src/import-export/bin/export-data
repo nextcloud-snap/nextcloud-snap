@@ -1,0 +1,181 @@
+#!/bin/sh
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "This utility needs to run as root"
+	exit 1
+fi
+
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
+# shellcheck source=src/mysql/utilities/mysql-utilities
+. "$SNAP/utilities/mysql-utilities"
+
+# shellcheck disable=SC2119
+wait_for_mysql
+
+COMMAND="nextcloud.export"
+BACKUP_DIRECTORY="${SNAP_COMMON}/backups"
+FORMAT="1"
+
+print_usage()
+{
+	echo "Usage:"
+	echo "    $COMMAND [OPTIONS]"
+	echo "    Export data suitable for migrating servers. By default this"
+	echo "    includes the Nextcloud database, configuration, and data"
+	echo "    (equivalent to running $COMMAND -abcd)."
+	echo ""
+	echo "Available options:"
+	echo "    -h: Display this help message"
+	echo "    -a: Include the (non-default) apps"
+	echo "    -b: Include the database"
+	echo "    -c: Include the config"
+	echo "    -d: Include the data (can be quite large)"
+}
+
+export_apps()
+{
+	backup="$1"
+	echo "Exporting apps..."
+	if ! rsync -ah --info=progress2 "$SNAP_DATA/nextcloud/extra-apps/" "${backup}/apps"; then
+		echo "Unable to export apps"
+		exit 1
+	fi
+}
+
+export_database()
+{
+	backup="$1"
+	echo "Exporting database..."
+	if ! mysqldump --defaults-file="$SNAP_DATA/mysql/root.ini" \
+	             --lock-tables nextcloud > "${backup}/database.sql"; then
+		echo "Unable to export database"
+		exit 1
+	fi
+}
+
+export_config()
+{
+	backup="$1"
+	config_backup="${backup}/config.php"
+
+	# Mask out the config password. We don't need it when restoring.
+	echo "Exporting config..."
+	if ! sed "s/\(dbpassword.*=>\s*\).*,/\1'DBPASSWORD',/" \
+	       "${SNAP_DATA}/nextcloud/config/config.php" > "$config_backup"; then
+		echo "Unable to export config"
+		exit 1
+	fi
+}
+
+export_data()
+{
+	backup="$1"
+	echo "Exporting data..."
+	if ! rsync -ah --info=progress2 "${NEXTCLOUD_DATA_DIR%/}/" "${backup}/data"; then
+		echo "Unable to export data"
+		exit 1
+	fi
+}
+
+run_command()
+{
+	printf "%s... " "$2"
+	if output="$(eval "$1" 2>&1)"; then
+		echo "done"
+		return 0;
+	else
+		echo "error"
+		echo "$output"
+		return 1;
+	fi
+}
+
+enable_maintenance_mode()
+{
+	run_command "occ maintenance:mode --on" "Enabling maintenance mode"
+}
+
+disable_maintenance_mode()
+{
+	run_command "occ maintenance:mode --off" "Disabling maintenance mode"
+}
+
+do_export_apps=false
+do_export_database=false
+do_export_config=false
+do_export_data=false
+
+# If no parameters are specified, default to exporting everything
+if [ $# -eq 0 ]; then
+	do_export_apps=true
+	do_export_database=true
+	do_export_config=true
+	do_export_data=true
+fi
+
+while getopts ":abcdh" opt; do
+	case $opt in
+		a)
+			do_export_apps=true
+			;;
+		b)
+			do_export_database=true
+			;;
+		c)
+			do_export_config=true
+			;;
+		d)
+			do_export_data=true
+			;;
+		h)
+			print_usage
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			exit 1
+			;;
+	esac
+done
+
+# Clear options
+shift "$((OPTIND-1))"
+
+echo "WARNING: This functionality is still experimental and under" >&2
+echo "development, use at your own risk. Note that the CLI interface is" >&2
+echo "unstable, so beware if using from within scripts." >&2
+echo "" >&2
+
+backup="${BACKUP_DIRECTORY}/$(date +%Y%m%d-%H%M%S)"
+
+mkdir -p "$backup"
+chmod 750 "$backup"
+
+echo "$FORMAT" > "${backup}/format"
+
+# Enable maintenance mode so data can't change out from under us
+if ! enable_maintenance_mode; then
+	echo "Unable to enter maintenance mode"
+	exit 1
+fi
+trap 'disable_maintenance_mode' EXIT
+
+if [ "$do_export_apps" = true ]; then
+	export_apps "$backup"
+fi
+
+if [ "$do_export_database" = true ]; then
+	export_database "$backup"
+fi
+
+if [ "$do_export_config" = true ]; then
+	export_config "$backup"
+fi
+
+if [ "$do_export_data" = true ]; then
+	export_data "$backup"
+fi
+
+echo ""
+echo "Successfully exported $backup"

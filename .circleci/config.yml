@@ -29,10 +29,16 @@ jobs:
                       sh -c "cd $(pwd) && snapcraft"
 
      - run:
-         # Install the snap and create an admin user
+         # Install and run the review tools on the resulting snap
          command: |
            sudo apt update -qq
            sudo apt install -y snapd
+           sudo snap install --beta review-tools
+           sudo /snap/bin/review-tools.snap-review *.snap
+
+     - run:
+         # Install the snap and create an admin user
+         command: |
            sudo snap install *.snap --dangerous
            sudo nextcloud.manual-install admin admin
 
@@ -49,7 +55,7 @@ jobs:
       - run:
           # Install the snap and create an admin user
           command: |
-            sudo apt update
+            sudo apt update -qq
             sudo apt install -y snapd
             sudo snap install --edge nextcloud
             sudo nextcloud.manual-install admin admin
@@ -67,7 +73,7 @@ jobs:
       - run:
           # Install the snap and create an admin user
           command: |
-            sudo apt update
+            sudo apt update -qq
             sudo apt install -y snapd
             sudo snap install nextcloud --channel=12/edge
             sudo nextcloud.manual-install admin admin
@@ -85,7 +91,7 @@ jobs:
       - run:
           # Install the snap and create an admin user
           command: |
-            sudo apt update
+            sudo apt update -qq
             sudo apt install -y snapd
             sudo snap install nextcloud --channel=13/edge
             sudo nextcloud.manual-install admin admin

@@ -39,8 +39,8 @@ jobs:
      - run:
          # Copy artifacts
          command: |
-           mkdir /artifacts/
-           cp *.snap /artifacts/nextcloud.snap
+           sudo mkdir /artifacts/
+           sudo cp *.snap /artifacts/nextcloud.snap
 
      - run:
          # Run the integration tests

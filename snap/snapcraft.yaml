@@ -48,7 +48,7 @@ apps:
 
   # MySQL client
   mysql-client:
-    command: mysql --defaults-file=$SNAP_DATA/mysql/root.ini
+    command: run-mysql
     plugs: [network, network-bind]
 
   mysqldump:
@@ -85,6 +85,14 @@ apps:
     command: manual-install
     plugs: [network, network-bind, removable-media]
 
+  import:
+    command: import-data
+    plugs: [network, network-bind, removable-media]
+
+  export:
+    command: export-data
+    plugs: [network, network-bind, removable-media]
+
 hooks:
   configure:
     plugs: [network, network-bind]
@@ -94,6 +102,14 @@ parts:
     plugin: apache
     source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.35.tar.bz2
     source-checksum: sha256/2607c6fdd4d12ac3f583127629291e9432b247b782396a563bec5678aae69b56
+
+    override-pull: |
+      snapcraftctl pull
+
+      # For some reason, all directories in (and after) 2.4.32 are setgid.
+      # Reported as https://bz.apache.org/bugzilla/show_bug.cgi?id=62298
+      # Work around by unsetting setgid. FIXME: Remove when bug is fixed.
+      find . -perm -g+s -exec chmod g-s {} \;
 
     # The built-in Apache modules to enable
     modules:
@@ -347,6 +363,11 @@ parts:
     source: src/https/
     stage-packages: [openssl]
     stage: [-etc/ssl, -patches]
+
+  import-export:
+    plugin: dump
+    source: src/import-export
+    stage-packages: [rsync]
 
   hooks:
     plugin: dump

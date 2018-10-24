@@ -43,10 +43,13 @@ jobs:
            sudo nextcloud.manual-install admin admin
 
      - run:
-         # Copy artifacts
+         # Copy artifacts, install nodejs and publish download link in PR
          command: |
            sudo mkdir /artifacts/
            sudo cp *.snap /artifacts/nextcloud.snap
+           wget -qO- https://deb.nodesource.com/setup_8.x | sudo -E bash -
+           sudo apt-get install -y nodejs
+           sh $(pwd)/.circleci/publish-artifact.js
 
      - run:
          # Run the integration tests

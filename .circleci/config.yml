@@ -26,7 +26,7 @@ jobs:
            docker run -v $(pwd):$(pwd) \
                       -e SNAPCRAFT_MANAGED_HOST=yes \
                       -t snapcore/snapcraft:stable \
-                      sh -c "cd $(pwd) && snapcraft"
+                      sh -c "cd $(pwd) && apt update -qq && snapcraft"
 
      - run:
          # Install and run the review tools on the resulting snap

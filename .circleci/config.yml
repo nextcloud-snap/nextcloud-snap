@@ -26,7 +26,6 @@ jobs:
            docker run -v $(pwd):$(pwd) \
                       -e SNAPCRAFT_MANAGED_HOST=yes \
                       -t snapcore/snapcraft:stable \
-                      apt update && \
                       sh -c "cd $(pwd) && snapcraft"
 
      - run:

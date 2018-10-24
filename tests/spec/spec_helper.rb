@@ -163,6 +163,9 @@ RSpec.configure do |config|
 		disable_https
 		disable_http2
 
+		# Make sure any and all backups are removed
+		`sudo rm -rf /var/snap/nextcloud/common/backups`
+
 		# Make sure we're usin the normal, HTTP host again
 		Capybara.app_host = 'http://localhost'
 	end

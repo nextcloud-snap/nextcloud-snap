@@ -2,7 +2,11 @@ require 'rake'
 require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:test) do |t|
-	t.pattern = Dir.glob('spec/**/*_spec.rb')
+	if ENV['TEST'].nil? or ENV['TEST'].empty?
+		t.pattern = Dir.glob('spec/**/*_spec.rb')
+	else
+		t.pattern = Dir.glob(ENV['TEST'])
+	end
 	t.rspec_opts = "--format documentation"
 end
 task :default => :test

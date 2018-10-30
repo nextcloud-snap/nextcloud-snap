@@ -1,0 +1,191 @@
+#!/bin/sh
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "This utility needs to run as root"
+	exit 1
+fi
+
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
+# shellcheck source=src/mysql/utilities/mysql-utilities
+. "$SNAP/utilities/mysql-utilities"
+
+# shellcheck disable=SC2119
+wait_for_mysql
+
+COMMAND="nextcloud.import"
+
+print_usage()
+{
+	echo "Usage:"
+	echo "    $COMMAND [OPTIONS] <backup dir>"
+	echo "    Import data exported from another Nextcloud snap instance."
+	echo "    By default this imports the database, config, and data"
+	echo "    (equivalent to running $COMMAND -abcd)."
+	echo ""
+	echo "Available options:"
+	echo "    -h: Display this help message"
+	echo "    -a: Import the (non-default) apps"
+	echo "    -b: Import the database"
+	echo "    -c: Import the config"
+	echo "    -d: Import the data"
+}
+
+import_apps()
+{
+	backup_dir="${1%/}"
+	apps_backup="${backup_dir}/apps"
+	run_command "rm -rf \"$SNAP_DATA/nextcloud/extra-apps\"" "Clearing existing non-default apps"
+	echo "Importing apps..."
+	if ! rsync -ah --info=progress2 "$apps_backup/" "$SNAP_DATA/nextcloud/extra-apps"; then
+		echo "Unable to import apps"
+		exit 1
+	fi
+}
+
+import_database()
+{
+	backup_dir="$1"
+	database_backup="${backup_dir}/database.sql"
+
+	# First, drop the database (if any)
+	run_command "run-mysql -e \"DROP DATABASE nextcloud\"" \
+	            "Dropping existing database"
+	run_command "run-mysql -e \"CREATE DATABASE nextcloud\"" \
+	            "Creating new database"
+	run_command "run-mysql -e \"GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost'\"" \
+	            "Granting database privileges to existing user"
+
+	# Now restore the database
+	echo "Importing database..."
+	if ! run-mysql nextcloud < "$database_backup"; then
+		echo "Unable to import database"
+		exit 1
+	fi
+}
+
+import_config()
+{
+	backup_dir="$1"
+	config_backup="${backup_dir}/config.php"
+	database_password="$(mysql_get_nextcloud_password)"
+
+	# Import the config, but set our new database password
+	echo "Importing config..."
+	if ! sed "s/DBPASSWORD/$database_password/" \
+	         "$config_backup" > "${SNAP_DATA}/nextcloud/config/config.php"; then
+		echo "Unable to import config"
+		exit 1
+	fi
+}
+
+import_data()
+{
+	backup_dir="${1%/}"
+	data_backup="${backup_dir}/data"
+	run_command "rm -rf \"$NEXTCLOUD_DATA_DIR\"" "Clearing existing data"
+	echo "Importing data..."
+	if ! rsync -ah --info=progress2 "$data_backup/" "$NEXTCLOUD_DATA_DIR"; then
+		echo "Unable to import data"
+		exit 1
+	fi
+}
+
+run_command()
+{
+	printf "%s... " "$2"
+	if output="$(eval "$1" 2>&1)"; then
+		echo "done"
+		return 0;
+	else
+		echo "error"
+		echo "$output"
+		return 1;
+	fi
+}
+
+enable_maintenance_mode()
+{
+	run_command "occ maintenance:mode --on" "Enabling maintenance mode"
+}
+
+disable_maintenance_mode()
+{
+	run_command "occ maintenance:mode --off" "Disabling maintenance mode"
+}
+
+do_import_apps=false
+do_import_database=false
+do_import_config=false
+do_import_data=false
+
+# If no parameters are specified, default to importing everything
+if [ $# -eq 1 ]; then
+	do_import_apps=true
+	do_import_database=true
+	do_import_config=true
+	do_import_data=true
+fi
+
+while getopts ":abcdh" opt; do
+	case $opt in
+		a)
+			do_import_apps=true
+			;;
+		b)
+			do_import_database=true
+			;;
+		c)
+			do_import_config=true
+			;;
+		d)
+			do_import_data=true
+			;;
+		h)
+			print_usage
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			exit 1
+			;;
+	esac
+done
+
+# Clear options
+shift "$((OPTIND-1))"
+
+echo "WARNING: This functionality is still experimental and under" >&2
+echo "development, use at your own risk. Note that the CLI interface is" >&2
+echo "unstable, so beware if using from within scripts." >&2
+echo "" >&2
+
+# Enable maintenance mode so data can't change out from under us
+if ! enable_maintenance_mode; then
+	echo "Unable to enter maintenance mode"
+	exit 1
+fi
+trap 'disable_maintenance_mode' EXIT
+
+backup_dir="$1"
+if [ -z "$backup_dir" ]; then
+	echo "Missing parameter <backup dir>"
+	print_usage
+	exit 1
+fi
+
+if [ "$do_import_apps" = true ]; then
+	import_apps "$backup_dir"
+fi
+
+if [ "$do_import_database" = true ]; then
+	import_database "$backup_dir"
+fi
+
+if [ "$do_import_config" = true ]; then
+	import_config "$backup_dir"
+fi
+
+if [ "$do_import_data" = true ]; then
+	import_data "$backup_dir"
+fi

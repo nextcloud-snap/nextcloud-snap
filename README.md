@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 13.0.6
+- Nextcloud 13.0.7
 - Apache 2.4
 - PHP 7.1
 - MySQL 5.7
@@ -116,6 +116,17 @@ If you want to disable the cronjob completely, run:
 To reenable it again simply set the `nextcloud.cron-interval` snap variable to a value that isn't `-1`
 
 
+#### Debug mode
+
+By default, the snap installs itself in production mode, which prevents Apache
+and PHP from providing any detailed version or library information in the HTTP
+headers and error pages. Debug mode can be enabled with:
+
+    $ sudo snap set nextcloud mode=debug
+
+"debug" and "production" are the only valid modes.
+
+
 ### Included CLI utilities
 
 There are a few CLI utilities included:
@@ -141,6 +152,15 @@ There are a few CLI utilities included:
     - Manually install Nextcloud instead of visiting it in your browser. This
       allows you to create the admin user via the CLI. Note that it requires
       `sudo`.
+- `nextcloud.export`:
+    - Export data suitable for migrating servers. By default this includes the
+      Nextcloud database, configuration, and data. See `nextcloud.export -h` for
+      more information. Note that it requires `sudo`.
+- `nextcloud.import`:
+    - Import data exported from another Nextcloud snap instance (via
+      `nextcloud.export`). By default this imports the database, config, and
+      data. See `nextcloud.import -h` for more information. Note that it
+      requires `sudo`.
 
 
 ## Where is my stuff?

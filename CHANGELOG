@@ -1,3 +1,11 @@
+v 12.0.12snap1
+  - nextcloud: update to 12.0.12
+  - apache: update to 2.4.37
+  - apache: work around setgid directories
+  - ci: use snapcraft docker images
+  - occ: don't require PHP restart for maintenance mode
+  - certbot: update to 0.26.1
+
 v 12.0.10snap1
   - nextcloud: update to 12.0.10
   - php: update to 7.1.20

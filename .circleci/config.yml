@@ -45,8 +45,8 @@ jobs:
      - run:
          # Copy artifacts, install nodejs and publish download link in PR
          command: |
-           sudo mkdir /home/circleci/project/artifacts
-           sudo cp *.snap /home/circleci/project/artifacts/nextcloud.snap
+           sudo mkdir artifacts
+           sudo cp *.snap artifacts/nextcloud.snap
            wget -qO- https://deb.nodesource.com/setup_10.x | sudo -E bash -
            sudo apt-get install -y nodejs
            npm install circle-github-bot
@@ -57,7 +57,7 @@ jobs:
          command: ./.circleci/runtests.sh
 
      - store_artifacts:
-          path: /home/circleci/project/artifacts/nextcloud.snap
+          path: artifacts/nextcloud.snap
 
   test-daily-master:
     working_directory: ~/nextcloud-snap

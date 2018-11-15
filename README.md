@@ -12,10 +12,7 @@ Nextcloud server packaged as a snap. It consists of:
 
 ## How to install
 
-This Nextcloud snap is available in the store for release series 16 (e.g. Ubuntu
-16.04). Install via:
-
-    $ sudo snap install nextcloud
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/nextcloud)
 
 There are a [number of releases available][1]. By default you'll get the newest
 stable one, but you may be interested in others.

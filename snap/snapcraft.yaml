@@ -195,6 +195,9 @@ parts:
       # Enable ldap.
       - --with-libdir=lib/ARCH_TRIPLET
       - --with-ldap
+
+      # Enable LFS(Large File Support) for 32bit architecture(e.g: i386 or i686, ARMv7).
+      - CFLAGS=-D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2

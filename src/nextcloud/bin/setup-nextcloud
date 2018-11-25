@@ -49,7 +49,7 @@ fi
 
 # Finally, make sure nextcloud is up to date. The return code of the upgrade
 # can be used to determine the outcome:
-#    succes = 0;
+#    success = 0;
 #    not installed = 1;
 #    in maintenance mode = 2;
 #    already up to date = 3;

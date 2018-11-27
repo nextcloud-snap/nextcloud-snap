@@ -107,8 +107,8 @@ activate_certbot_certificate()
 {
 	# There shouldn't be multiple domains here since we have no way to
 	# support them, but account for the possibility by simply taking the
-	# first domain's certificates.
-	certdir="$(find "$CERTBOT_LIVE_DIRECTORY" -maxdepth 1 -mindepth 1 -printf "%P\n" | sort -n | head -1)"
+	# first domain's certificates. Ignore any READMEs.
+	certdir="$(find "$CERTBOT_LIVE_DIRECTORY" -maxdepth 1 -mindepth 1 -not -iname readme -printf "%P\n" | sort -n | head -1)"
 
 	deactivate_certificates
 	ln -s "$CERTBOT_LIVE_DIRECTORY/$certdir" "$LIVE_CERTS_DIRECTORY"

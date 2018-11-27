@@ -43,7 +43,11 @@ jobs:
            sudo nextcloud.manual-install admin admin
 
      - run:
-         # Copy artifacts, install nodejs and publish download link in PR
+         # Run the integration tests
+         command: ./.circleci/runtests.sh
+
+     - run:
+         # Copy artifacts and publish download link in PR
          command: |
            sudo mkdir /artifacts
            sudo cp *.snap /artifacts/nextcloud.snap
@@ -51,13 +55,9 @@ jobs:
                     -e CIRCLE_BUILD_URL -e CIRCLE_PROJECT_REPONAME \
                     -e CIRCLE_SHA1 -e CIRCLE_PROJECT_USERNAME \
                     registry.gitlab.com/bn4t/circle-github-bot:latest
-
-     - run:
-         # Run the integration tests
-         command: ./.circleci/runtests.sh
-
+                    
      - store_artifacts:
-          path: artifacts/nextcloud.snap
+          path: /artifacts/nextcloud.snap
 
   test-daily-master:
     working_directory: ~/nextcloud-snap

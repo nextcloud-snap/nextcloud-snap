@@ -47,11 +47,9 @@ jobs:
          command: |
            sudo mkdir artifacts
            sudo cp *.snap artifacts/nextcloud.snap
-           docker run -e GH_AUTH_TOKEN=$GH_AUTH_TOKEN -e CIRCLE_BUILD_NUM=$CIRCLE_BUILD_NUM \
-                    -e CIRCLE_BUILD_URL=$CIRCLE_BUILD_URL \
-                    -e CIRCLE_PROJECT_REPONAME=$CIRCLE_PROJECT_REPONAME \
-                    -e CIRCLE_SHA1=$CIRCLE_SHA1 \
-                    -e CIRCLE_PROJECT_USERNAME=$CIRCLE_PROJECT_USERNAME \
+           docker run -e GH_AUTH_TOKEN -e CIRCLE_BUILD_NUM \
+                    -e CIRCLE_BUILD_URL -e CIRCLE_PROJECT_REPONAME \
+                    -e CIRCLE_SHA1 -e CIRCLE_PROJECT_USERNAME \
                     registry.gitlab.com/bn4t/circle-github-bot:latest
 
      - run:

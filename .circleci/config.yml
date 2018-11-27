@@ -45,8 +45,8 @@ jobs:
      - run:
          # Copy artifacts, install nodejs and publish download link in PR
          command: |
-           sudo mkdir artifacts
-           sudo cp *.snap artifacts/nextcloud.snap
+           sudo mkdir /artifacts
+           sudo cp *.snap /artifacts/nextcloud.snap
            docker run -e GH_AUTH_TOKEN -e CIRCLE_BUILD_NUM \
                     -e CIRCLE_BUILD_URL -e CIRCLE_PROJECT_REPONAME \
                     -e CIRCLE_SHA1 -e CIRCLE_PROJECT_USERNAME \

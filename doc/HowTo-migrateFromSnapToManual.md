@@ -33,7 +33,7 @@ https://docs.nextcloud.com/server/14/admin_manual/installation/source_installati
 
 1. Extract nextcloud to `/var/www/nextcloud`
 
-2. (On Debian):
+2. Then chmod (example for Debian):
 
 `# chown -R www-data:www-data /var/www/nextcloud`
 
@@ -45,10 +45,10 @@ Run this on the OLD server:
 
 `# nextcloud.mysqldump > my-old-nextcloud.sql`
 
-Copy this file to the new server (`rsync` or `scp` etc)
+Copy `my-old-nextcloud.sql` file to the new server (`rsync` or `scp` etc)
 
 
-## Create Database on NEW server
+## Database on NEW server
 
 #### Allow larger innoDB
 
@@ -62,12 +62,12 @@ Copy this file to the new server (`rsync` or `scp` etc)
 
 Now logout & login (to get the global values).
 
-Now create the new database:
+#### create the new database:
 
 `> CREATE DATABASE nextcloud;`
 
 
-## Populate Database
+## Populate NEW Database
 
 `# mysql -u root -p nextcloud < my-old-nextcloud.sql`
 
@@ -79,7 +79,7 @@ Run this command from OLD server:
 `# rsync -avz --delete /var/snap/nextcloud/common/nextcloud/data/ root@your-new-server:/var/www/nextcloud/data/`
 
 
-## Migrate Certificates
+## Migrate SSL Certificates
 
 These instructions assume you are using LetsEncrypt.  The nextcloud-snap letsencrypt tool does not allow you to delete certificates but you can get around that this way.
 
@@ -90,21 +90,26 @@ These instructions assume you are using LetsEncrypt.  The nextcloud-snap letsenc
 
 3. Install the certificate with this command:
 
-`# certbot certonly -d <nextcloud.mydomain.com>`
+`# certbot certonly -d nextcloud.yourdomain.com`
 
+You can let the old certificates expire.  Just do nothing.
 
-You can let the old certificates expire.
-
-You can add this line to a cron job as root on the NEW server:
+You can add this line to a cron job as root on the NEW server to automatically update the certificate:
 
 `certbot renew --rsa-key-size 4096 --pre-hook "service apache2 stop" --post-hook "service apache2 start"`
 
 
 ## Apache2 configuration
 
+#### Some modules you will need:
+
 `# a2enmod ssl rewrite env headers mime dir`
 
-/etc/apache2/sites-enabled/nextcloud.conf:
+#### Sample conf file
+
+This file will redirect all traffic to https using the SSL certificate you created in the step above.
+
+`# vi /etc/apache2/sites-enabled/nextcloud.conf`
 
 ```
 <VirtualHost *:80>

@@ -12,6 +12,8 @@ The `nextcloud-snap` is very good.  For some situations it is the perfect soluti
 If you need to move from `nextcloud-snap` to Nextcloud server here are some notes:
 
 
+This document makes some assumptions.  It assumes you use `root` user to make changes.  You should not do this if you don't know what you're doing.  Then you will have to add 'sudo' to most of these commands.
+
 
 ## Install NextCloud
 
@@ -52,22 +54,31 @@ Copy `my-old-nextcloud.sql` file to the new server (`rsync` or `scp` etc)
 
 #### Allow larger innoDB
 
+Log in as root:
+
 `# mysql -u root -p`
+
+(If you skipped securing your mariaDB installation and you do not have a root password then skip the `-p`).
+
+mySQL commands:
 
 ```
 > SET GLOBAL innodb_file_format=Barracuda;
 > SET GLOBAL innodb_file_per_table=ON;
 > SET GLOBAL innodb_large_prefix=1;
+> quit;
 ```
 
-Now logout & login (to get the global values).
+You must `quit;` and then log in again to get the global values you set.
 
-#### create the new database:
+#### Create the new database:
 
 `> CREATE DATABASE nextcloud;`
 
 
 ## Populate NEW Database
+
+Exit mariaDB.  On the command line you type:
 
 `# mysql -u root -p nextcloud < my-old-nextcloud.sql`
 

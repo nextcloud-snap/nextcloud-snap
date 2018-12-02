@@ -1,6 +1,6 @@
 # How to migrate from nextcloud-snap to Nextcloud 
 
-The nextcloud-snap is very good but there are problems:
+The `nextcloud-snap` is very good.  For some situations it is the perfect solution but there are problems:
 
 1. Little documentation for custom tools
 
@@ -9,7 +9,7 @@ The nextcloud-snap is very good but there are problems:
 3. Some current tools are limited (example: deleting letsencrypt certificates)
 
 
-If you need to move from nextcloud-snap to Nextcloud server here are some notes:
+If you need to move from `nextcloud-snap` to Nextcloud server here are some notes:
 
 
 
@@ -136,3 +136,11 @@ You can add this line to a cron job as root on the NEW server:
 </VirtualHost>
 
 ```
+
+`# service apache2 restart`
+
+## Done?
+
+I think this was everything I did to make it work (not including many things from the Intallation instructions at https://docs.nextcloud.com/server/14/admin_manual/installation/source_installation.html#ubuntu-installation-label for things like Redis, possibly other dependencies.
+
+What I learned is that the `nextcloud-snap` is more standardized than I thought.  But for some use cases it is not the best solution.  For many other situations it definitely is great.

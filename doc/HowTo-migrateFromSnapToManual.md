@@ -157,6 +157,8 @@ This file will redirect all traffic to https using the SSL certificate you creat
 
 ## Done?
 
-I think this was everything I did to make it work (not including many things from the Intallation instructions at https://docs.nextcloud.com/server/14/admin_manual/installation/source_installation.html#ubuntu-installation-label for things like Redis, possibly other dependencies.
+I think this was everything I did to make it work (not including many things from the Installation instructions at https://docs.nextcloud.com/server/14/admin_manual/installation/source_installation.html#ubuntu-installation-label for things like Redis, possibly other dependencies.
+
+When I logged on I saw my files including shared files.  The username and passwords were the same.  There were small problems with the Apps that came from new versions I think.  But mostly it was fine.
 
 What I learned is that the `nextcloud-snap` is more standardized than I thought.  But for some use cases it is not the best solution.  For many other situations it definitely is great.

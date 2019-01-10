@@ -8,7 +8,7 @@ chmod 750 "$SNAP_DATA/apache/logs"
 
 # Make sure Nextcloud is installed and running
 echo "Making sure nextcloud is setup..."
-if ! setup_nextcloud; then
+if ! setup-nextcloud; then
 	echo "Failed to setup nextcloud"
         exit 1
 fi

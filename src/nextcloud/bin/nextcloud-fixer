@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# shellcheck source=src/apache/utilities/apache-utilities
+. "$SNAP/utilities/apache-utilities"
+
+# By waiting for Apache we ensure that Nextcloud is setup and fully-updated
+wait_for_apache
+
+# This command can be run without putting Nextcloud into maintenance mode
+occ db:add-missing-indices

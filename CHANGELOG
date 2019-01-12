@@ -1,3 +1,6 @@
+v 14.0.5snap2
+  - nextcloud: disable updatenotification before upgrade
+
 v 14.0.5snap1
   - php: update to 7.1.26
   - nextcloud: update to 14.0.5

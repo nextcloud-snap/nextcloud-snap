@@ -93,6 +93,13 @@ apps:
     command: export-data
     plugs: [network, network-bind, removable-media]
 
+  # Service for automatically fixing Nextcloud indices, etc.
+  nextcloud-fixer:
+    command: nextcloud-fixer
+    daemon: simple
+    restart-condition: on-failure
+    plugs: [network, network-bind, removable-media]
+
 hooks:
   configure:
     plugs: [network, network-bind]
@@ -156,8 +163,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.7.tar.bz2
-    source-checksum: sha256/be7adaa9d1ade58f221cdabd093bdc7ddfe614d936f43f59f5311f6e904841ef
+    source: https://download.nextcloud.com/server/releases/nextcloud-14.0.6.tar.bz2
+    source-checksum: sha256/1a739b5c4a633d15e68d1db31f785c2e5926b877e165af62f740837077e2f45f
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -170,8 +177,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.1.25.tar.bz2/from/this/mirror
-    source-checksum: sha256/002cdc880ac7cfaede2c389204d366108847db0f3ac72edf1ba95c0577f9aaac
+    source: https://php.net/get/php-7.1.26.tar.bz2/from/this/mirror
+    source-checksum: sha256/5b351ca86bc7e4600778aaf1d61ab9e4e38864efa86ab4cc4d5b02ea7f542ae6
     source-type: tar
     install-via: prefix
     configflags:

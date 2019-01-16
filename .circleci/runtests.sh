@@ -10,6 +10,7 @@ bash --login -c '
     rvm install 2.4.0
     rvm use 2.4.0
     cd tests
+    gem update --system
     gem install bundler
     bundle install --deployment
     bundle exec rake test

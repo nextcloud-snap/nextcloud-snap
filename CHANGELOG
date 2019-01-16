@@ -1,3 +1,16 @@
+v 14.0.5snap2
+  - nextcloud: disable updatenotification before upgrade
+
+v 14.0.5snap1
+  - php: update to 7.1.26
+  - nextcloud: update to 14.0.5
+  - ci: update rubygems for tests
+  - ci: enable daily v14 and v15
+
+v 13.0.8snap1
+  - nextcloud: update to 13.0.8
+  - php: update to 7.1.25
+
 v 13.0.7snap2
   - certbot: update to 0.28.0
   - tests: update all gems to latest

@@ -45,11 +45,16 @@ else
 	occ config:system:set redis port --value=0 --type=integer
 	occ config:system:set memcache.locking --value="\OC\Memcache\Redis" --type=string
 	occ config:system:set memcache.local --value="\OC\Memcache\Redis" --type=string
+
+	# It's possible for the updatenotification app to be installed (see
+	# https://github.com/nextcloud/nextcloud-snap/issues/838), and it'll
+	# interfere with the upgrade to v14. Disable it now.
+	occ app:disable updatenotification
 fi
 
 # Finally, make sure nextcloud is up to date. The return code of the upgrade
 # can be used to determine the outcome:
-#    succes = 0;
+#    success = 0;
 #    not installed = 1;
 #    in maintenance mode = 2;
 #    already up to date = 3;

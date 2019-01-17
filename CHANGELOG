@@ -1,3 +1,43 @@
+v 14.0.5snap2
+  - nextcloud: disable updatenotification before upgrade
+
+v 14.0.5snap1
+  - php: update to 7.1.26
+  - nextcloud: update to 14.0.5
+  - ci: update rubygems for tests
+  - ci: enable daily v14 and v15
+
+v 13.0.8snap1
+  - nextcloud: update to 13.0.8
+  - php: update to 7.1.25
+
+v 13.0.7snap2
+  - certbot: update to 0.28.0
+  - tests: update all gems to latest
+  - README: add link to snap store
+  - snapcraft.yaml: use git version instead of hard-coding
+
+v 13.0.7snap1
+  - apache: update to 2.4.37
+  - Add the ability to import/export install
+  - apache: work around setgid directories
+  - nextcloud: update to 13.0.7
+  - apache, php: add debug mode
+  - redis: update to 4.0.11
+
+v 13.0.6snap1
+  - php: update to 7.1.22
+  - nextcloud: update to 13.0.6
+  - ci: use snapcraft docker images
+  - occ: don't require PHP restart for maintenance mode
+  - certbot: update to 0.26.1
+
+v 13.0.5snap1
+  - php: update to 7.1.20
+  - nextcloud: update to 13.0.5
+  - apache: update to 2.4.34
+  - php: enable FTP support
+
 v 13.0.4snap1
   - nextcloud: update to 13.0.4
   - nextcloud: make cron interval adjustable

@@ -1,25 +1,19 @@
 #!/bin/sh
 
-# shellcheck source=src/hooks/utilities/hook-utilities
-. "$SNAP/utilities/hook-utilities"
-
-# Make sure the configure hook isn't running (otherwise we'll run on old
-# configuration data)
-wait_for_configure_hook
+# shellcheck source=src/https/utilities/https-utilities
+. "$SNAP/utilities/https-utilities"
 
 mkdir -p "$SNAP_DATA/apache/logs"
 chmod 750 "$SNAP_DATA/apache/logs"
 
 # Make sure Nextcloud is installed and running
 echo "Making sure nextcloud is setup..."
-if ! setup_nextcloud; then
+if ! setup-nextcloud; then
 	echo "Failed to setup nextcloud"
         exit 1
 fi
 
 echo "All set! Running httpd..."
-
-. $SNAP/utilities/https-utilities
 
 # Rewrite live cert symlinks that aren't using the current symlink.
 # FIXME: Remove this migration once epochs and upgrade hooks are available.

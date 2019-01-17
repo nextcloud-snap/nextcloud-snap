@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mysql --defaults-file="$SNAP_DATA/mysql/root.ini" "$@"

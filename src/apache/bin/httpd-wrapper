@@ -6,6 +6,8 @@
 . "$SNAP/utilities/apache-utilities"
 # shellcheck source=src/php/utilities/php-utilities
 . "$SNAP/utilities/php-utilities"
+# shellcheck source=src/hooks/utilities/configuration-utilities
+. "$SNAP/utilities/configuration-utilities"
 
 params=""
 if certificates_are_active; then
@@ -21,6 +23,10 @@ if certificates_are_active; then
 	fi
 else
 	echo "No certificates are active: using HTTP only"
+fi
+
+if debug_mode_enabled; then
+	params="$params -DDebug"
 fi
 
 HTTP_PORT="$(apache_http_port)"

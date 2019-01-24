@@ -190,7 +190,6 @@ parts:
       - --with-curl
       - --with-openssl
       - --with-bz2
-      - --with-mcrypt
       - --enable-exif
       - --enable-intl
       - --enable-pcntl
@@ -200,7 +199,7 @@ parts:
       - --enable-ftp
 
       # Enable ldap.
-      - --with-libdir=lib/ARCH_TRIPLET
+      - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
       - --with-ldap
     stage-packages:
       # These are only included here until the OS snap stabilizes

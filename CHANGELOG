@@ -1,3 +1,8 @@
+v 14.0.6snap1
+  - php: enable large file support on 32-bit systems
+  - nextcloud: update to 14.0.6
+  - php: update to 7.2.14
+
 v 14.0.5snap2
   - nextcloud: disable updatenotification before upgrade
 

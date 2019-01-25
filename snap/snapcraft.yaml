@@ -158,8 +158,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-14.0.5.tar.bz2
-    source-checksum: sha256/af997a251bc9403a81ba161cf06df9caa71a42faf4557ddcd8f5d2974811745a
+    source: https://download.nextcloud.com/server/releases/nextcloud-14.0.6.tar.bz2
+    source-checksum: sha256/1a739b5c4a633d15e68d1db31f785c2e5926b877e165af62f740837077e2f45f
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -172,8 +172,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.1.26.tar.bz2/from/this/mirror
-    source-checksum: sha256/5b351ca86bc7e4600778aaf1d61ab9e4e38864efa86ab4cc4d5b02ea7f542ae6
+    source: https://php.net/get/php-7.2.14.tar.bz2/from/this/mirror
+    source-checksum: sha256/f56132d248c7bf1e0efc8a680a4b598d6ff73fc6b9c84b5d7b539ad8db7a6597
     source-type: tar
     install-via: prefix
     configflags:
@@ -190,7 +190,6 @@ parts:
       - --with-curl
       - --with-openssl
       - --with-bz2
-      - --with-mcrypt
       - --enable-exif
       - --enable-intl
       - --enable-pcntl
@@ -200,7 +199,7 @@ parts:
       - --enable-ftp
 
       # Enable ldap.
-      - --with-libdir=lib/ARCH_TRIPLET
+      - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
       - --with-ldap
     stage-packages:
       # These are only included here until the OS snap stabilizes

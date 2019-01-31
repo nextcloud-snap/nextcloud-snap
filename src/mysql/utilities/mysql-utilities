@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
 export MYSQL_PIDFILE="/tmp/pids/mysql.pid"
 export MYSQL_SOCKET="/tmp/sockets/mysql.sock"
 export NEXTCLOUD_PASSWORD_FILE="$SNAP_DATA/mysql/nextcloud_password"
@@ -7,8 +10,10 @@ MYSQL_SETUP_LOCKFILE="/tmp/locks/mysql-setup"
 
 mkdir -p "$(dirname "$MYSQL_PIDFILE")"
 mkdir -p "$(dirname "$MYSQL_SOCKET")"
+mkdir -p "$(dirname "$MYSQL_SETUP_LOCKFILE")"
 chmod 750 "$(dirname "$MYSQL_PIDFILE")"
 chmod 750 "$(dirname "$MYSQL_SOCKET")"
+chmod 750 "$(dirname "$MYSQL_SETUP_LOCKFILE")"
 
 mysql_is_running()
 {
@@ -21,13 +26,7 @@ wait_for_mysql()
 {
 	# Arguments:
 	#  -f: Force the check, i.e. ignore if it's currently in setup
-	if ! mysql_is_running "$@"; then
-		printf "Waiting for MySQL... "
-		while ! mysql_is_running "$@"; do
-			sleep 1
-		done
-		printf "done\n"
-	fi
+	wait_for_command "Waiting for MySQL" mysql_is_running "$@"
 }
 
 mysql_setup_running()
@@ -47,7 +46,7 @@ set_mysql_setup_not_running()
 
 mysql_pid()
 {
-	if mysql_is_running; then
+	if mysql_is_running ""; then
 		cat "$MYSQL_PIDFILE"
 	else
 		echo "Unable to get MySQL PID as it's not yet running" >&2

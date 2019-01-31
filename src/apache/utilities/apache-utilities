@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
 DEFAULT_HTTP_PORT="80"
 DEFAULT_HTTPS_PORT="443"
 export APACHE_PIDFILE="/tmp/pids/httpd.pid"
@@ -33,13 +36,7 @@ apache_is_running()
 
 wait_for_apache()
 {
-	if ! apache_is_running; then
-		printf "Waiting for Apache... "
-		while ! apache_is_running; do
-			sleep 1
-		done
-		printf "done\n"
-	fi
+	wait_for_command "Waiting for Apache" apache_is_running
 }
 
 apache_pid()

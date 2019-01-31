@@ -1,0 +1,61 @@
+#!/bin/sh
+
+stdout_is_a_terminal()
+{
+	[ -t 1 ]
+}
+
+stderr_is_a_terminal()
+{
+	[ -t 2 ]
+}
+
+run_command()
+{
+	# Ideally we could output these all on one line, but that only works with a
+	# terminal. Support both.
+	if stdout_is_a_terminal; then
+		printf "%s... " "$1"
+	else
+		echo "$1..."
+	fi
+
+	shift
+	if output="$("$@" 2>&1)"; then
+		echo "done"
+		return 0
+	else
+		echo "error"
+		echo "$output"
+		return 1
+	fi
+}
+
+wait_for_command()
+{
+	message="$1"
+	shift
+	if ! "$@"; then
+		# Ideally we could output these all on one line, but that only works with a
+		# terminal. Support both.
+		if stdout_is_a_terminal; then
+			printf "%s... " "$message"
+		else
+			echo "$message..."
+		fi
+		while ! "$@"; do
+			sleep 1
+		done
+		echo "done"
+	fi
+}
+
+enable_maintenance_mode()
+{
+	run_command "Enabling maintenance mode" occ maintenance:mode --on
+}
+
+disable_maintenance_mode()
+{
+	run_command "Disabling maintenance mode" occ maintenance:mode --off
+}

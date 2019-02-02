@@ -1,3 +1,6 @@
+v 15.0.2snap2
+  - nextcloud-fixer: disable theming app on new installs
+
 v 15.0.2snap1
   - apache: update to 2.4.38
   - nextcloud: update to 15.0.2

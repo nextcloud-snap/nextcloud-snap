@@ -27,6 +27,11 @@ if nextcloud_is_installed; then
 else
 	wait_for_nextcloud_to_be_installed
 
+	# Disable the theming app. It requires imagick (which the snap doesn't ship) and
+	# displays a warning if it's not installed. This way, the warning is only shown if
+	# someone needs and enables the theming app.
+	run_command "Disabling theming by default" occ app:disable theming
+
 	# Technically convert-filecache-bigint should be run under maintenance mode, but
 	# there really isn't anything to go wrong on a fresh install, and the UX of enabling
 	# maintenance mode as soon as an admin account is created is awful.

@@ -107,8 +107,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.37.tar.bz2
-    source-checksum: sha256/3498dc5c6772fac2eb7307dc7963122ffe243b5e806e0be4fb51974ff759d726
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.38.tar.bz2
+    source-checksum: sha256/7dc65857a994c98370dc4334b260101a7a04be60e6e74a5c57a6dee1bc8f394a
 
     override-pull: |
       snapcraftctl pull
@@ -158,8 +158,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-14.0.6.tar.bz2
-    source-checksum: sha256/1a739b5c4a633d15e68d1db31f785c2e5926b877e165af62f740837077e2f45f
+    source: https://download.nextcloud.com/server/releases/nextcloud-15.0.2.tar.bz2
+    source-checksum: sha256/c1f4cc33e39994ddbe6777370b62c30b7ae52136a0530c0b9922770803ca0fea
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -250,6 +250,7 @@ parts:
     source: src/nextcloud/
     organize:
       config/: htdocs/config/
+    stage-packages: [jq]
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.
@@ -374,6 +375,10 @@ parts:
     plugin: dump
     source: src/import-export
     stage-packages: [rsync]
+
+  common:
+    plugin: dump
+    source: src/common/
 
   hooks:
     plugin: dump

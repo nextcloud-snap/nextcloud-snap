@@ -99,19 +99,7 @@ class PhpPlugin(autotools.AutotoolsPlugin):
         if os.path.exists(self.extensions_directory):
             shutil.rmtree(self.extensions_directory)
 
-    def _replace_arch_triplet(self):
-        pattern = re.compile(r'ARCH_TRIPLET')
-
-        old_configflags = self.options.configflags
-        self.options.configflags = []
-        for flag in old_configflags:
-            self.options.configflags.append(
-                pattern.sub(self.project.arch_triplet, flag))
-
     def build(self):
-        # Replace ARCH_TRIPLET in options
-        self._replace_arch_triplet()
-
         super().build()
 
         if self.extensions:
@@ -136,3 +124,15 @@ class PhpPlugin(autotools.AutotoolsPlugin):
                 self.project.parallel_build_count)],
                 cwd=extension_build_directory)
             self.run(['make', 'install'], cwd=extension_build_directory)
+
+    def env(self, root):
+        env = super().env(root)
+
+        if root == self.installdir or root == self.project.stage_dir:
+            largefile_cflags = self.run_output(['getconf', 'LFS_CFLAGS'])
+            if largefile_cflags:
+                env.append(
+                    'CFLAGS="$CFLAGS {}"'.format(largefile_cflags)
+                )
+
+        return env

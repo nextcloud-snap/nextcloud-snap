@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
 export NEXTCLOUD_CONFIG_DIR="$SNAP_DATA/nextcloud/config"
 export NEXTCLOUD_DATA_DIR="$SNAP_COMMON/nextcloud/data"
 DEFAULT_CRONJOB_INTERVAL="15m"
@@ -11,13 +14,20 @@ nextcloud_is_configured()
 
 wait_for_nextcloud_to_be_configured()
 {
-	if ! nextcloud_is_configured; then
-		printf "Waiting for Nextcloud to be configured... "
-		while ! nextcloud_is_configured; do
-			sleep 1
-		done
-		printf "done\n"
-	fi
+	wait_for_command "Waiting for Nextcloud to be configured" nextcloud_is_configured
+}
+
+# Nextcloud doesn't consider itself "installed" until the admin account has been created
+nextcloud_is_installed()
+{
+	# Urgh, occ still prints text warnings even with JSON output. Thus fromjson?.
+	installed="$(occ status --output=json | jq -R 'fromjson? | .installed')"
+	[ "$installed" = "true" ]
+}
+
+wait_for_nextcloud_to_be_installed()
+{
+	wait_for_command "Waiting for Nextcloud to be installed" nextcloud_is_installed
 }
 
 cronjob_interval()

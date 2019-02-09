@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
 DEFAULT_MEMORY_LIMIT="512M"
 export PHP_FPM_PIDFILE="/tmp/pids/php-fpm.pid"
 export PHP_FPM_SOCKET="/tmp/sockets/php-fpm.sock"
@@ -35,13 +38,7 @@ php_is_running()
 
 wait_for_php()
 {
-	if ! php_is_running; then
-		printf "Waiting for PHP... "
-		while ! php_is_running; do
-			sleep 1
-		done
-		printf "done\n"
-	fi
+	wait_for_command "Waiting for PHP" php_is_running
 }
 
 php_pid()

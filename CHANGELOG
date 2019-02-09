@@ -1,3 +1,15 @@
+v 15.0.2snap2
+  - nextcloud-fixer: disable theming app on new installs
+
+v 15.0.2snap1
+  - apache: update to 2.4.38
+  - nextcloud: update to 15.0.2
+
+v 14.0.6snap1
+  - php: enable large file support on 32-bit systems
+  - nextcloud: update to 14.0.6
+  - php: update to 7.2.14
+
 v 14.0.5snap2
   - nextcloud: disable updatenotification before upgrade
 

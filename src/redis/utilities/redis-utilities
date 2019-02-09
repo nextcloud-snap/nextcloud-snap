@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
 export REDIS_PIDFILE="/tmp/pids/redis.pid"
 export REDIS_SOCKET="/tmp/sockets/redis.sock"
 
@@ -15,13 +18,7 @@ redis_is_running()
 
 wait_for_redis()
 {
-	if ! redis_is_running; then
-		printf "Waiting for redis... "
-		while ! redis_is_running; do
-			sleep 1
-		done
-		printf "done\n"
-	fi
+	wait_for_command "Waiting for redis" redis_is_running
 }
 
 redis_pid()

@@ -77,24 +77,6 @@ jobs:
           # Run the tests
           command: ./.circleci/runtests.sh
 
-  test-daily-v12:
-    working_directory: ~/nextcloud-snap
-    machine: true
-    steps:
-      - checkout
-
-      - run:
-          # Install the snap and create an admin user
-          command: |
-            sudo apt update -qq
-            sudo apt install -y snapd
-            sudo snap install nextcloud --channel=12/edge
-            sudo nextcloud.manual-install admin admin
-
-      - run:
-          # Run the tests
-          command: ./.circleci/runtests.sh
-
   test-daily-v13:
     working_directory: ~/nextcloud-snap
     machine: true
@@ -107,6 +89,42 @@ jobs:
             sudo apt update -qq
             sudo apt install -y snapd
             sudo snap install nextcloud --channel=13/edge
+            sudo nextcloud.manual-install admin admin
+
+      - run:
+          # Run the tests
+          command: ./.circleci/runtests.sh
+
+  test-daily-v14:
+    working_directory: ~/nextcloud-snap
+    machine: true
+    steps:
+      - checkout
+
+      - run:
+          # Install the snap and create an admin user
+          command: |
+            sudo apt update -qq
+            sudo apt install -y snapd
+            sudo snap install nextcloud --channel=14/edge
+            sudo nextcloud.manual-install admin admin
+
+      - run:
+          # Run the tests
+          command: ./.circleci/runtests.sh
+
+  test-daily-v15:
+    working_directory: ~/nextcloud-snap
+    machine: true
+    steps:
+      - checkout
+
+      - run:
+          # Install the snap and create an admin user
+          command: |
+            sudo apt update -qq
+            sudo apt install -y snapd
+            sudo snap install nextcloud --channel=15/edge
             sudo nextcloud.manual-install admin admin
 
       - run:
@@ -129,17 +147,6 @@ workflows:
 
     jobs: [test-daily-master]
 
-  daily-v12:
-    triggers:
-      - schedule:
-          # 0700 UTC == 0000 PSC
-          cron: "0 7 * * *"
-          filters:
-            branches:
-              only: develop
-
-    jobs: [test-daily-v12]
-
   daily-v13:
     triggers:
       - schedule:
@@ -150,3 +157,25 @@ workflows:
               only: develop
 
     jobs: [test-daily-v13]
+
+  daily-v14:
+    triggers:
+      - schedule:
+          # 0700 UTC == 0000 PSC
+          cron: "0 7 * * *"
+          filters:
+            branches:
+              only: develop
+
+    jobs: [test-daily-v14]
+
+  daily-v15:
+    triggers:
+      - schedule:
+          # 0700 UTC == 0000 PSC
+          cron: "0 7 * * *"
+          filters:
+            branches:
+              only: develop
+
+    jobs: [test-daily-v15]

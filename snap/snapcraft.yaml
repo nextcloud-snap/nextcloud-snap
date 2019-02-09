@@ -93,6 +93,13 @@ apps:
     command: export-data
     plugs: [network, network-bind, removable-media]
 
+  # Service for automatically fixing Nextcloud indices, etc.
+  nextcloud-fixer:
+    command: nextcloud-fixer
+    daemon: simple
+    restart-condition: on-failure
+    plugs: [network, network-bind, removable-media]
+
 hooks:
   configure:
     plugs: [network, network-bind]
@@ -100,8 +107,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.37.tar.bz2
-    source-checksum: sha256/3498dc5c6772fac2eb7307dc7963122ffe243b5e806e0be4fb51974ff759d726
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.38.tar.bz2
+    source-checksum: sha256/7dc65857a994c98370dc4334b260101a7a04be60e6e74a5c57a6dee1bc8f394a
 
     override-pull: |
       snapcraftctl pull
@@ -151,8 +158,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-13.0.8.tar.bz2
-    source-checksum: sha256/984a5464aab423262cb3272a602e3f6b0ff5148e41b737ab29687eff71d4dc81
+    source: https://download.nextcloud.com/server/releases/nextcloud-15.0.2.tar.bz2
+    source-checksum: sha256/c1f4cc33e39994ddbe6777370b62c30b7ae52136a0530c0b9922770803ca0fea
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -165,8 +172,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.1.25.tar.bz2/from/this/mirror
-    source-checksum: sha256/002cdc880ac7cfaede2c389204d366108847db0f3ac72edf1ba95c0577f9aaac
+    source: https://php.net/get/php-7.2.14.tar.bz2/from/this/mirror
+    source-checksum: sha256/f56132d248c7bf1e0efc8a680a4b598d6ff73fc6b9c84b5d7b539ad8db7a6597
     source-type: tar
     install-via: prefix
     configflags:
@@ -183,7 +190,6 @@ parts:
       - --with-curl
       - --with-openssl
       - --with-bz2
-      - --with-mcrypt
       - --enable-exif
       - --enable-intl
       - --enable-pcntl
@@ -193,7 +199,7 @@ parts:
       - --enable-ftp
 
       # Enable ldap.
-      - --with-libdir=lib/ARCH_TRIPLET
+      - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
       - --with-ldap
     stage-packages:
       # These are only included here until the OS snap stabilizes
@@ -244,6 +250,7 @@ parts:
     source: src/nextcloud/
     organize:
       config/: htdocs/config/
+    stage-packages: [jq]
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.
@@ -368,6 +375,10 @@ parts:
     plugin: dump
     source: src/import-export
     stage-packages: [rsync]
+
+  common:
+    plugin: dump
+    source: src/common/
 
   hooks:
     plugin: dump

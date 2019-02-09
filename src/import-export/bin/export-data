@@ -9,6 +9,8 @@ fi
 . "$SNAP/utilities/nextcloud-utilities"
 # shellcheck source=src/mysql/utilities/mysql-utilities
 . "$SNAP/utilities/mysql-utilities"
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
 
 # shellcheck disable=SC2119
 wait_for_mysql
@@ -76,29 +78,6 @@ export_data()
 		echo "Unable to export data"
 		exit 1
 	fi
-}
-
-run_command()
-{
-	printf "%s... " "$2"
-	if output="$(eval "$1" 2>&1)"; then
-		echo "done"
-		return 0;
-	else
-		echo "error"
-		echo "$output"
-		return 1;
-	fi
-}
-
-enable_maintenance_mode()
-{
-	run_command "occ maintenance:mode --on" "Enabling maintenance mode"
-}
-
-disable_maintenance_mode()
-{
-	run_command "occ maintenance:mode --off" "Disabling maintenance mode"
 }
 
 do_export_apps=false

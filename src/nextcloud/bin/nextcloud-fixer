@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# shellcheck source=src/apache/utilities/apache-utilities
+. "$SNAP/utilities/apache-utilities"
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
+
+# By waiting for Apache we ensure that Nextcloud is setup and fully-updated
+wait_for_apache
+
+if nextcloud_is_installed; then
+	# This command can be run without putting Nextcloud into maintenance mode
+	occ db:add-missing-indices --no-interaction
+
+	# Unfortunately convert-filecache-bigint requires that Nextcloud be in maintenance
+	# mode, and can take some time.
+	if ! enable_maintenance_mode; then
+		echo "Unable to enter maintenance mode" >&2
+		sleep 10 # Give it a few seconds before bailing so systemd doesn't throttle
+		exit 1
+	fi
+	trap 'disable_maintenance_mode' EXIT
+
+	occ db:convert-filecache-bigint --no-interaction
+else
+	wait_for_nextcloud_to_be_installed
+
+	# Disable the theming app. It requires imagick (which the snap doesn't ship) and
+	# displays a warning if it's not installed. This way, the warning is only shown if
+	# someone needs and enables the theming app.
+	run_command "Disabling theming by default" occ app:disable theming
+
+	# Technically convert-filecache-bigint should be run under maintenance mode, but
+	# there really isn't anything to go wrong on a fresh install, and the UX of enabling
+	# maintenance mode as soon as an admin account is created is awful.
+	occ db:add-missing-indices --no-interaction
+	occ db:convert-filecache-bigint --no-interaction
+fi

@@ -9,6 +9,8 @@ fi
 . "$SNAP/utilities/nextcloud-utilities"
 # shellcheck source=src/mysql/utilities/mysql-utilities
 . "$SNAP/utilities/mysql-utilities"
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
 
 # shellcheck disable=SC2119
 wait_for_mysql
@@ -35,7 +37,7 @@ import_apps()
 {
 	backup_dir="${1%/}"
 	apps_backup="${backup_dir}/apps"
-	run_command "rm -rf \"$SNAP_DATA/nextcloud/extra-apps\"" "Clearing existing non-default apps"
+	run_command "Clearing existing non-default apps" rm -rf "$SNAP_DATA/nextcloud/extra-apps"
 	echo "Importing apps..."
 	if ! rsync -ah --info=progress2 "$apps_backup/" "$SNAP_DATA/nextcloud/extra-apps"; then
 		echo "Unable to import apps"
@@ -49,12 +51,11 @@ import_database()
 	database_backup="${backup_dir}/database.sql"
 
 	# First, drop the database (if any)
-	run_command "run-mysql -e \"DROP DATABASE nextcloud\"" \
-	            "Dropping existing database"
-	run_command "run-mysql -e \"CREATE DATABASE nextcloud\"" \
-	            "Creating new database"
-	run_command "run-mysql -e \"GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost'\"" \
-	            "Granting database privileges to existing user"
+	run_command "Dropping existing database" run-mysql -e "DROP DATABASE nextcloud"
+	run_command "Creating new database" run-mysql -e "CREATE DATABASE nextcloud"
+	run_command "Granting database privileges to existing user" \
+	            run-mysql -e "GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost'"
+
 
 	# Now restore the database
 	echo "Importing database..."
@@ -83,35 +84,12 @@ import_data()
 {
 	backup_dir="${1%/}"
 	data_backup="${backup_dir}/data"
-	run_command "rm -rf \"$NEXTCLOUD_DATA_DIR\"" "Clearing existing data"
+	run_command "Clearing existing data" rm -rf "$NEXTCLOUD_DATA_DIR"
 	echo "Importing data..."
 	if ! rsync -ah --info=progress2 "$data_backup/" "$NEXTCLOUD_DATA_DIR"; then
 		echo "Unable to import data"
 		exit 1
 	fi
-}
-
-run_command()
-{
-	printf "%s... " "$2"
-	if output="$(eval "$1" 2>&1)"; then
-		echo "done"
-		return 0;
-	else
-		echo "error"
-		echo "$output"
-		return 1;
-	fi
-}
-
-enable_maintenance_mode()
-{
-	run_command "occ maintenance:mode --on" "Enabling maintenance mode"
-}
-
-disable_maintenance_mode()
-{
-	run_command "occ maintenance:mode --off" "Disabling maintenance mode"
 }
 
 do_import_apps=false

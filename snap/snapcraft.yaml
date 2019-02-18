@@ -8,7 +8,7 @@ description: |
 grade: stable
 confinement: strict
 
-# Make no changes
+# Make no changes again
 
 apps:
   # Apache daemon

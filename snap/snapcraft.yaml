@@ -163,8 +163,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-15.0.4.tar.bz2
-    source-checksum: sha256/f87db047c174f563e391a22c959d9ace767ca14ef0f97fc394f3061fc63d8f77
+    source: https://download.nextcloud.com/server/releases/nextcloud-15.0.5.tar.bz2
+    source-checksum: sha256/4661869b797a340cd967abb3dbe6931b375434e0a44480346a27ccd73250b988
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -232,8 +232,8 @@ parts:
 
   redis:
     plugin: redis
-    source: http://download.redis.io/releases/redis-4.0.11.tar.gz
-    source-checksum: sha256/fc53e73ae7586bcdacb4b63875d1ff04f68c5474c1ddeda78f00e5ae2eed1bbb
+    source: http://download.redis.io/releases/redis-4.0.13.tar.gz
+    source-checksum: sha256/17d955227966dcd68590be6139e5fe7f2d19fc4fb7334248a904ea9cdd30c1d4
 
   redis-customizations:
     plugin: dump
@@ -277,7 +277,7 @@ parts:
   mysql:
     plugin: cmake
     source: https://github.com/mysql/mysql-server.git
-    source-tag: mysql-5.7.22
+    source-tag: mysql-5.7.25
     source-depth: 1
     override-pull: |
       snapcraftctl pull

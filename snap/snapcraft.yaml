@@ -172,8 +172,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.2.14.tar.bz2/from/this/mirror
-    source-checksum: sha256/f56132d248c7bf1e0efc8a680a4b598d6ff73fc6b9c84b5d7b539ad8db7a6597
+    source: https://php.net/get/php-7.2.16.tar.bz2/from/this/mirror
+    source-checksum: sha256/2c0ad10053d58694cd14323248ecd6d9ba71d2733d160973c356ad01d09e7f38
     source-type: tar
     install-via: prefix
     configflags:

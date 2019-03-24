@@ -65,6 +65,17 @@ feature "Change ports" do
 		assert_uri(https: true, port: 444)
 	end
 
+	scenario "Let's Encrypt challenge request" do
+		enable_https
+
+		# Assert we do not redirect under the four possibilities for
+		# changing or not changing ports
+		assert_lets_encrypt_challenge(http_port: 80, https_port: 443)
+		assert_lets_encrypt_challenge(http_port: 80, https_port: 444)
+		assert_lets_encrypt_challenge(http_port: 81, https_port: 443)
+		assert_lets_encrypt_challenge(http_port: 81, https_port: 444)
+	end
+
 	protected
 
 	def assert_uri(https:, port:)
@@ -90,5 +101,15 @@ feature "Change ports" do
 	def assert_logged_in
 		visit "/"
 		expect(page).to have_content "Documents"
+	end
+
+	def assert_lets_encrypt_challenge(http_port:, https_port:)
+		`sudo snap set nextcloud ports.http=#{http_port} ports.https=#{https_port}`
+		expect($?.to_i).to eq 0
+		wait_for_nextcloud(https: false, port: http_port)
+		Capybara.app_host = "http://localhost:#{http_port}"
+
+		visit "/.well-known/acme-challenge/a-challenge-path"
+		assert_uri(https: false, port: http_port)
 	end
 end

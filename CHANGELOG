@@ -1,3 +1,8 @@
+v 15.0.5snap2
+  - apache: disable TLS 1.0 and 1.1 and strengthen ciphers
+  - apache: don't redirect Let's Encrypt to HTTPS
+  - php: update to 7.2.16
+
 v 15.0.5snap1
   - nextcloud: update to 15.0.5
   - mysql: update to 5.7.25

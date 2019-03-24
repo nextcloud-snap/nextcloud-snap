@@ -142,7 +142,7 @@ RSpec.configure do |config|
 		RSpec.configuration.headless.destroy
 	end
 
-	config.after(:all) do
+	config.after(:each) do
 		# After each test, make sure the ports are reset
 		`sudo snap set nextcloud ports.http=80 ports.https=443`
 		expect($?.to_i).to eq 0
@@ -165,7 +165,7 @@ RSpec.configure do |config|
 		# Make sure any and all backups are removed
 		`sudo rm -rf /var/snap/nextcloud/common/backups`
 
-		# Make sure we're usin the normal, HTTP host again
+		# Make sure we're using the normal, HTTP host again
 		Capybara.app_host = 'http://localhost'
 	end
 

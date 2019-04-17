@@ -162,14 +162,14 @@ There are a few CLI utilities included:
 
 ## Where is my stuff?
 
-- `$SNAP_DATA`:
+- `$SNAP_DATA` (`/var/snap/nextcloud/current/` by default)
     - Apache, PHP, MySQL, and Redis logs
     - Keys and certificates
     - MySQL database
     - Redis database
     - Nextcloud config
     - Any Nextcloud apps installed by the user
-- `$SNAP_COMMON`
+- `$SNAP_COMMON` (`/var/snap/nextcloud/common/` by default)
     - Nextcloud data
     - Nextcloud logs
 

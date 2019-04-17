@@ -129,7 +129,10 @@ headers and error pages. Debug mode can be enabled with:
 There are a few CLI utilities included:
 
 - `nextcloud.occ`:
-    - Nextcloud's `occ` configuration tool. Note that it requires `sudo`.
+    - Nextcloud's `occ` configuration tool. You can always edit the config file
+      directly (`/var/snap/nextcloud/current/nextcloud/config/config.php`) but
+      the configuration tool provides a CLI interface for it. See
+      `nextcloud.occ -h` for more information. Note that it requires `sudo`.
 - `nextcloud.mysql-client`:
     - MySQL client preconfigured to communicate with Nextcloud MySQL server.
       This may be useful in case you need to migrate Nextcloud installations.

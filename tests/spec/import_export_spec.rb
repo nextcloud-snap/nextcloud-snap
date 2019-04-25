@@ -27,6 +27,7 @@ feature "Import and export data" do
 		`sudo mkdir -p "$(dirname "#{backup}")"`
 		`sudo mv "#{moved_backup}" "#{backup}"`
 		`sudo nextcloud.import "#{backup}"`
+		wait_for_nextcloud
 		assert_loginable
 	end
 
@@ -37,6 +38,6 @@ feature "Import and export data" do
 		fill_in "User", with: "admin"
 		fill_in "Password", with: "admin"
 		click_button "Log in"
-		expect(page).to have_content "Documents"
+		expect(page).to have_content "All files"
 	end
 end

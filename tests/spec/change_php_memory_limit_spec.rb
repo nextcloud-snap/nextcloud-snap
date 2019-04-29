@@ -1,29 +1,30 @@
 feature "Change PHP memory limit" do
+	after(:all) do
+		set_config "php.memory-limit": "512M"
+		wait_for_nextcloud
+	end
+
 	scenario "unlimited" do
-		`sudo snap set nextcloud php.memory-limit=-1`
-		expect($?.to_i).to eq 0
+		set_config "php.memory-limit": -1
 		wait_for_nextcloud
 
 		assert_login
 
 		# Also assert that we can change it back to the default
-		`sudo snap set nextcloud php.memory-limit=128M`
-		expect($?.to_i).to eq 0
+		set_config "php.memory-limit": "512M"
 		wait_for_nextcloud
 
 		assert_logged_in
 	end
 
 	scenario "bytes" do
-		`sudo snap set nextcloud php.memory-limit=536870912`
-		expect($?.to_i).to eq 0
+		set_config "php.memory-limit": 536870912
 		wait_for_nextcloud
 
 		assert_login
 
 		# Also assert that we can change it back to the default
-		`sudo snap set nextcloud php.memory-limit=128M`
-		expect($?.to_i).to eq 0
+		set_config "php.memory-limit": "512M"
 		wait_for_nextcloud
 
 		assert_logged_in
@@ -45,11 +46,11 @@ feature "Change PHP memory limit" do
 		fill_in "User", with: "admin"
 		fill_in "Password", with: "admin"
 		click_button "Log in"
-		expect(page).to have_content "Documents"
+		expect(page).to have_content "All files"
 	end
 
 	def assert_logged_in
 		visit "/"
-		expect(page).to have_content "Documents"
+		expect(page).to have_content "All files"
 	end
 end

@@ -172,8 +172,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.2.17.tar.bz2/from/this/mirror
-    source-checksum: sha256/91a811ab6f6d7acb312159cf6b0a3cffe968676fdebf042e9253245cc6094f75
+    source: https://php.net/get/php-7.2.18.tar.bz2/from/this/mirror
+    source-checksum: sha256/fa1a27b12d1173207e81e798a48d4a7f77ba897f5c5200ac0b5d62aa8b4c4b72
     source-type: tar
     install-via: prefix
     configflags:
@@ -272,7 +272,7 @@ parts:
   mysql:
     plugin: cmake
     source: https://github.com/mysql/mysql-server.git
-    source-tag: mysql-5.7.25
+    source-tag: mysql-5.7.26
     source-depth: 1
     override-pull: |
       snapcraftctl pull

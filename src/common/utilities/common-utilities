@@ -52,10 +52,10 @@ wait_for_command()
 
 enable_maintenance_mode()
 {
-	run_command "Enabling maintenance mode" occ maintenance:mode --on
+	run_command "Enabling maintenance mode" occ -n maintenance:mode --on
 }
 
 disable_maintenance_mode()
 {
-	run_command "Disabling maintenance mode" occ maintenance:mode --off
+	run_command "Disabling maintenance mode" occ -n maintenance:mode --off
 }

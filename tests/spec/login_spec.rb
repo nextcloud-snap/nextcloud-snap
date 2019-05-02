@@ -4,14 +4,14 @@ feature "Logging in" do
 		fill_in "User", with: "admin"
 		fill_in "Password", with: "admin"
 		click_button "Log in"
-		expect(page).to have_content "Documents"
+		expect(page).to have_content "All files"
 	end
 
-	scenario "Loggin in with incorrect credentials" do
+	scenario "Logging in with incorrect credentials" do
 		visit "/"
 		fill_in "User", with: "wronguser"
 		fill_in "Password", with: "wrongpassword"
 		click_button "Log in"
-		expect(page).to have_content "Wrong password"
+		expect(page).to have_content /Wrong.*password/
 	end
 end

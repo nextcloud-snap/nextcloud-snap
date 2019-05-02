@@ -1,3 +1,7 @@
+v 13.0.12snap1
+  - php: update to 7.1.27
+  - nextcloud: update to 13.0.12
+
 v 13.0.11snap1
   - nextcloud: update to 13.0.11
   - apache: update to 2.4.38

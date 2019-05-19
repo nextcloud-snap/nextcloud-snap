@@ -276,7 +276,7 @@ parts:
     source-depth: 1
     override-pull: |
       snapcraftctl pull
-      git apply $SNAPCRAFT_STAGE/support-compile-time-disabling-of-setpriority.patch
+      git apply $SNAPCRAFT_STAGE/mysql-support-compile-time-disabling-of-setpriority.patch
     after: [boost, patches]
     configflags:
       - -DWITH_BOOST=$SNAPCRAFT_STAGE
@@ -350,26 +350,23 @@ parts:
     plugin: dump
     source: src/delay-on-failure/
 
-  certbot-nextcloud-plugin:
+  certbot:
     plugin: python
     python-version: python2
     source: src/https/
     requirements: requirements.txt
     build-packages: [libffi-dev]
-
-  fix-certbot:
-    plugin: nil
-    source: src/https/patches
-    after: [certbot-nextcloud-plugin]
-    override-pull: |
-      snapcraftctl pull
-      patch -p1 -d $SNAPCRAFT_STAGE/lib/python2.7/site-packages/certbot < remove_default_config_files.patch
+    after: [patches]
+    override-build: |
+      snapcraftctl build
+      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
+      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
 
   setup-https:
     plugin: dump
     source: src/https/
     stage-packages: [openssl]
-    stage: [-etc/ssl, -patches]
+    stage: [-etc/ssl, -requirements.txt]
 
   import-export:
     plugin: dump

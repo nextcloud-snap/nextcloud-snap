@@ -1,0 +1,11 @@
+--- a/storage.py	2019-05-18 10:01:00.196684342 +0000
++++ b/storage.py	2019-05-18 10:01:04.352539257 +0000
+@@ -1108,8 +1108,7 @@
+                 (stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | \
+                  stat.S_IROTH)
+             mode = BASE_PRIVKEY_MODE | old_mode
+-            os.chown(target["privkey"], -1, os.stat(old_privkey).st_gid)
+             os.chmod(target["privkey"], mode)
+
+         # Save everything else
+         with open(target["cert"], "wb") as f:

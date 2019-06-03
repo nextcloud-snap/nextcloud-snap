@@ -1,4 +1,8 @@
 feature "Enabling HTTPS" do
+	after(:all) do
+		disable_https
+	end
+
 	scenario "self-signed" do
 		enable_https
 
@@ -6,6 +10,6 @@ feature "Enabling HTTPS" do
 		fill_in "User", with: "admin"
 		fill_in "Password", with: "admin"
 		click_button "Log in"
-		expect(page).to have_content "Documents"
+		expect(page).to have_content "All files"
 	end
 end

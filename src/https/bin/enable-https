@@ -112,8 +112,8 @@ handle_lets_encrypt()
 	# to be separated by whitespace): disable the check
 	# shellcheck disable=SC2086
 	if ! output="$(run_certbot certonly $extra_params \
-	             --authenticator nextcloud:webroot \
-	             --nextcloud:webroot-path "$CERTBOT_DIRECTORY" \
+	             --authenticator webroot \
+	             --webroot-path "$CERTBOT_DIRECTORY" \
 	             --rsa-key-size 4096 \
 	             --email "$email" \
 	             --non-interactive \

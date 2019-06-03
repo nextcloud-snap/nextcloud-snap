@@ -1,3 +1,25 @@
+v 15.0.8snap2
+  - certbot: re-introduce custom webroot plugin
+
+v 15.0.8snap1
+  - certbot: patch out untested chown calls
+  - nextcloud: update to 15.0.8
+  - ci: enable daily v16
+
+v 15.0.7snap2
+  - php: update to 7.2.18
+  - tests: move from webkit to chrome
+  - mysql: update to 5.7.26
+  - certbot: update to 0.33.1
+  - README: add config file path to tool section
+  - README: add file paths to "where is my stuff"
+  - ci: disable v13 dailies
+
+v 15.0.7snap1
+  - nextcloud: update to 15.0.7
+  - php: update to 7.2.17
+  - apache: update to 2.4.39
+
 v 15.0.5snap2
   - apache: disable TLS 1.0 and 1.1 and strengthen ciphers
   - apache: don't redirect Let's Encrypt to HTTPS

@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 15.0.5
+- Nextcloud 15.0.8
 - Apache 2.4
 - PHP 7.2
 - MySQL 5.7
@@ -129,7 +129,10 @@ headers and error pages. Debug mode can be enabled with:
 There are a few CLI utilities included:
 
 - `nextcloud.occ`:
-    - Nextcloud's `occ` configuration tool. Note that it requires `sudo`.
+    - Nextcloud's `occ` configuration tool. You can always edit the config file
+      directly (`/var/snap/nextcloud/current/nextcloud/config/config.php`) but
+      the configuration tool provides a CLI interface for it. See
+      `nextcloud.occ -h` for more information. Note that it requires `sudo`.
 - `nextcloud.mysql-client`:
     - MySQL client preconfigured to communicate with Nextcloud MySQL server.
       This may be useful in case you need to migrate Nextcloud installations.
@@ -162,14 +165,14 @@ There are a few CLI utilities included:
 
 ## Where is my stuff?
 
-- `$SNAP_DATA`:
+- `$SNAP_DATA` (`/var/snap/nextcloud/current/` by default)
     - Apache, PHP, MySQL, and Redis logs
     - Keys and certificates
     - MySQL database
     - Redis database
     - Nextcloud config
     - Any Nextcloud apps installed by the user
-- `$SNAP_COMMON`
+- `$SNAP_COMMON` (`/var/snap/nextcloud/common/` by default)
     - Nextcloud data
     - Nextcloud logs
 

@@ -21,7 +21,7 @@ wait_for_nextcloud_to_be_configured()
 nextcloud_is_installed()
 {
 	# Urgh, occ still prints text warnings even with JSON output. Thus fromjson?.
-	installed="$(occ status --output=json | jq -R 'fromjson? | .installed')"
+	installed="$(occ -n status --output=json | jq -R 'fromjson? | .installed')"
 	[ "$installed" = "true" ]
 }
 

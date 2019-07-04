@@ -48,7 +48,7 @@ snap permission to access removable media by connecting that interface:
 
 Beyond the typical Nextcloud configuration (either by using `nextcloud.occ` or
 editing `/var/snap/nextcloud/current/nextcloud/config/config.php`), the snap
-exposes extra configuration options via the `snap set` command.
+exposes extra configuration options via `snap set` and `snap get` commands.
 
 
 #### HTTP/HTTPS port configuration
@@ -97,6 +97,25 @@ To set it to be unlimited (not recommended), use -1:
 
     $ sudo snap set nextcloud php.memory-limit=-1
 
+#### Uploading big files > 512MB
+
+The default maximum file size for uploads is 512MB. You can increase this limit up to what your filesystem and operating system allows. There are certain hard limits that cannot be exceeded:
+
+- < 2GB on 32Bit OS-architecture
+- < 2GB with IE6 - IE8
+- < 4GB with IE9 - IE11
+
+64-bit filesystems have much higher limits; consult the documentation for your filesystem. By default, the file size limit is set to 512MB, if you'll like to customize this limit, you can run:
+
+    $ sudo snap set nextcloud php.upload-max-filesize=16G
+    $ sudo snap set nextcloud php.post-max-size=16G
+
+Adjust these values for your needs. If you see PHP timeouts in your logfiles, increase the timeout values, which are in seconds:
+
+    $ sudo snap set nextcloud php.max-input-time=3600
+    $ sudo snap set nextcloud php.max-execution-time=3600
+
+The [mod_reqtimeout](https://httpd.apache.org/docs/current/mod/mod_reqtimeout.html) Apache module could also stop large uploads from completing. If you’re using this module and getting failed uploads of large files either disable it in your Apache config or raise the configured RequestReadTimeout timeouts.
 
 #### Cronjob interval configuration
 

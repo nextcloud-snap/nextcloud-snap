@@ -50,15 +50,14 @@ if [ $new_install = true ]; then
 		GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost' IDENTIFIED BY '$nextcloud_password';
 		SQL
 	then
+		# Now the root mysql user has a password. Save that as well.
+		echo "password=$root_password" >> "$root_option_file"
 		printf "done\n"
 	else
 		echo "Failed to initialize-- reverting..."
 		"$SNAP/support-files/mysql.server" stop
 		rm -rf "$SNAP_DATA"/mysql/*
 	fi
-
-	# Now the root mysql user has a password. Save that as well.
-	echo "password=$root_password" >> "$root_option_file"
 else
 	# Okay, this isn't a new installation. However, we recently changed
 	# the location of MySQL's socket (11.0.2snap1). Make sure the root

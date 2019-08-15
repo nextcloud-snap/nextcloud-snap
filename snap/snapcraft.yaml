@@ -107,8 +107,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.39.tar.bz2
-    source-checksum: sha256/b4ca9d05773aa59b54d66cd8f4744b945289f084d3be17d7981d1783a5decfa2
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.41.tar.bz2
+    source-checksum: sha256/133d48298fe5315ae9366a0ec66282fa4040efa5d566174481077ade7d18ea40
 
     override-pull: |
       snapcraftctl pull

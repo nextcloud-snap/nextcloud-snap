@@ -23,9 +23,10 @@ print_usage()
 {
 	echo "Usage:"
 	echo "    $COMMAND [OPTIONS]"
-	echo "    Export data suitable for migrating servers. By default this"
-	echo "    includes the Nextcloud database, configuration, and data"
-	echo "    (equivalent to running $COMMAND -abcd)."
+	echo "    Export Nextcloud data suitable for migrating servers."
+	echo "    By default this includes the"
+        echo "    apps, database, config, certs, keys, and data"
+	echo "    (equivalent to running $COMMAND -abcdef)."
 	echo ""
 	echo "Available options:"
 	echo "    -h: Display this help message"
@@ -33,6 +34,8 @@ print_usage()
 	echo "    -b: Include the database"
 	echo "    -c: Include the config"
 	echo "    -d: Include the data (can be quite large)"
+	echo "    -e: Include the encryption keys"
+	echo "    -f: Include the certificates"
 }
 
 export_apps()
@@ -80,10 +83,66 @@ export_data()
 	fi
 }
 
+export_keys()
+{
+        backup="$1"
+	occ_err="/tmp/nextcloud_occ.err"
+	rsync_err="/tmp/nextcloud_rsync.err"
+	cat /dev/null > "$rsync_err"
+	
+        echo "Exporting encryption keys..."
+	encryption_status="$(nextcloud.occ encryption:status 2>$occ_err | awk 'NR==1{print $3}')"
+	if [ "$(cat $occ_err)" != "Nextcloud is in maintenance mode - no apps have been loaded" ]; then
+		# ignore the maintenance mode message but print out other errors.
+		echo "WARNING: nextcloud.occ reported an error checking the status of encryption:"
+		cat "$occ_err"
+	fi
+	if [ "$encryption_status" = "false" ]; then
+		# because these encryption directories do not exist until encryption is enabled,
+		# rsync will throw a bunch of directory not found errors
+		echo "Encryption does not appear to be enabled, skipping."
+	else
+		# back up system-wide master keys, public sharing keys, recovery keys
+		echo "Exporting system-wide keys..."
+		if ! rsync -ah --info=progress2 "$NEXTCLOUD_DATA_DIR"/files_encryption "${backup}"/keys/ 2>>"$rsync_err"; then
+			echo -e "WARNING: Unable to back up system-wide encryption keys. For details, see $rsync_err\n"
+		fi
+		# back up user keys
+		echo "Exporting user keys..."
+		# make sure the keys directory exists before rsync attempts to create subdirectories
+		# if the first backup above fails, it may not have been created
+		mkdir "${backup}/keys" 2>/dev/null
+		if ! nextcloud.occ user:list 2>"$occ_err" | awk '{print $3}' | xargs -I{} rsync -ah --info=progress2 "$NEXTCLOUD_DATA_DIR"/'{}'/files_encryption "${backup}"/keys/'{}'/ 2>>"$rsync_err"; then
+			echo -e "WARNING: One or more user keys couldn't be backed up.  If you use system-wide keys, you may ignore this. For details, see $rsync_err\n"
+		fi
+		if [ "$(cat $occ_err)" != "Nextcloud is in maintenance mode - no apps have been loaded" ]; then
+			# Ignore the maintenance mode message but print out other errors.
+			echo "WARNING: nextcloud.occ reported an error listing users:"
+			cat "$occ_err"
+		fi
+	fi
+}
+
+export_certs()
+{
+        backup="$1"
+        echo "Exporting certificates..."
+        if [ ! -d "$SNAP_DATA/certs" ]; then
+                echo "Certificates do not appear to be installed, skipping."
+        else
+                if ! rsync -ah --info=progress2 "$SNAP_DATA/certs/" "${backup}/certs"; then
+                        echo "Unable to export certs"
+                        exit 1
+                fi
+        fi
+}
+
 do_export_apps=false
 do_export_database=false
 do_export_config=false
 do_export_data=false
+do_export_keys=false
+do_export_certs=false
 
 # If no parameters are specified, default to exporting everything
 if [ $# -eq 0 ]; then
@@ -91,9 +150,11 @@ if [ $# -eq 0 ]; then
 	do_export_database=true
 	do_export_config=true
 	do_export_data=true
+	do_export_keys=false # keys already get grabbed in a full data backup
+	do_export_certs=true
 fi
 
-while getopts ":abcdh" opt; do
+while getopts ":abcdefh" opt; do
 	case $opt in
 		a)
 			do_export_apps=true
@@ -107,6 +168,12 @@ while getopts ":abcdh" opt; do
 		d)
 			do_export_data=true
 			;;
+		e)
+                        do_export_keys=true
+                        ;;
+		f)
+                        do_export_certs=true
+                        ;;
 		h)
 			print_usage
 			exit 0
@@ -150,6 +217,14 @@ fi
 
 if [ "$do_export_config" = true ]; then
 	export_config "$backup"
+fi
+
+if [ "$do_export_keys" = true ] && [ "$do_export_data" = false ]; then
+	export_keys "$backup"
+fi
+
+if [ "$do_export_certs" = true ]; then
+        export_certs "$backup"
 fi
 
 if [ "$do_export_data" = true ]; then

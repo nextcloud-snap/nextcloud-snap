@@ -22,8 +22,9 @@ print_usage()
 	echo "Usage:"
 	echo "    $COMMAND [OPTIONS] <backup dir>"
 	echo "    Import data exported from another Nextcloud snap instance."
-	echo "    By default this imports the database, config, and data"
-	echo "    (equivalent to running $COMMAND -abcd)."
+	echo "    By default this imports the"
+        echo "    apps, database, config, certs, and data"
+	echo "    (equivalent to running $COMMAND -abcdf)."
 	echo ""
 	echo "Available options:"
 	echo "    -h: Display this help message"
@@ -31,6 +32,7 @@ print_usage()
 	echo "    -b: Import the database"
 	echo "    -c: Import the config"
 	echo "    -d: Import the data"
+	echo "    -f: Import the certificates"
 }
 
 import_apps()
@@ -92,10 +94,27 @@ import_data()
 	fi
 }
 
+import_certs()
+{
+	backup_dir="${1%/}"
+        certs_backup="${backup_dir}/certs"
+	if [ ! -d "$certs_backup" ]; then
+		echo "Certificates were not found in the provided backup, skipping."
+	else
+        	run_command "Clearing existing certificates" rm -rf "$SNAP_DATA/certs"
+        	echo "Importing certificates..."
+        	if ! rsync -ah --info=progress2 "$certs_backup/" "$SNAP_DATA/certs"; then
+                	echo "Unable to import certificates"
+                	exit 1
+        	fi
+	fi
+}
+
 do_import_apps=false
 do_import_database=false
 do_import_config=false
 do_import_data=false
+do_import_certs=false
 
 # If no parameters are specified, default to importing everything
 if [ $# -eq 1 ]; then
@@ -103,9 +122,10 @@ if [ $# -eq 1 ]; then
 	do_import_database=true
 	do_import_config=true
 	do_import_data=true
+	do_import_certs=true
 fi
 
-while getopts ":abcdh" opt; do
+while getopts ":abcdfh" opt; do
 	case $opt in
 		a)
 			do_import_apps=true
@@ -119,6 +139,9 @@ while getopts ":abcdh" opt; do
 		d)
 			do_import_data=true
 			;;
+		f)
+                        do_import_certs=true
+                        ;;
 		h)
 			print_usage
 			exit 0
@@ -162,6 +185,10 @@ fi
 
 if [ "$do_import_config" = true ]; then
 	import_config "$backup_dir"
+fi
+
+if [ "$do_import_certs" = true ]; then
+        import_certs "$backup_dir"
 fi
 
 if [ "$do_import_data" = true ]; then

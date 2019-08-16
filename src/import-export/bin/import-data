@@ -23,7 +23,7 @@ print_usage()
 	echo "    $COMMAND [OPTIONS] <backup dir>"
 	echo "    Import data exported from another Nextcloud snap instance."
 	echo "    By default this imports the"
-        echo "    apps, database, config, certs, keys, and data"
+        echo "    apps, database, config, keys, and data"
 	echo "    (equivalent to running $COMMAND -abcdef)."
 	echo ""
 	echo "Available options:"
@@ -33,7 +33,6 @@ print_usage()
 	echo "    -c: Import the config"
 	echo "    -d: Import the data"
 	echo "    -e: Import the encryption keys"
-	echo "    -f: Import the certificates"
 }
 
 import_apps()
@@ -118,28 +117,11 @@ import_keys()
 	fi
 }
 
-import_certs()
-{
-	backup_dir="${1%/}"
-        certs_backup="${backup_dir}/certs"
-	if [ ! -d "$certs_backup" ]; then
-		echo "Certificates were not found in the provided backup, skipping."
-	else
-        	run_command "Clearing existing certificates" rm -rf "$SNAP_DATA/certs"
-        	echo "Importing certificates..."
-        	if ! rsync -ah --info=progress2 "$certs_backup/" "$SNAP_DATA/certs"; then
-                	echo "Unable to import certificates"
-                	exit 1
-        	fi
-	fi
-}
-
 do_import_apps=false
 do_import_database=false
 do_import_config=false
 do_import_data=false
 do_import_keys=false
-do_import_certs=false
 
 # If no parameters are specified, default to importing everything
 if [ $# -eq 1 ]; then
@@ -148,10 +130,9 @@ if [ $# -eq 1 ]; then
 	do_import_config=true
 	do_import_data=true
 	do_import_keys=false  # keys already get grabbed in a full data import
-	do_import_certs=true
 fi
 
-while getopts ":abcdefh" opt; do
+while getopts ":abcdeh" opt; do
 	case $opt in
 		a)
 			do_import_apps=true
@@ -167,9 +148,6 @@ while getopts ":abcdefh" opt; do
 			;;
 		e)
                         do_import_keys=true
-                        ;;
-		f)
-                        do_import_certs=true
                         ;;
 		h)
 			print_usage
@@ -218,10 +196,6 @@ fi
 
 if [ "$do_import_keys" = true ] && [ "$do_import_data" = false ]; then
         import_keys "$backup_dir"
-fi
-
-if [ "$do_import_certs" = true ]; then
-        import_certs "$backup_dir"
 fi
 
 if [ "$do_import_data" = true ]; then

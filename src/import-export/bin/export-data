@@ -26,7 +26,7 @@ print_usage()
 	echo "    Export Nextcloud data suitable for migrating servers."
 	echo "    By default this includes the"
         echo "    apps, database, config, keys, and data"
-	echo "    (equivalent to running $COMMAND -abcdef)."
+	echo "    (equivalent to running $COMMAND -abcde)."
 	echo ""
 	echo "Available options:"
 	echo "    -h: Display this help message"

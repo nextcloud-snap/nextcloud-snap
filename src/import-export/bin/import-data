@@ -24,7 +24,7 @@ print_usage()
 	echo "    Import data exported from another Nextcloud snap instance."
 	echo "    By default this imports the"
         echo "    apps, database, config, keys, and data"
-	echo "    (equivalent to running $COMMAND -abcdef)."
+	echo "    (equivalent to running $COMMAND -abcde)."
 	echo ""
 	echo "Available options:"
 	echo "    -h: Display this help message"

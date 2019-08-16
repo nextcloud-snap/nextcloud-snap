@@ -23,9 +23,10 @@ print_usage()
 {
 	echo "Usage:"
 	echo "    $COMMAND [OPTIONS]"
-	echo "    Export data suitable for migrating servers. By default this"
-	echo "    includes the Nextcloud database, configuration, and data"
-	echo "    (equivalent to running $COMMAND -abcd)."
+	echo "    Export Nextcloud data suitable for migrating servers."
+	echo "    By default this includes the"
+        echo "    apps, database, config, certs, and data"
+	echo "    (equivalent to running $COMMAND -abcdf)."
 	echo ""
 	echo "Available options:"
 	echo "    -h: Display this help message"
@@ -33,6 +34,7 @@ print_usage()
 	echo "    -b: Include the database"
 	echo "    -c: Include the config"
 	echo "    -d: Include the data (can be quite large)"
+	echo "    -f: Include the certificates"
 }
 
 export_apps()
@@ -80,10 +82,25 @@ export_data()
 	fi
 }
 
+export_certs()
+{
+        backup="$1"
+        echo "Exporting certificates..."
+        if [ ! -d "$SNAP_DATA/certs" ]; then
+                echo "Certificates do not appear to be installed, skipping."
+        else
+                if ! rsync -ah --info=progress2 "$SNAP_DATA/certs/" "${backup}/certs"; then
+                        echo "Unable to export certs"
+                        exit 1
+                fi
+        fi
+}
+
 do_export_apps=false
 do_export_database=false
 do_export_config=false
 do_export_data=false
+do_export_certs=false
 
 # If no parameters are specified, default to exporting everything
 if [ $# -eq 0 ]; then
@@ -91,9 +108,10 @@ if [ $# -eq 0 ]; then
 	do_export_database=true
 	do_export_config=true
 	do_export_data=true
+	do_export_certs=true
 fi
 
-while getopts ":abcdh" opt; do
+while getopts ":abcdfh" opt; do
 	case $opt in
 		a)
 			do_export_apps=true
@@ -107,6 +125,9 @@ while getopts ":abcdh" opt; do
 		d)
 			do_export_data=true
 			;;
+		f)
+                        do_export_certs=true
+                        ;;
 		h)
 			print_usage
 			exit 0
@@ -150,6 +171,10 @@ fi
 
 if [ "$do_export_config" = true ]; then
 	export_config "$backup"
+fi
+
+if [ "$do_export_certs" = true ]; then
+        export_certs "$backup"
 fi
 
 if [ "$do_export_data" = true ]; then

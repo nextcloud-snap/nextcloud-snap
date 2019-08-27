@@ -107,8 +107,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.39.tar.bz2
-    source-checksum: sha256/b4ca9d05773aa59b54d66cd8f4744b945289f084d3be17d7981d1783a5decfa2
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.41.tar.bz2
+    source-checksum: sha256/133d48298fe5315ae9366a0ec66282fa4040efa5d566174481077ade7d18ea40
 
     override-pull: |
       snapcraftctl pull
@@ -158,8 +158,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-15.0.10.tar.bz2
-    source-checksum: sha256/494511fcda6e823e8dfb571fcf3b9ddc433148449acb080104f4165d2f2f4d43
+    source: https://download.nextcloud.com/server/releases/nextcloud-15.0.11.tar.bz2
+    source-checksum: sha256/59cdde8e7a4a15606efc246e37adf6401b0b4a60f33289be8725d675b9c2ae26
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess

@@ -129,6 +129,11 @@ class PhpPlugin(autotools.AutotoolsPlugin):
         env = super().env(root)
 
         if root == self.installdir or root == self.project.stage_dir:
+            # gmp is installed into i386-linux-gnu on 32-bit, but the PHP gmp
+            # extension looks in i686-linux-gnu and can't find it. Set it
+            # explicitly. There should be no downside for doing this on all
+            # architectures.
+            env.append('GMP_DIR="{}"'.format(self.project.arch_triplet))
             largefile_cflags = self.run_output(['getconf', 'LFS_CFLAGS'])
             if largefile_cflags:
                 env.append(

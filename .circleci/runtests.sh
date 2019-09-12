@@ -7,8 +7,8 @@
 # Ruby v2.4.0 (the older version that is the default doesn't handle
 # the redirection that we test)
 bash --login -c '
-    rvm install 2.4.0
-    rvm use 2.4.0
+    rvm install 2.6.2
+    rvm use 2.6.2
     cd tests
     gem update --system
     gem install bundler

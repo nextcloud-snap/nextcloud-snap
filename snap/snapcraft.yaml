@@ -172,8 +172,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.2.21.tar.bz2/from/this/mirror
-    source-checksum: sha256/343183a1be8336670171885c761d57ffcae99cbbcf1db43da7cb5565056b14ef
+    source: https://php.net/get/php-7.2.22.tar.bz2/from/this/mirror
+    source-checksum: sha256/c10a9883b586ada5ef1149f2571625b27efdcc3e70a04fbb9121979633b0f08a
     source-type: tar
     install-via: prefix
     configflags:
@@ -198,9 +198,12 @@ parts:
       - --disable-rpath
       - --enable-ftp
 
-      # Enable ldap.
+      # Enable ldap
       - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
       - --with-ldap
+
+      # Enable gmp
+      - --with-gmp
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2
@@ -214,6 +217,7 @@ parts:
       - libmcrypt-dev
       - libldap2-dev
       - libfreetype6-dev
+      - libgmp-dev
     prime:
      - -sbin/
      - -etc/

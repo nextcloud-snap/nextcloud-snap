@@ -124,7 +124,7 @@ RSpec.configure do |config|
 
 	config.before(:suite) do
 		# Ensure the first run wizard is disabled, just in case
-		`sudo nextcloud.occ app:disable firstrunwizard`
+		`sudo nextcloud.occ -n app:disable firstrunwizard`
 	end
 
 	config.after(:each) do
@@ -133,8 +133,11 @@ RSpec.configure do |config|
 		Capybara.current_session.driver.quit
 
 		# After each test, make sure maintenance mode is reset
-		`sudo nextcloud.occ maintenance:mode --off 2>&1`
+		`sudo nextcloud.occ -n maintenance:mode --off 2>&1`
 		expect($?.to_i).to eq 0
+
+		# Maintenance mode takes a second to apply (opcache)
+		sleep 2
 
 		# Make sure any and all backups are removed
 		`sudo rm -rf /var/snap/nextcloud/common/backups`

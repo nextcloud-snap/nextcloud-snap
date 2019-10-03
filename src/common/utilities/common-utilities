@@ -52,10 +52,20 @@ wait_for_command()
 
 enable_maintenance_mode()
 {
-	run_command "Enabling maintenance mode" occ -n maintenance:mode --on
+	if run_command "Enabling maintenance mode" occ -n maintenance:mode --on; then
+		# The opcache might cache changes for one second. Wait for two to be safe.
+		sleep 2
+		return 0
+	fi
+	return 1
 }
 
 disable_maintenance_mode()
 {
-	run_command "Disabling maintenance mode" occ -n maintenance:mode --off
+	if run_command "Disabling maintenance mode" occ -n maintenance:mode --off; then
+		# The opcache might cache changes for one second. Wait for two to be safe.
+		sleep 2
+		return 0
+	fi
+	return 1
 }

@@ -172,8 +172,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.2.22.tar.bz2/from/this/mirror
-    source-checksum: sha256/c10a9883b586ada5ef1149f2571625b27efdcc3e70a04fbb9121979633b0f08a
+    source: https://php.net/get/php-7.2.23.tar.bz2/from/this/mirror
+    source-checksum: sha256/a17af3643d29d7e730f977e3776dc3e325d5ca00b361e41dbfc2368ebad5430d
     source-type: tar
     install-via: prefix
     configflags:
@@ -246,7 +246,7 @@ parts:
     source: src/php/
     organize:
       config/*: config/php/
-    stage-packages: [mawk, libfcgi0ldbl]
+    stage-packages: [mawk]
 
   # Copy over our Nextcloud configuration files
   nextcloud-customizations:

@@ -139,7 +139,7 @@ echo "unstable, so beware if using from within scripts." >&2
 echo "" >&2
 
 # Enable maintenance mode so data can't change out from under us
-if ! enable_maintenance_mode; then
+if nextcloud_is_installed && ! enable_maintenance_mode; then
 	echo "Unable to enter maintenance mode"
 	exit 1
 fi

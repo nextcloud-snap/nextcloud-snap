@@ -169,6 +169,9 @@ parts:
     # users. This does not result in an integrity check failure.
     prime:
       - -htdocs/apps/updatenotification
+    # Add imagemagick
+    stage-packages:
+      - imagemagick
 
   php:
     plugin: php

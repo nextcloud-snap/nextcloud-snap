@@ -1,3 +1,7 @@
+v 16.0.5snap3
+  - php: update to 7.2.24
+  - mysql: update to 5.7.28
+
 v 16.0.5snap2
   - php: update to 7.2.23
   - php: check file timestamps for opcache

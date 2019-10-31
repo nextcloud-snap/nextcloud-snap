@@ -4,6 +4,8 @@
 . "$SNAP/utilities/common-utilities"
 
 DEFAULT_MEMORY_LIMIT="512M"
+DEFAULT_MAX_EXECUTION_TIME="3600"
+DEFAULT_MAX_INPUT_TIME="3600"
 export PHP_FPM_PIDFILE="/tmp/pids/php-fpm.pid"
 export PHP_FPM_SOCKET="/tmp/sockets/php-fpm.sock"
 
@@ -76,4 +78,58 @@ php_previous_memory_limit()
 php_set_previous_memory_limit()
 {
 	snapctl set private.php.memory-limit="$1"
+}
+
+php_max_execution_time()
+{
+	max_execution_time="$(snapctl get php.max-execution-time)"
+	if [ -z "$max_execution_time" ]; then
+		max_execution_time="$DEFAULT_MAX_EXECUTION_TIME"
+		php_set_max_execution_time "$max_execution_time"
+		php_set_previous_max_execution_time "$max_execution_time"
+	fi
+
+	echo "$max_execution_time"
+}
+
+php_set_max_execution_time()
+{
+	snapctl set php.max-execution-time="$1"
+}
+
+php_previous_max_execution_time()
+{
+	snapctl get private.php.max-execution-time
+}
+
+php_set_previous_max_execution_time()
+{
+	snapctl set private.php.max-execution-time="$1"
+}
+
+php_max_input_time()
+{
+	max_input_time="$(snapctl get php.max-input-time)"
+	if [ -z "$max_input_time" ]; then
+		max_input_time="$DEFAULT_MAX_INPUT_TIME"
+		php_set_max_input_time "$max_input_time"
+		php_set_previous_max_input_time "$max_input_time"
+	fi
+
+	echo "$max_input_time"
+}
+
+php_set_max_input_time()
+{
+	snapctl set php.max-input-time="$1"
+}
+
+php_previous_max_input_time()
+{
+	snapctl get private.php.max-input-time
+}
+
+php_set_previous_max_input_time()
+{
+	snapctl set private.php.max-input-time="$1"
 }

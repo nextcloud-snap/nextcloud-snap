@@ -83,19 +83,35 @@ the automatic detection (including the port if necessary), e.g.:
     $ sudo nextcloud.occ config:system:set overwritehost --value="example.com:81"
 
 
-#### PHP Memory limit configuration
+#### PHP memory and execution configuration
 
 By default, PHP will use 128M as the memory limit. If you notice images not
 getting previews generated, or errors about memory exhaustion in your Nextcloud
 log, you may need to set this to a higher value.
 
-If you'd like to set the memory limit to a higher value (say, 512M), run:
+If you'd like to set the memory limit to a higher value (say, 512M, the default
+in snap), run:
 
     $ sudo snap set nextcloud php.memory-limit=512M
 
 To set it to be unlimited (not recommended), use -1:
 
     $ sudo snap set nextcloud php.memory-limit=-1
+
+By default, PHP will use 30s as the max execution time and 60s as the max input
+time. If you notice images not getting previews generated, or errors about scripts
+being interrupted in your Nextcloud log, you may need to set these to a higher value.
+
+If you'd like to set the max execution time and max input time to a higher value
+(say, 3600s, the default in snap), run:
+
+    $ sudo snap set nextcloud php.max-execution-time=3600
+    $ sudo snap set nextcloud php.max-input-time=3600
+
+To set them to be unlimited (not recommended), use -1:
+
+    $ sudo snap set nextcloud php.max-execution-time=-1
+    $ sudo snap set nextcloud php.max-input-time=-1
 
 
 #### Cronjob interval configuration

@@ -39,8 +39,12 @@ average_php_memory_requirement=50
 total_memory=$(mawk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo)
 PHP_FPM_MAX_CHILDREN=$((total_memory/average_php_memory_requirement))
 PHP_MEMORY_LIMIT="$(php_memory_limit)"
+PHP_MAX_EXECUTION_TIME="$(php_max_execution_time)"
+PHP_MAX_INPUT_TIME="$(php_max_input_time)"
 export PHP_FPM_MAX_CHILDREN
 export PHP_MEMORY_LIMIT
+export PHP_MAX_EXECUTION_TIME
+export PHP_MAX_INPUT_TIME
 
 PHP_EXPOSE_PHP="Off"
 if debug_mode_enabled; then

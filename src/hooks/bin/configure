@@ -9,8 +9,14 @@
 #   is enabled).
 #
 # - php.memory-limit (string)
-#   Memory limit for PHP workers. String can include units, e.g. 32M is 32
-#   megabytes.
+#   Memory limit for PHP workers or -1 to set unlimited. String can include
+#   units, e.g. 32M is 32 megabytes.
+#
+# - php.max-execution-time (string)
+#   Max execution time for PHP workers in seconds or -1 to set unlimited.
+#
+# - php.max-input-time (string)
+#   Max input time for PHP workers in seconds or -1 to set unlimited.
 #
 # - nextcloud.cron-interval (string)
 #   Interval of the internal Nextcloud cronjob
@@ -85,6 +91,56 @@ handle_php_memory_limit()
 	snapctl restart nextcloud.php-fpm
 }
 
+handle_php_max_execution_time()
+{
+	max_execution_time="$(php_max_execution_time)"
+	previous_max_execution_time="$(php_previous_max_execution_time)"
+
+	# If no changes were requested, then there's nothing to do here.
+	if [ "$max_execution_time" = "$previous_max_execution_time" ]; then
+		return 0
+	fi
+
+	# Validate max execution time. -1 and raw seconds allowed.
+	if ! expr "$max_execution_time" : '^-\?[0-9]\+\?$' > /dev/null; then
+		echo "\"$max_execution_time\" is not a valid PHP max execution time" >&2
+		return 1
+	fi
+
+	# Set new value. Since snapctl only gives us new values, also keep track of
+	# the current value so we know when it changes.
+	php_set_max_execution_time "$max_execution_time"
+	php_set_previous_max_execution_time "$max_execution_time"
+
+	# Restart PHP to apply new config
+	snapctl restart nextcloud.php-fpm
+}
+
+handle_php_max_input_time()
+{
+	max_input_time="$(php_max_input_time)"
+	previous_max_input_time="$(php_previous_max_input_time)"
+
+	# If no changes were requested, then there's nothing to do here.
+	if [ "$max_input_time" = "$previous_max_input_time" ]; then
+		return 0
+	fi
+
+	# Validate max input time. -1 and raw seconds allowed.
+	if ! expr "$max_input_time" : '^-\?[0-9]\+\?$' > /dev/null; then
+		echo "\"$max_input_time\" is not a valid PHP max input time" >&2
+		return 1
+	fi
+
+	# Set new value. Since snapctl only gives us new values, also keep track of
+	# the current value so we know when it changes.
+	php_set_max_input_time "$max_input_time"
+	php_set_previous_max_input_time "$max_input_time"
+
+	# Restart PHP to apply new config
+	snapctl restart nextcloud.php-fpm
+}
+
 handle_cronjob_interval()
 {
 	interval="$(cronjob_interval)"
@@ -133,5 +189,7 @@ handle_mode()
 
 handle_apache_port_config && \
 handle_php_memory_limit && \
+handle_php_max_execution_time && \
+handle_php_max_input_time && \
 handle_cronjob_interval && \
 handle_mode

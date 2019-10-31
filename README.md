@@ -114,6 +114,19 @@ To set them to be unlimited (not recommended), use -1:
     $ sudo snap set nextcloud php.max-input-time=-1
 
 
+#### PHP upload limit configuration
+
+By default, PHP will use 8M as the post max size and 2M as the upload max filesize.
+If you notice files are not being uploaded or the uploads being interrupted in your
+Nextcloud log, you may need to set these to a higher value.
+
+If you'd like to set the post max size and upload max filesize to a higher value
+(say, 16G, the default in snap), run:
+
+    $ sudo snap set nextcloud php.post-max-size=16G
+    $ sudo snap set nextcloud php.upload-max-filesize=16G
+
+
 #### Cronjob interval configuration
 
 By default the cronjob interval is 15 minutes.

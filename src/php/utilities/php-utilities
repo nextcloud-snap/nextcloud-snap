@@ -6,6 +6,8 @@
 DEFAULT_MEMORY_LIMIT="512M"
 DEFAULT_MAX_EXECUTION_TIME="3600"
 DEFAULT_MAX_INPUT_TIME="3600"
+DEFAULT_POST_MAX_SIZE="16G"
+DEFAULT_UPLOAD_MAX_FILESIZE="16G"
 export PHP_FPM_PIDFILE="/tmp/pids/php-fpm.pid"
 export PHP_FPM_SOCKET="/tmp/sockets/php-fpm.sock"
 
@@ -132,4 +134,58 @@ php_previous_max_input_time()
 php_set_previous_max_input_time()
 {
 	snapctl set private.php.max-input-time="$1"
+}
+
+php_post_max_size()
+{
+	post_max_size="$(snapctl get php.post-max-size)"
+	if [ -z "$post_max_size" ]; then
+		post_max_size="$DEFAULT_POST_MAX_SIZE"
+		php_set_post_max_size "$post_max_size"
+		php_set_previous_post_max_size "$post_max_size"
+	fi
+
+	echo "$post_max_size"
+}
+
+php_set_post_max_size()
+{
+	snapctl set php.post-max-size="$1"
+}
+
+php_previous_post_max_size()
+{
+	snapctl get private.php.post-max-size
+}
+
+php_set_previous_post_max_size()
+{
+	snapctl set private.php.post-max-size="$1"
+}
+
+php_upload_max_filesize()
+{
+	upload_max_filesize="$(snapctl get php.upload-max-filesize)"
+	if [ -z "$upload_max_filesize" ]; then
+		upload_max_filesize="$DEFAULT_UPLOAD_MAX_FILESIZE"
+		php_set_upload_max_filesize "$upload_max_filesize"
+		php_set_previous_upload_max_filesize "$upload_max_filesize"
+	fi
+
+	echo "$upload_max_filesize"
+}
+
+php_set_upload_max_filesize()
+{
+	snapctl set php.upload-max-filesize="$1"
+}
+
+php_previous_upload_max_filesize()
+{
+	snapctl get private.php.upload-max-filesize
+}
+
+php_set_previous_upload_max_filesize()
+{
+	snapctl set private.php.upload-max-filesize="$1"
 }

@@ -1,3 +1,9 @@
+v 15.0.13snap1
+  - nextcloud: update to 15.0.13
+  - php: update to 7.2.24
+  - mysql: update to 5.7.28
+  - php: update to 7.2.23
+
 v 15.0.11snap2
   - tests: update ruby version and gems
   - php: enable gmp

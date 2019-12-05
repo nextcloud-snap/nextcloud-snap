@@ -172,8 +172,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.2.24.tar.bz2/from/this/mirror
-    source-checksum: sha256/a079934db63068bbcc9bbd2e7b916b9891fc97719862697e5f954c639984f603
+    source: https://php.net/get/php-7.3.12.tar.bz2/from/this/mirror
+    source-checksum: sha256/d317b029f991410578cc38ba4b76c9f764ec29c67e7124e1fec57bceb3ad8c39
     source-type: tar
     install-via: prefix
     configflags:
@@ -218,6 +218,7 @@ parts:
       - libldap2-dev
       - libfreetype6-dev
       - libgmp-dev
+      - libzip-dev
     prime:
      - -sbin/
      - -etc/

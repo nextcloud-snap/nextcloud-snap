@@ -172,8 +172,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.3.12.tar.bz2/from/this/mirror
-    source-checksum: sha256/d317b029f991410578cc38ba4b76c9f764ec29c67e7124e1fec57bceb3ad8c39
+    source: https://php.net/get/php-7.3.13.tar.bz2/from/this/mirror
+    source-checksum: sha256/5c7b89062814f3c3953d1518f63ed463fd452929e3a37110af4170c5d23267bc
     source-type: tar
     install-via: prefix
     configflags:

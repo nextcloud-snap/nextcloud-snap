@@ -3,6 +3,7 @@
 latest_master_url="https://download.nextcloud.com/server/daily/latest-master.tar.bz2"
 latest_stable15_url="https://download.nextcloud.com/server/daily/latest-stable15.tar.bz2"
 latest_stable16_url="https://download.nextcloud.com/server/daily/latest-stable16.tar.bz2"
+latest_stable17_url="https://download.nextcloud.com/server/daily/latest-stable17.tar.bz2"
 
 rewrite_snapcraft_yaml()
 {
@@ -45,3 +46,8 @@ echo "Requesting build of latest 16..."
 request_build \
 	"latest-16" "$latest_stable16_url" "16-$today" \
 	"From CI: Use Nextcloud latest 16"
+
+echo "Requesting build of latest 17..."
+request_build \
+	"latest-17" "$latest_stable17_url" "17-$today" \
+	"From CI: Use Nextcloud latest 17"

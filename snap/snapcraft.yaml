@@ -102,7 +102,7 @@ apps:
 
 hooks:
   configure:
-    plugs: [network, network-bind]
+    plugs: [network, network-bind, removable-media]
 
 parts:
   apache:

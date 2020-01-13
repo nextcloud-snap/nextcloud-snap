@@ -24,6 +24,13 @@ if nextcloud_is_installed; then
 	trap 'disable_maintenance_mode' EXIT
 
 	occ -n db:convert-filecache-bigint
+
+	echo "Updating all apps..."
+	if occ -n app:update --all; then
+		# app:update downloads and extracts the updates, but now we
+		# need to run upgrade to run database migrations, etc.
+		occ -n upgrade
+	fi
 else
 	wait_for_nextcloud_to_be_installed
 

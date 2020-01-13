@@ -1,3 +1,6 @@
+v 16.0.7snap2
+  - nextcloud-fixer: upgrade and update apps before anything else
+
 v 16.0.7snap1
   - nextcloud: update to 16.0.7
   - nextcloud-fixer: update all apps

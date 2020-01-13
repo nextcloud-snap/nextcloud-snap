@@ -102,7 +102,7 @@ apps:
 
 hooks:
   configure:
-    plugs: [network, network-bind]
+    plugs: [network, network-bind, removable-media]
 
 parts:
   apache:
@@ -158,8 +158,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-16.0.5.tar.bz2
-    source-checksum: sha256/8709c64fa776fd731c8e5f1ab25d592a2e690e5e18a81601cccf363795fae551
+    source: https://download.nextcloud.com/server/releases/nextcloud-16.0.7.tar.bz2
+    source-checksum: sha256/b9632772f4845c16b14e1e861783a747ed1bc25a18347d99b2caccb1079c8de3
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess

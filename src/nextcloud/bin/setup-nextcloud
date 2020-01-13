@@ -54,25 +54,23 @@ else
 	occ -n app:disable updatenotification
 fi
 
-# Finally, make sure nextcloud is up to date. The return code of the upgrade
-# can be used to determine the outcome:
-#    success = 0;
-#    not installed = 1;
-#    in maintenance mode = 2;
-#    already up to date = 3;
-#    invalid arguments  = 4;
-#    other failure = 5;
-echo "Making sure nextcloud is fully upgraded..."
-occ -n upgrade
-return_code=$?
-if [ $return_code -eq 1 ]; then
-	echo "Nextcloud is not yet installed-- no upgrade necessary"
-elif [ $return_code -eq 3 ]; then
-	echo "Nextcloud is fully upgraded"
-elif [ $return_code -ne 0 ]; then
-	echo "Unable to upgrade Nextcloud. Will try again."
-	# occ may have left it in maintenance mode, so turn that off
-	disable_maintenance_mode
-	sleep 10 # Delaying here so systemd doesn't throttle us
-	exit 1
+
+if nextcloud_is_installed; then
+	# Finally, make sure nextcloud is up to date. The return code of the
+	# upgrade can be used to determine the outcome:
+	#    success (or already up to date) = 0;
+	#    not installed = 1;
+	#    in maintenance mode = 2;
+	#    invalid arguments  = 4;
+	#    other failure = 5;
+	echo "Making sure nextcloud is fully upgraded..."
+	occ -n upgrade
+	return_code=$?
+	if [ $return_code -ne 0 ]; then
+		echo "Unable to upgrade Nextcloud. Will try again."
+		# occ may have left it in maintenance mode, so turn that off
+		disable_maintenance_mode
+		sleep 10 # Delaying here so systemd doesn't throttle us
+		exit 1
+	fi
 fi

@@ -1,3 +1,8 @@
+v 16.0.7snap1
+  - nextcloud: update to 16.0.7
+  - nextcloud-fixer: update all apps
+  - tests: update dependencies
+
 v 16.0.5snap4
   - php: update to 7.3.13
 

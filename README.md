@@ -38,8 +38,9 @@ which will automatically change the cron admin setting to Cron for you.
 
 Also note that the interface providing the ability to access removable media is
 not automatically connected upon install, so if you'd like to use external
-storage (or otherwise use a device in `/media` for data), you need to give the
-snap permission to access removable media by connecting that interface:
+storage (or otherwise use a device in `/media` or `/mnt` for data), you need to
+give the snap permission to access removable media by connecting that
+interface:
 
     $ sudo snap connect nextcloud:removable-media
 

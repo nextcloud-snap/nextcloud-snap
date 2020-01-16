@@ -277,7 +277,7 @@ parts:
   mysql:
     plugin: cmake
     source: https://github.com/mysql/mysql-server.git
-    source-tag: mysql-5.7.28
+    source-tag: mysql-5.7.29
     source-depth: 1
     override-pull: |
       snapcraftctl pull

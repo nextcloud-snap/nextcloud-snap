@@ -103,6 +103,8 @@ apps:
 hooks:
   configure:
     plugs: [network, network-bind, removable-media]
+  pre-refresh:
+    plugs: [network, network-bind, removable-media]
 
 parts:
   apache:

@@ -50,6 +50,16 @@ wait_for_command()
 	fi
 }
 
+get_previous_snap_version()
+{
+	snapctl get private.snap.version
+}
+
+set_previous_snap_version()
+{
+	snapctl set private.snap.version="$1"
+}
+
 enable_maintenance_mode()
 {
 	if run_command "Enabling maintenance mode" occ -n maintenance:mode --on; then

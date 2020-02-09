@@ -30,6 +30,22 @@ wait_for_nextcloud_to_be_installed()
 	wait_for_command "Waiting for Nextcloud to be installed" nextcloud_is_installed
 }
 
+# nextcloud_notify_admins <short message> <long message>
+nextcloud_notify_admins()
+{
+	if ! occ app:list --output=json | jq -e '.enabled | .notifications' > /dev/null; then
+		echo "Notifications app isn't enabled-- unable to send notification" >&2
+		return 1
+	fi
+
+	users=$(occ user:list --output=json | jq -r 'keys[]')
+	for user in $users; do
+		if occ user:info --output=json "$user" | jq -e '.groups | index("admin")' > /dev/null; then
+			occ notification:generate "$user" "$1" -l "$2"
+		fi
+	done
+}
+
 cronjob_interval()
 {
 	interval="$(snapctl get nextcloud.cron-interval)"

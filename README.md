@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 16.0.7
+- Nextcloud 16.0.8
 - Apache 2.4
 - PHP 7.3
 - MySQL 5.7
@@ -38,8 +38,9 @@ which will automatically change the cron admin setting to Cron for you.
 
 Also note that the interface providing the ability to access removable media is
 not automatically connected upon install, so if you'd like to use external
-storage (or otherwise use a device in `/media` for data), you need to give the
-snap permission to access removable media by connecting that interface:
+storage (or otherwise use a device in `/media` or `/mnt` for data), you need to
+give the snap permission to access removable media by connecting that
+interface:
 
     $ sudo snap connect nextcloud:removable-media
 

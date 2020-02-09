@@ -103,6 +103,8 @@ apps:
 hooks:
   configure:
     plugs: [network, network-bind, removable-media]
+  pre-refresh:
+    plugs: [network, network-bind, removable-media]
 
 parts:
   apache:
@@ -158,8 +160,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-16.0.7.tar.bz2
-    source-checksum: sha256/b9632772f4845c16b14e1e861783a747ed1bc25a18347d99b2caccb1079c8de3
+    source: https://download.nextcloud.com/server/releases/nextcloud-16.0.8.tar.bz2
+    source-checksum: sha256/252fb559814777553e57a5c486194c5e07c92e6a453e1d0bacba5f339221bf30
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -172,8 +174,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.3.13.tar.bz2/from/this/mirror
-    source-checksum: sha256/5c7b89062814f3c3953d1518f63ed463fd452929e3a37110af4170c5d23267bc
+    source: https://php.net/get/php-7.3.14.tar.bz2/from/this/mirror
+    source-checksum: sha256/b9dfcbbbc929ce67995f976de8636c5f46804593ecae6e110509329b9dc6c272
     source-type: tar
     install-via: prefix
     configflags:
@@ -277,7 +279,7 @@ parts:
   mysql:
     plugin: cmake
     source: https://github.com/mysql/mysql-server.git
-    source-tag: mysql-5.7.28
+    source-tag: mysql-5.7.29
     source-depth: 1
     override-pull: |
       snapcraftctl pull

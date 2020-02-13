@@ -7,6 +7,7 @@ description: |
 
 grade: stable
 confinement: strict
+base: core18
 
 apps:
   # Apache daemon
@@ -209,11 +210,20 @@ parts:
     stage-packages:
       # These are only included here until the OS snap stabilizes
       - libxml2
-      - libpng12-0
+      - libpng16-16
+      # These seems to be needed for core18
+      - libcurl4
+      - libjpeg9
+      - libbz2-1.0
+      - libmcrypt4
+      - libldap-2.4-2
+      - libfreetype6
+      - libgmp10
+      - libzip4
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
-      - libpng12-dev
+      - libpng-dev
       - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
@@ -308,6 +318,9 @@ parts:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
       - -COPYING
+    stage-packages:
+      # This seems to be needed for core18
+      - libaio1
     prime:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
@@ -361,7 +374,7 @@ parts:
     plugin: python
     python-version: python2
     source: src/https/
-    requirements: requirements.txt
+    requirements: ["requirements.txt"]
     build-packages: [libffi-dev]
     after: [patches]
     override-build: |

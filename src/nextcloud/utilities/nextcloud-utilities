@@ -38,8 +38,7 @@ nextcloud_notify_admins()
 		return 1
 	fi
 
-	users=$(occ user:list --output=json | jq -r 'keys[]')
-	for user in $users; do
+	occ user:list --output=json | jq -r 'keys[]' | while read -r user; do
 		if occ user:info --output=json "$user" | jq -e '.groups | index("admin")' > /dev/null; then
 			occ notification:generate "$user" "$1" -l "$2"
 		fi

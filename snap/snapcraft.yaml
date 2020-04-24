@@ -109,8 +109,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.41.tar.bz2
-    source-checksum: sha256/133d48298fe5315ae9366a0ec66282fa4040efa5d566174481077ade7d18ea40
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.43.tar.bz2
+    source-checksum: sha256/a497652ab3fc81318cdc2a203090a999150d86461acff97c1065dc910fe10f43
 
     override-pull: |
       snapcraftctl pull
@@ -160,8 +160,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-17.0.5.tar.bz2
-    source-checksum: sha256/d503eaf998e652554a27c14382f2b42c307e7fc9d6afa05f2829b547eb733161
+    source: https://download.nextcloud.com/server/releases/nextcloud-18.0.4.tar.bz2
+    source-checksum: sha256/fad8e12632b352247ffc5ae181d4e414d732b9072caa0401774cfdb93a714329
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -174,8 +174,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.3.16.tar.bz2/from/this/mirror
-    source-checksum: sha256/b8072d526a283182963b03960b7982392daa43cb31131eca4cf0b996764a042e
+    source: https://php.net/get/php-7.3.17.tar.bz2/from/this/mirror
+    source-checksum: sha256/d83e90d9024c999f209933732ed4e1d0e7295a67c66ab79490898ea0a4a29709
     source-type: tar
     install-via: prefix
     configflags:

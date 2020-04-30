@@ -1,3 +1,9 @@
+v 16.0.9snap1
+  - nextcloud: update to 16.0.9
+  - redis: update to 5.0.8
+  - php: update to 7.3.17
+  - apache: update to 2.4.43
+
 v 16.0.8snap2
   - redis: update phpredis to 5.1.1 and redis to 5.0.7
   - nextcloud: support notifying users with spaces in username

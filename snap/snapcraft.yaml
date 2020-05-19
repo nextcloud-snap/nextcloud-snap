@@ -168,8 +168,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-18.0.6.tar.bz2
-    source-checksum: sha256/3aa185f69c4e5ec7de3b3d5792003aeb4bd16a350865e447c9363019c69b15b2
+    source: https://download.nextcloud.com/server/releases/nextcloud-19.0.0.tar.bz2
+    source-checksum: sha256/d23d429657c5e3476d7e73af1eafc70e42a81cfe2ed65b20655a005724fe0aae
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -207,6 +207,7 @@ parts:
       - --with-freetype-dir=/usr/lib
       - --disable-rpath
       - --enable-ftp
+      - --enable-bcmath
 
       # Enable ldap
       - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
@@ -283,7 +284,12 @@ parts:
     source: src/nextcloud/
     organize:
       config/: htdocs/config/
-    stage-packages: [jq]
+    stage-packages:
+      # jq is needed for parsing occ's json output
+      - jq
+
+      # The collabora appimage requires this
+      - libfontconfig1
 
   # Download the boost headers for MySQL. Note that the version used may need to
   # be updated if the version of MySQL changes.

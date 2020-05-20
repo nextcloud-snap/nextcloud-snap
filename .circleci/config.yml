@@ -17,7 +17,7 @@ jobs:
   build:
     working_directory: ~/nextcloud-snap
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202004-01
     steps:
      - checkout
 
@@ -50,7 +50,7 @@ jobs:
   test-daily-master:
     working_directory: ~/nextcloud-snap
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202004-01
     steps:
       - checkout
 
@@ -88,7 +88,7 @@ jobs:
   test-daily-v16:
     working_directory: ~/nextcloud-snap
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202004-01
     steps:
       - checkout
 
@@ -107,7 +107,7 @@ jobs:
   test-daily-v17:
     working_directory: ~/nextcloud-snap
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202004-01
     steps:
       - checkout
 
@@ -126,7 +126,7 @@ jobs:
   test-daily-v18:
     working_directory: ~/nextcloud-snap
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202004-01
     steps:
       - checkout
 

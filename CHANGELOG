@@ -1,3 +1,7 @@
+v 18.0.4snap2
+  - php: update to 7.3.18
+  - mysql: update to 5.7.30
+
 v 18.0.4snap1
   - nextcloud: update to 18.0.4
   - php: update to 7.3.17

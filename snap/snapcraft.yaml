@@ -53,7 +53,7 @@ apps:
     plugs: [network, network-bind]
 
   mysqldump:
-    command: mysqldump --defaults-file=$SNAP_DATA/mysql/root.ini --lock-tables nextcloud
+    command: run-mysqldump
     plugs: [network, network-bind]
 
   # Nextcloud occ command
@@ -207,19 +207,6 @@ parts:
 
       # Enable gmp
       - --with-gmp
-    stage-packages:
-      # These are only included here until the OS snap stabilizes
-      - libxml2
-      - libpng16-16
-      # These seems to be needed for core18
-      - libcurl4
-      - libjpeg9
-      - libbz2-1.0
-      - libmcrypt4
-      - libldap-2.4-2
-      - libfreetype6
-      - libgmp10
-      - libzip4
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
@@ -231,6 +218,28 @@ parts:
       - libfreetype6-dev
       - libgmp-dev
       - libzip-dev
+    stage-packages:
+      - libasn1-8-heimdal
+      - libcurl4
+      - libfreetype6
+      - libgssapi3-heimdal
+      - libhcrypto4-heimdal
+      - libheimbase1-heimdal
+      - libheimntlm0-heimdal
+      - libhx509-5-heimdal
+      - libicu60
+      - libjpeg9
+      - libkrb5-26-heimdal
+      - libldap-2.4-2
+      - libnghttp2-14
+      - libpng16-16
+      - libpsl5
+      - libroken18-heimdal
+      - librtmp1
+      - libsasl2-2
+      - libwind0-heimdal
+      - libxml2
+      - libzip4
     prime:
      - -sbin/
      - -etc/
@@ -314,13 +323,12 @@ parts:
       - bison
       - libncurses5-dev
       - libaio-dev
+    stage-packages:
+      - libaio1
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
       - -COPYING
-    stage-packages:
-      # This seems to be needed for core18
-      - libaio1
     prime:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server

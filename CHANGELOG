@@ -1,3 +1,7 @@
+v 18.0.4snap3
+  - nextcloud: regenerate asset cache on startup
+  - nextcloud: cron should run every 5 minutes by default
+
 v 18.0.4snap2
   - php: update to 7.3.18
   - mysql: update to 5.7.30

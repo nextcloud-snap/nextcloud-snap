@@ -5,7 +5,7 @@
 
 export NEXTCLOUD_CONFIG_DIR="$SNAP_DATA/nextcloud/config"
 export NEXTCLOUD_DATA_DIR="$SNAP_COMMON/nextcloud/data"
-DEFAULT_CRONJOB_INTERVAL="15m"
+DEFAULT_CRONJOB_INTERVAL="5m"
 
 nextcloud_is_configured()
 {

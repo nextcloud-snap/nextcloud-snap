@@ -7,6 +7,14 @@ description: |
 
 grade: stable
 confinement: strict
+base: core18
+
+architectures:
+  - build-on: amd64
+  - build-on: i386
+  - build-on: arm64
+  - build-on: armhf
+  - build-on: ppc64el
 
 apps:
   # Apache daemon
@@ -52,7 +60,7 @@ apps:
     plugs: [network, network-bind]
 
   mysqldump:
-    command: mysqldump --defaults-file=$SNAP_DATA/mysql/root.ini --lock-tables nextcloud
+    command: run-mysqldump
     plugs: [network, network-bind]
 
   # Nextcloud occ command
@@ -206,14 +214,10 @@ parts:
 
       # Enable gmp
       - --with-gmp
-    stage-packages:
-      # These are only included here until the OS snap stabilizes
-      - libxml2
-      - libpng12-0
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
-      - libpng12-dev
+      - libpng-dev
       - libjpeg9-dev
       - libbz2-dev
       - libmcrypt-dev
@@ -221,6 +225,28 @@ parts:
       - libfreetype6-dev
       - libgmp-dev
       - libzip-dev
+    stage-packages:
+      - libasn1-8-heimdal
+      - libcurl4
+      - libfreetype6
+      - libgssapi3-heimdal
+      - libhcrypto4-heimdal
+      - libheimbase1-heimdal
+      - libheimntlm0-heimdal
+      - libhx509-5-heimdal
+      - libicu60
+      - libjpeg9
+      - libkrb5-26-heimdal
+      - libldap-2.4-2
+      - libnghttp2-14
+      - libpng16-16
+      - libpsl5
+      - libroken18-heimdal
+      - librtmp1
+      - libsasl2-2
+      - libwind0-heimdal
+      - libxml2
+      - libzip4
     prime:
      - -sbin/
      - -etc/
@@ -304,6 +330,8 @@ parts:
       - bison
       - libncurses5-dev
       - libaio-dev
+    stage-packages:
+      - libaio1
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
@@ -361,7 +389,7 @@ parts:
     plugin: python
     python-version: python2
     source: src/https/
-    requirements: requirements.txt
+    requirements: ["requirements.txt"]
     build-packages: [libffi-dev]
     after: [patches]
     override-build: |

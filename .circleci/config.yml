@@ -22,11 +22,15 @@ jobs:
      - checkout
 
      - run:
+         # Build the docker image necessary to build this snap
+         command: |
+           docker build -t nextcloud_builder .circleci/
+
+     - run:
          # Build the snap
          command: |
            docker run -v $(pwd):$(pwd) \
-                      -e SNAPCRAFT_MANAGED_HOST=yes \
-                      -t snapcore/snapcraft:stable \
+                      -t nextcloud_builder \
                       sh -c "cd $(pwd) && apt update -qq && snapcraft"
 
      - run:

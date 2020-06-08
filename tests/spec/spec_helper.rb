@@ -9,7 +9,7 @@ require 'selenium-webdriver'
 
 Capybara.register_driver :chrome do |app|
 	options = Selenium::WebDriver::Chrome::Options.new(
-		args: %w[headless disable-gpu no-sandbox]
+		args: %w[headless disable-gpu no-sandbox ignore-certificate-errors]
 	)
 	Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end

@@ -1,3 +1,6 @@
+v 18.0.4snap4
+  - snap: upgrade to core18
+
 v 18.0.4snap3
   - nextcloud: regenerate asset cache on startup
   - nextcloud: cron should run every 5 minutes by default

@@ -22,7 +22,7 @@ class ApachePlugin(snapcraft.plugins.v1.PluginV1):
             'default': 'event',
         }
 
-        schema['required'].append('modules')
+        schema['required'] = ['modules']
 
         return schema
 
@@ -32,6 +32,7 @@ class ApachePlugin(snapcraft.plugins.v1.PluginV1):
         self.build_packages.extend(
             ['pkg-config', 'libapr1-dev', 'libaprutil1-dev', 'libpcre3-dev',
              'libssl-dev'])
+        self.stage_packages.extend(['libapr1', 'libaprutil1'])
 
     def build(self):
         super().build()

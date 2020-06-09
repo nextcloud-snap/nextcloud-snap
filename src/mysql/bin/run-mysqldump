@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mysqldump --defaults-file="$SNAP_DATA/mysql/root.ini" --lock-tables nextcloud "$@"

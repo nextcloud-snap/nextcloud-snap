@@ -5,7 +5,7 @@ import re
 import subprocess
 
 import snapcraft
-from snapcraft.plugins import autotools
+from snapcraft.plugins.v1 import autotools
 
 logger = logging.getLogger(__name__)
 

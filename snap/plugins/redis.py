@@ -5,7 +5,7 @@ import re
 import subprocess
 
 import snapcraft
-from snapcraft.plugins import make
+from snapcraft.plugins.v1 import make
 
 logger = logging.getLogger(__name__)
 

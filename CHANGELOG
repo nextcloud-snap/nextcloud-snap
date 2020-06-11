@@ -1,3 +1,7 @@
+v 18.0.6snap1
+  - nextcloud: update to 18.0.6
+  - snap: rewrite plugins to workaround snapcraft breakage
+
 v 18.0.4snap4
   - snap: upgrade to core18
 

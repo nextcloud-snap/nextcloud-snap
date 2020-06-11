@@ -108,6 +108,25 @@ jobs:
           # Run the tests
           command: ./.circleci/runtests.sh
 
+  test-daily-v19:
+    working_directory: ~/nextcloud-snap
+    machine:
+      image: ubuntu-1604:202004-01
+    steps:
+      - checkout
+
+      - run:
+          # Install the snap and create an admin user
+          command: |
+            sudo apt update -qq
+            sudo apt install -y snapd
+            sudo snap install nextcloud --channel=19/edge
+            sudo nextcloud.manual-install admin admin
+
+      - run:
+          # Run the tests
+          command: ./.circleci/runtests.sh
+
 workflows:
   version: 2
   commit:
@@ -145,3 +164,14 @@ workflows:
               only: develop
 
     jobs: [test-daily-v18]
+
+  daily-v19:
+    triggers:
+      - schedule:
+          # 0700 UTC == 0000 PSC
+          cron: "0 7 * * *"
+          filters:
+            branches:
+              only: develop
+
+    jobs: [test-daily-v19]

@@ -59,8 +59,11 @@ COPY --from=builder /snap/bin/snapcraft /snap/bin/snapcraft
 COPY --from=builder /snap/bin/go /snap/bin/go
 COPY --from=builder /snap/bin/gofmt /snap/bin/gofmt
 
+# Install snapd
+RUN apt update && apt dist-upgrade --yes && apt install --yes snapd
+
 # Generate locale
-RUN apt update && apt dist-upgrade --yes && apt install --yes sudo locales && locale-gen en_US.UTF-8
+RUN apt install --yes sudo locales && locale-gen en_US.UTF-8
 
 # Set the proper environment
 ENV LANG="en_US.UTF-8"

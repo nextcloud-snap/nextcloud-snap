@@ -1,3 +1,7 @@
+v 19.0.1snap3
+  - php: update to 7.3.21
+  - apache: update to 2.4.46
+
 v 19.0.1snap2
   - mysql: ignore config files on host
 

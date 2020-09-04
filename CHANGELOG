@@ -1,3 +1,6 @@
+v 19.0.2snap1
+  - nextcloud: update to 19.0.2
+
 v 19.0.1snap3
   - php: update to 7.3.21
   - apache: update to 2.4.46

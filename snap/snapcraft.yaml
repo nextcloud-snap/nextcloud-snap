@@ -38,7 +38,15 @@ apps:
     command: start-php-fpm
     daemon: simple
     restart-condition: always
-    plugs: [network, network-bind, removable-media]
+    plugs:
+      - network
+      - network-bind
+
+      # Optional interface for observing network in system settings
+      - network-observe
+
+      # Optional interface for accessing removable media
+      - removable-media
 
   # redis server daemon
   redis-server:

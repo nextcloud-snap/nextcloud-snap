@@ -45,6 +45,16 @@ interface:
     $ sudo snap connect nextcloud:removable-media
 
 
+### System monitoring
+
+The System application requires a bit more access to the system than the snap
+uses by default (e.g. the ability to monitor network hardware, etc.). If you'd
+like to utilize those features, you'll need to connect the interface that
+allows that kind of access:
+
+    $ sudo snap connect nextcloud:network-observe
+
+
 ### Configuration
 
 Beyond the typical Nextcloud configuration (either by using `nextcloud.occ` or

@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 19.0.2
+- Nextcloud 19.0.3
 - Apache 2.4
 - PHP 7.3
 - MySQL 5.7
@@ -43,6 +43,16 @@ give the snap permission to access removable media by connecting that
 interface:
 
     $ sudo snap connect nextcloud:removable-media
+
+
+### System monitoring
+
+The System application requires a bit more access to the system than the snap
+uses by default (e.g. the ability to monitor network hardware, etc.). If you'd
+like to utilize those features, you'll need to connect the interface that
+allows that kind of access:
+
+    $ sudo snap connect nextcloud:network-observe
 
 
 ### Configuration

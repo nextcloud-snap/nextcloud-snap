@@ -1,3 +1,8 @@
+v 19.0.3snap2
+  - php: disable output buffering
+  - php: update to 7.3.23
+  - php: include support for argon2
+
 v 19.0.3snap1
   - snapcraft.yaml: enable network monitoring
   - nextcloud: update to 19.0.3

@@ -46,11 +46,11 @@ feature "Change PHP memory limit" do
 		fill_in "User", with: "admin"
 		fill_in "Password", with: "admin"
 		click_button "Log in"
-		expect(page).to have_content "All files"
+		expect(page).to have_content "Recommended files"
 	end
 
 	def assert_logged_in
 		visit "/"
-		expect(page).to have_content "All files"
+		expect(page).to have_content "Recommended files"
 	end
 end

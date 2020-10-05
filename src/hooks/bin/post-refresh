@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+run-snap-migrations

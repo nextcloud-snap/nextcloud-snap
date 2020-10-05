@@ -51,6 +51,13 @@ php_pid()
 	fi
 }
 
+php_reload()
+{
+	if php_is_running; then
+		kill -USR1 php_pid > /dev/null
+	fi
+}
+
 php_memory_limit()
 {
 	memory_limit="$(snapctl get php.memory-limit)"

@@ -19,23 +19,26 @@ architectures:
 apps:
   # Apache daemon
   apache:
-    command: run-httpd -k start -DFOREGROUND
-    stop-command: httpd-wrapper -k stop
+    command: bin/run-httpd -k start -DFOREGROUND
+    stop-command: bin/httpd-wrapper -k stop
+    reload-command: bin/httpd-wrapper -k graceful
     daemon: simple
     restart-condition: always
     plugs: [network, network-bind, removable-media]
 
   # MySQL daemon
   mysql:
-    command: start_mysql
+    command: bin/start_mysql
     stop-command: support-files/mysql.server stop
+    reload-command: bin/reload-mysql
     daemon: simple
     restart-condition: always
     plugs: [network, network-bind]
 
   # PHP FPM daemon
   php-fpm:
-    command: start-php-fpm
+    command: bin/start-php-fpm
+    reload-command: bin/reload-php
     daemon: simple
     restart-condition: always
     plugs:
@@ -50,71 +53,77 @@ apps:
 
   # redis server daemon
   redis-server:
-    command: start-redis-server
+    command: bin/start-redis-server
     daemon: simple
     restart-condition: always
     plugs: [network, network-bind]
 
   # mDNS daemon
   mdns-publisher:
-    command: delay-on-failure mdns-publisher nextcloud
+    command: bin/delay-on-failure mdns-publisher nextcloud
     daemon: simple
     restart-condition: always
     plugs: [network, network-bind]
 
   # MySQL client
   mysql-client:
-    command: run-mysql
+    command: bin/run-mysql
     plugs: [network, network-bind]
 
   mysqldump:
-    command: run-mysqldump
+    command: bin/run-mysqldump
     plugs: [network, network-bind]
 
   # Nextcloud occ command
   occ:
-    command: occ
+    command: bin/occ
     plugs: [network, network-bind, removable-media]
 
   enable-https:
-    command: enable-https
+    command: bin/enable-https
     plugs: [network, network-bind]
 
   disable-https:
-    command: disable-https
+    command: bin/disable-https
     plugs: [network, network-bind]
 
   renew-certs:
-    command: renew-certs
+    command: bin/renew-certs
     daemon: simple
     restart-condition: always
     plugs: [network, network-bind]
 
   nextcloud-cron:
-    command: nextcloud-cron
+    command: bin/nextcloud-cron
     daemon: simple
     restart-condition: on-failure
     plugs: [network, network-bind, removable-media]
 
   # Command for manually installing instead of visiting site to create admin.
   manual-install:
-    command: manual-install
+    command: bin/manual-install
     plugs: [network, network-bind, removable-media]
 
   import:
-    command: import-data
+    command: bin/import-data
     plugs: [network, network-bind, removable-media]
 
   export:
-    command: export-data
+    command: bin/export-data
     plugs: [network, network-bind, removable-media]
 
   # Service for automatically fixing Nextcloud indices, etc.
   nextcloud-fixer:
-    command: nextcloud-fixer
+    command: bin/nextcloud-fixer
     daemon: simple
     restart-condition: on-failure
     plugs: [network, network-bind, removable-media]
+
+  logrotate:
+    command: bin/run-logrotate
+    daemon: simple
+    restart-condition: on-failure
+    timer: 00:00 # Run once a day at midnight
 
 hooks:
   configure:
@@ -290,6 +299,7 @@ parts:
     source: src/redis/
     organize:
       config/*: config/redis/
+    after: [envsubst]
 
   # Copy over our PHP configuration file.
   php-customizations:
@@ -445,3 +455,25 @@ parts:
     organize:
       bin/: snap/hooks/
     stage-packages: [curl]
+
+  logrotate:
+    plugin: dump
+    source: src/logrotate/
+    organize:
+      config/*: config/logrotate/
+      usr/sbin/*: bin/
+    stage-packages: [logrotate]
+    stage:
+      - bin/*
+      - config/*
+      - utilities/*
+    after: [envsubst]
+
+  migrations:
+    plugin: dump
+    source: src/migrations/
+
+  envsubst:
+    plugin: nil
+    stage-packages: [gettext-base]
+    stage: [usr/bin/envsubst]

@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
+version_less_than()
+{
+	if [ "$1" = "$2" ]; then
+		return 1
+	fi
+
+	printf "%s\n%s" "$1" "$2" | sort -VC
+}
+
+previous_version="$(get_previous_snap_version)"
+migrations_directory="$SNAP/migrations"
+
+version_migrations="$(find "$migrations_directory" -maxdepth 1 -mindepth 1 | sort -V)"
+for directory in $version_migrations; do
+	version="$(basename "$directory")"
+	if version_less_than "$previous_version" "$version"; then
+		run-parts -v --exit-on-error --regex '.*\.sh$' "$directory"
+	fi
+done

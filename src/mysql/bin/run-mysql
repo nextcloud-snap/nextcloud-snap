@@ -1,3 +1,6 @@
 #!/bin/sh
 
-mysql --defaults-file="$SNAP_DATA/mysql/root.ini" "$@"
+# shellcheck source=src/mysql/utilities/mysql-utilities
+. "$SNAP/utilities/mysql-utilities"
+
+mysql --defaults-file="$MYSQL_ROOT_OPTION_FILE" "$@"

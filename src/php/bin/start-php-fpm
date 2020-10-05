@@ -11,8 +11,8 @@
 # shellcheck source=src/nextcloud/utilities/nextcloud-utilities
 . "$SNAP/utilities/configuration-utilities"
 
-mkdir -p "${SNAP_DATA}/php"
-chmod 750 "${SNAP_DATA}/php"
+mkdir -p "$SNAP_DATA/logs"
+chmod 750 "$SNAP_DATA/logs"
 
 # We need to make sure mysql is running so we can run the migration process
 # shellcheck disable=SC2119

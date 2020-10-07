@@ -160,6 +160,9 @@ parts:
       - alias
       - ssl
       - socache_shmcb
+      - slotmem_shm
+      - log_config
+      - logio
 
     filesets:
       exclude:

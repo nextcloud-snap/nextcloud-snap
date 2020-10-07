@@ -61,6 +61,12 @@ class PhpPlugin(autotools.AutotoolsPlugin):
 
         return schema
 
+    @classmethod
+    def get_pull_properties(cls):
+        # Inform Snapcraft of the properties associated with pulling. If these
+        # change in the YAML Snapcraft will consider the pull step dirty.
+        return super().get_pull_properties() + ["extensions"]
+
     def __init__(self, name, options, project):
         super().__init__(name, options, project)
 

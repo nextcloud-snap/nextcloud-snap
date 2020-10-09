@@ -66,7 +66,7 @@ feature "Change operating mode" do
 		# Verify that PHP adds an X-Powered-By header
 		response = nextcloud_response
 		expect(response.to_hash).to include "x-powered-by"
-		expect(response["x-powered-by"]).to match /PHP\/7\.3\.\d+/
+		expect(response["x-powered-by"]).to match /PHP\/7\.4\.\d+/
 	end
 
 	def nextcloud_response(url: "http://localhost")

@@ -190,8 +190,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.3.23.tar.bz2/from/this/mirror
-    source-checksum: sha256/fd6666ad4605508042c6964151379475daea36c43e03b11b1e79d4ae6b04c04c
+    source: https://php.net/get/php-7.4.11.tar.bz2/from/this/mirror
+    source-checksum: sha256/5408f255243bd2292f3fbc2fafc27a2ec083fcd852902728f2ba9a3ea616b8c5
     source-type: tar
     install-via: prefix
     configflags:
@@ -201,18 +201,18 @@ parts:
       - --disable-phpdbg
       - --enable-ctype
       - --enable-mbstring
-      - --enable-zip
+      - --with-zip
       - --with-pdo-mysql
       - --with-zlib
-      - --with-gd
+      - --enable-gd
       - --with-curl
       - --with-openssl
       - --with-bz2
       - --enable-exif
       - --enable-intl
       - --enable-pcntl
-      - --with-jpeg-dir=/usr/lib
-      - --with-freetype-dir=/usr/lib
+      - --with-jpeg
+      - --with-freetype
       - --disable-rpath
       - --enable-ftp
       - --enable-bcmath
@@ -226,11 +226,15 @@ parts:
 
       # Enable argon2
       - --with-password-argon2
+
+      # Disable sqlite (we use mysql)
+      - --without-sqlite3
+      - --without-pdo-sqlite
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
       - libpng-dev
-      - libjpeg9-dev
+      - libjpeg8-dev
       - libbz2-dev
       - libmcrypt-dev
       - libldap2-dev
@@ -238,6 +242,9 @@ parts:
       - libgmp-dev
       - libzip-dev
       - libargon2-0-dev
+
+      # This is no longer bundled with PHP as of v7.4
+      - libonig-dev
     stage-packages:
       - libasn1-8-heimdal
       - libcurl4
@@ -248,7 +255,7 @@ parts:
       - libheimntlm0-heimdal
       - libhx509-5-heimdal
       - libicu60
-      - libjpeg9
+      - libjpeg8
       - libkrb5-26-heimdal
       - libldap-2.4-2
       - libnghttp2-14
@@ -261,6 +268,7 @@ parts:
       - libxml2
       - libzip4
       - libargon2-0
+      - libonig4
     prime:
      - -sbin/
      - -etc/
@@ -269,8 +277,8 @@ parts:
       sbin/php-fpm: bin/php-fpm
     extensions:
       # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis/archive/5.1.1.tar.gz
-        source-checksum: sha256/6b054e1c944f0c415a3489cf6ac94d5423b2b506d8c36ac7a8cdd965a1c07cf9
+      - source: https://github.com/phpredis/phpredis/archive/5.3.1.tar.gz
+        source-checksum: sha256/930dc88ef126509b8991c52757fdc68908c753b476ad6f25dae0ce6925870f14
 
   redis:
     plugin: redis

@@ -37,6 +37,9 @@ if [ $new_install = true ]; then
 	EOF
 	chmod 600 "$root_option_file"
 
+	# Make sure we wait until MySQL is actually up before continuing
+	wait_for_mysql -f
+
 	# Now set everything up in one step:
 	# 1) Set the root user's password
 	# 2) Create the nextcloud user
@@ -54,9 +57,10 @@ if [ $new_install = true ]; then
 		echo "password=$root_password" >> "$root_option_file"
 		printf "done\n"
 	else
-		echo "Failed to initialize-- reverting..."
+		echo "Failed to initialize-- undoing setup and will try again..."
 		"$SNAP/support-files/mysql.server" stop
 		rm -rf "$SNAP_DATA"/mysql/*
+		exit 1
 	fi
 else
 	# Okay, this isn't a new installation. However, we recently changed

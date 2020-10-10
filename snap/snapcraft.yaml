@@ -436,3 +436,4 @@ parts:
     source: src/hooks/
     organize:
       bin/: snap/hooks/
+    stage-packages: [curl]

@@ -26,6 +26,11 @@ mysql_is_running()
 		(! mysql_setup_running || [ "$1" = "-f" ])
 }
 
+mysql_is_initialized()
+{
+	[ -f  "$MYSQL_ROOT_OPTION_FILE" ] && grep -q "password=" "$MYSQL_ROOT_OPTION_FILE"
+}
+
 wait_for_mysql()
 {
 	# Arguments:

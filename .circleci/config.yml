@@ -45,7 +45,6 @@ jobs:
          # Install the snap and create an admin user
          command: |
            sudo snap install *.snap --dangerous
-           sudo nextcloud.manual-install admin admin
 
      - run:
          # Run the integration tests
@@ -64,7 +63,6 @@ jobs:
             sudo apt update -qq
             sudo apt install -y snapd
             sudo snap install --edge nextcloud
-            sudo nextcloud.manual-install admin admin
 
       - run:
           # Run the tests
@@ -83,7 +81,6 @@ jobs:
             sudo apt update -qq
             sudo apt install -y snapd
             sudo snap install nextcloud --channel=18/edge
-            sudo nextcloud.manual-install admin admin
 
       - run:
           # Run the tests
@@ -102,7 +99,6 @@ jobs:
             sudo apt update -qq
             sudo apt install -y snapd
             sudo snap install nextcloud --channel=19/edge
-            sudo nextcloud.manual-install admin admin
 
       - run:
           # Run the tests

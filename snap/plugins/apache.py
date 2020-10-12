@@ -26,6 +26,12 @@ class ApachePlugin(snapcraft.plugins.v1.PluginV1):
 
         return schema
 
+    @classmethod
+    def get_build_properties(cls):
+        # Inform Snapcraft of the properties associated with building. If these
+        # change in the YAML Snapcraft will consider the build step dirty.
+        return super().get_build_properties() + ["modules", "mpm"]
+
     def __init__(self, name, options, project):
         super().__init__(name, options, project)
 
@@ -34,14 +40,14 @@ class ApachePlugin(snapcraft.plugins.v1.PluginV1):
              'libssl-dev'])
         self.stage_packages.extend(['libapr1', 'libaprutil1'])
 
+
     def build(self):
         super().build()
 
         subprocess.check_call(
-            "./configure --prefix={} --with-mpm={} --enable-modules=none --enable-mods-shared='{}' ENABLED_DSO_MODULES='{}'".format(
+            "./configure --prefix={} --with-mpm={} --enable-modules=none --enable-mods-static='{}'".format(
                 self.installdir, self.options.mpm,
-                ' '.join(self.options.modules),
-                ','.join(self.options.modules)),
+                ' '.join(self.options.modules)),
             cwd=self.builddir, shell=True)
 
         self.run(

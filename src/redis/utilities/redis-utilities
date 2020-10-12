@@ -8,8 +8,10 @@ export REDIS_SOCKET="/tmp/sockets/redis.sock"
 
 mkdir -p "$(dirname "$REDIS_PIDFILE")"
 mkdir -p "$(dirname "$REDIS_SOCKET")"
+mkdir -p "$SNAP_DATA/redis"
 chmod 750 "$(dirname "$REDIS_PIDFILE")"
 chmod 750 "$(dirname "$REDIS_SOCKET")"
+chmod 750 "$SNAP_DATA/redis"
 
 redis_is_running()
 {

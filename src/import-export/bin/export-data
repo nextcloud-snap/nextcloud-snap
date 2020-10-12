@@ -49,7 +49,7 @@ export_database()
 {
 	backup="$1"
 	echo "Exporting database..."
-	if ! mysqldump --defaults-file="$SNAP_DATA/mysql/root.ini" \
+	if ! mysqldump --defaults-file="$MYSQL_ROOT_OPTION_FILE" \
 	             --lock-tables nextcloud > "${backup}/database.sql"; then
 		echo "Unable to export database"
 		exit 1

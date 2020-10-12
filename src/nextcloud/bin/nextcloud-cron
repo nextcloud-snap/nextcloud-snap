@@ -16,6 +16,10 @@ while true; do
 		exit 0
 	fi
 
-	run-php "$SNAP/htdocs/cron.php"
+	# Only run cron job if Nextcloud is actually installed
+	if nextcloud_is_installed; then
+		run-php "$SNAP/htdocs/cron.php"
+	fi
+
 	sleep "$(cronjob_interval)"
 done

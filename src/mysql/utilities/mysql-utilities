@@ -3,6 +3,7 @@
 # shellcheck source=src/common/utilities/common-utilities
 . "$SNAP/utilities/common-utilities"
 
+export MYSQL_ROOT_OPTION_FILE="$SNAP_DATA/mysql/root.ini"
 export MYSQL_PIDFILE="/tmp/pids/mysql.pid"
 export MYSQL_SOCKET="/tmp/sockets/mysql.sock"
 export NEXTCLOUD_PASSWORD_FILE="$SNAP_DATA/mysql/nextcloud_password"
@@ -54,6 +55,13 @@ mysql_pid()
 	else
 		echo "Unable to get MySQL PID as it's not yet running" >&2
 		echo ""
+	fi
+}
+
+mysql_flush_logs()
+{
+	if mysql_is_running ""; then
+		run-mysql -e 'FLUSH LOGS'
 	fi
 }
 

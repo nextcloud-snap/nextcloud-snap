@@ -1,6 +1,7 @@
 <?php
 
-$snap_name = getenv('SNAP_NAME');
+$snap_current = getenv('SNAP_CURRENT');
+$snap_data_current = getenv('SNAP_DATA_CURRENT');
 
 $CONFIG = array(
 /**
@@ -16,7 +17,7 @@ $CONFIG = array(
 	 * These are the default apps shipped with Nextcloud. They are read-only.
 	 */
 	array(
-		'path'=> '/snap/'.$snap_name.'/current/htdocs/apps',
+		'path'=> $snap_current.'/htdocs/apps',
 		'url' => '/apps',
 		'writable' => false,
 	),
@@ -25,7 +26,7 @@ $CONFIG = array(
 	 * This directory is writable, meant for apps installed by the user.
 	 */
 	array(
-		'path'=> '/var/snap/'.$snap_name.'/current/nextcloud/extra-apps',
+		'path'=> $snap_data_current.'/nextcloud/extra-apps',
 		'url' => '/extra-apps',
 		'writable' => true,
 	),
@@ -50,4 +51,8 @@ $CONFIG = array(
     'host' => getenv('REDIS_SOCKET'),
     'port' => 0,
 ),
+
+'log_type' => 'file',
+'logfile' => $snap_data_current.'/logs/nextcloud.log',
+'logfilemode' => 0640,
 );

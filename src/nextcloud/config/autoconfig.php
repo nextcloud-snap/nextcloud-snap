@@ -2,7 +2,7 @@
 
 $snap_name = getenv('SNAP_NAME');
 
-$data_path = '/var/snap/'.$snap_name.'/current';
+$data_path = getenv('SNAP_DATA_CURRENT');
 
 $database_password = trim(file_get_contents($data_path . '/mysql/nextcloud_password'));
 

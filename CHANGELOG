@@ -1,3 +1,13 @@
+v 19.0.4snap1
+  - apache: enable access log
+  - apache,php,mysql,redis,nextcloud: add log rotation
+  - hooks: check that apps.nextcloud.com is up before refreshing
+  - migrations: sanity check nextcloud version before upgrade
+  - mysql: ensure mysqld responds before considering it up
+  - mysql: properly handle interrupt in bootstrapping
+  - nextcloud: update to 19.0.4
+  - php: update to 7.4.11
+
 v 19.0.3snap2
   - php: disable output buffering
   - php: update to 7.3.23

@@ -1,5 +1,10 @@
 #!/bin/sh
 
+SNAP_CURRENT="$(realpath -s "$SNAP/../current")"
+SNAP_DATA_CURRENT="$(realpath -s "$SNAP_DATA/../current")"
+export SNAP_CURRENT
+export SNAP_DATA_CURRENT
+
 stdout_is_a_terminal()
 {
 	[ -t 1 ]

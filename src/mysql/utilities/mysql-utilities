@@ -3,6 +3,7 @@
 # shellcheck source=src/common/utilities/common-utilities
 . "$SNAP/utilities/common-utilities"
 
+export MYSQL_ROOT_OPTION_FILE="$SNAP_DATA/mysql/root.ini"
 export MYSQL_PIDFILE="/tmp/pids/mysql.pid"
 export MYSQL_SOCKET="/tmp/sockets/mysql.sock"
 export NEXTCLOUD_PASSWORD_FILE="$SNAP_DATA/mysql/nextcloud_password"
@@ -19,7 +20,15 @@ mysql_is_running()
 {
 	# Arguments:
 	#  -f: Force the check, i.e. ignore if it's currently in setup
-	[ -f "$MYSQL_PIDFILE" ] && [ -S "$MYSQL_SOCKET" ] && (! mysql_setup_running || [ "$1" = "-f" ])
+	[ -f "$MYSQL_PIDFILE" ] && \
+		[ -S "$MYSQL_SOCKET" ] && \
+		run-mysql -e 'SHOW DATABASES' > /dev/null 2>&1 && \
+		(! mysql_setup_running || [ "$1" = "-f" ])
+}
+
+mysql_is_initialized()
+{
+	[ -f  "$MYSQL_ROOT_OPTION_FILE" ] && grep -q "password=" "$MYSQL_ROOT_OPTION_FILE"
 }
 
 wait_for_mysql()
@@ -51,6 +60,13 @@ mysql_pid()
 	else
 		echo "Unable to get MySQL PID as it's not yet running" >&2
 		echo ""
+	fi
+}
+
+mysql_flush_logs()
+{
+	if mysql_is_running ""; then
+		run-mysql -e 'FLUSH LOGS'
 	fi
 }
 

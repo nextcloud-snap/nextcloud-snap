@@ -1,0 +1,62 @@
+#!/bin/sh -e
+
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
+version_less_than()
+{
+	if [ "$1" = "$2" ]; then
+		return 1
+	fi
+
+	printf "%s\n%s" "$1" "$2" | sort -VC
+}
+
+major_version()
+{
+	echo "$1" | sed -r 's/([0-9]+)\..*/\1/'
+}
+
+# Before we do any migrations, Nextcloud is very strict about what makes for a
+# valid upgrade:
+#
+# 1. A minor version upgrade (i.e. with the same major version).
+# 2. A single major version upgrade (e.g. 18 to 19, not 18 to 20).
+# 3. No downgrades are supported.
+#
+# Enforce those rules so folks don't end up needing to revert.
+
+previous_version="$(get_previous_snap_version)"
+current_version="$SNAP_VERSION"
+
+# Before we can compare versions, we must first confirm we HAVE them both
+if [ -z "$previous_version" ] || [ -z "$current_version" ]; then
+	exit 0
+fi
+
+# First of all, let's make sure that the new version is actually newer than the
+# previous one. If it's not, we already know there are problems.
+if version_less_than "$current_version" "$previous_version"; then
+	echo "Nextcloud doesn't support downgrades, but you can revert. See 'snap revert -h' for details." >&2
+	exit 1
+fi
+
+previous_major_version="$(major_version "$previous_version")"
+current_major_version="$(major_version "$current_version")"
+
+# Now make sure the major version jump is less than or equal to 1
+if [ "$((current_major_version-previous_major_version))" -gt "1" ]; then
+	next_major_version="$((previous_major_version+1))"
+	echo "Nextcloud doesn't support skipping major versions, you must upgrade to Nextcloud $next_major_version first. Try 'sudo snap refresh nextcloud --channel=$next_major_version'" >&2
+	exit 1
+fi
+
+# Now run the version-specific migrations
+migrations_directory="$SNAP/migrations"
+version_migrations="$(find "$migrations_directory" -maxdepth 1 -mindepth 1 -type d | sort -V)"
+for directory in $version_migrations; do
+	version="$(basename "$directory")"
+	if version_less_than "$previous_version" "$version"; then
+		run-parts -v --exit-on-error --regex '.*\.sh$' "$directory"
+	fi
+done

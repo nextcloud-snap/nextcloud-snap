@@ -3,12 +3,18 @@
 # shellcheck source=src/mysql/utilities/mysql-utilities
 . "$SNAP/utilities/mysql-utilities"
 
-root_option_file="$SNAP_DATA/mysql/root.ini"
+mkdir -p "${SNAP_DATA}/logs"
+chmod 750 "${SNAP_DATA}/logs"
+
 new_install=false
+
+if ! mysql_is_initialized; then
+	rm -rf "$SNAP_DATA/mysql"
+fi
 
 # Make sure the database is initialized (this is safe to run if already
 # initialized)
-if mysqld --defaults-file="$SNAP/my.cnf" --initialize-insecure --basedir="$SNAP" --datadir="$SNAP_DATA/mysql" --lc-messages-dir="$SNAP/share"; then
+if mysqld --defaults-file="$SNAP/my.cnf" --initialize-insecure --basedir="$SNAP" --datadir="$SNAP_DATA/mysql" --lc-messages-dir="$SNAP/share" > /dev/null 2>&1; then
 	new_install=true
 fi
 
@@ -30,12 +36,15 @@ if [ $new_install = true ]; then
 	printf "done\n"
 
 	# Save root user information
-	cat <<-EOF > "$root_option_file"
+	cat <<-EOF > "$MYSQL_ROOT_OPTION_FILE"
 		[client]
 		socket=$MYSQL_SOCKET
 		user=root
 	EOF
-	chmod 600 "$root_option_file"
+	chmod 600 "$MYSQL_ROOT_OPTION_FILE"
+
+	# Make sure we wait until MySQL is actually up before continuing
+	wait_for_mysql -f
 
 	# Now set everything up in one step:
 	# 1) Set the root user's password
@@ -43,7 +52,7 @@ if [ $new_install = true ]; then
 	# 3) Create the nextcloud database
 	# 4) Grant the nextcloud user privileges on the nextcloud database
 	printf "Setting up users and nextcloud database... "
-	if mysql --defaults-file="$root_option_file" <<-SQL
+	if run-mysql <<-SQL
 		ALTER USER 'root'@'localhost' IDENTIFIED BY '$root_password';
 		CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$nextcloud_password';
 		CREATE DATABASE nextcloud;
@@ -51,18 +60,19 @@ if [ $new_install = true ]; then
 		SQL
 	then
 		# Now the root mysql user has a password. Save that as well.
-		echo "password=$root_password" >> "$root_option_file"
+		echo "password=$root_password" >> "$MYSQL_ROOT_OPTION_FILE"
 		printf "done\n"
 	else
-		echo "Failed to initialize-- reverting..."
+		echo "Failed to initialize-- undoing setup and will try again..."
 		"$SNAP/support-files/mysql.server" stop
-		rm -rf "$SNAP_DATA"/mysql/*
+		rm -rf "$SNAP_DATA/mysql"
+		exit 1
 	fi
 else
 	# Okay, this isn't a new installation. However, we recently changed
 	# the location of MySQL's socket (11.0.2snap1). Make sure the root
 	# option file is updated to look there instead of the old location.
-	sed -ri "s|(socket\s*=\s*)/var/snap/.*mysql.sock|\1$MYSQL_SOCKET|" "$root_option_file"
+	sed -ri "s|(socket\s*=\s*)/var/snap/.*mysql.sock|\1$MYSQL_SOCKET|" "$MYSQL_ROOT_OPTION_FILE"
 fi
 
 # Wait here until mysql is running
@@ -71,7 +81,7 @@ wait_for_mysql -f
 # Check and upgrade mysql tables if necessary. This will return 0 if the upgrade
 # succeeded, in which case we need to restart mysql.
 echo "Checking/upgrading mysql tables if necessary..."
-if mysql_upgrade --defaults-file="$root_option_file"; then
+if mysql_upgrade --defaults-file="$MYSQL_ROOT_OPTION_FILE"; then
 	echo "Restarting mysql server after upgrade..."
 	"$SNAP/support-files/mysql.server" restart
 

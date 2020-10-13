@@ -3,8 +3,8 @@
 # shellcheck source=src/https/utilities/https-utilities
 . "$SNAP/utilities/https-utilities"
 
-mkdir -p "$SNAP_DATA/apache/logs"
-chmod 750 "$SNAP_DATA/apache/logs"
+mkdir -p "$SNAP_DATA/logs"
+chmod 750 "$SNAP_DATA/logs"
 
 # Make sure Nextcloud is installed and running
 echo "Making sure nextcloud is setup..."

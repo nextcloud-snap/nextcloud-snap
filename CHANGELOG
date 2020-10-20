@@ -1,3 +1,11 @@
+v 17.0.10snap1
+  - nextcloud: update to 17.0.10
+  - php: update to 7.3.23
+  - mysql: update to 5.7.31
+  - apache: update to 2.4.46
+  - base: core18
+  - snap: rewrite plugins to workaround snapcraft breakage
+
 v 17.0.6snap1
   - nextcloud: update to 17.0.6
   - php: update to 7.3.17

@@ -6,7 +6,7 @@
 # Clean non existent log file entries from status file
 test -e "$LOGROTATE_STATUS_FILE" || touch "$LOGROTATE_STATUS_FILE"
 head -1 "$LOGROTATE_STATUS_FILE" > "${LOGROTATE_STATUS_FILE}.clean"
-sed 's/"//g' "$LOGROTATE_STATUS_FILE" | while read -r logfile date
+sed '1d; s/"//g' "$LOGROTATE_STATUS_FILE" | while read -r logfile date
 do
     [ -e "$logfile" ] && echo "\"$logfile\" $date"
 done >> "${LOGROTATE_STATUS_FILE}.clean"

@@ -1,3 +1,9 @@
+v 19.0.4snap2
+  - logrotate: skip first line of status file when cleaning
+  - logrotate: remove status file if it seems corrupted
+  - mysql: update to 5.7.32
+  - migrations: support daily versions
+
 v 19.0.4snap1
   - apache: enable access log
   - apache,php,mysql,redis,nextcloud: add log rotation

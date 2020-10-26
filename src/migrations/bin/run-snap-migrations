@@ -14,7 +14,12 @@ version_less_than()
 
 major_version()
 {
-	echo "$1" | sed -r 's/([0-9]+)\..*/\1/'
+	echo "$1" | sed -r 's/([0-9]+)[.-].*/\1/'
+}
+
+is_integer()
+{
+	expr "$1" : '^[0-9]\+$' > /dev/null
 }
 
 # Before we do any migrations, Nextcloud is very strict about what makes for a
@@ -41,14 +46,20 @@ if version_less_than "$current_version" "$previous_version"; then
 	exit 1
 fi
 
+# Now attempt to extract the major version
 previous_major_version="$(major_version "$previous_version")"
 current_major_version="$(major_version "$current_version")"
 
-# Now make sure the major version jump is less than or equal to 1
-if [ "$((current_major_version-previous_major_version))" -gt "1" ]; then
-	next_major_version="$((previous_major_version+1))"
-	echo "Nextcloud doesn't support skipping major versions, you must upgrade to Nextcloud $next_major_version first. Try 'sudo snap refresh nextcloud --channel=$next_major_version'" >&2
-	exit 1
+# Verify that what we got was actually integers (not all versions work this
+# way, e.g. the daily builds). This isn't an error, we just can't reliably
+# check this without numbers.
+if is_integer "$previous_major_version" && is_integer "$current_major_version"; then
+	# Now make sure the major version jump is less than or equal to 1
+	if [ "$((current_major_version-previous_major_version))" -gt "1" ]; then
+		next_major_version="$((previous_major_version+1))"
+		echo "Nextcloud doesn't support skipping major versions, you must upgrade to Nextcloud $next_major_version first. Try 'sudo snap refresh nextcloud --channel=$next_major_version'" >&2
+		exit 1
+	fi
 fi
 
 # Now run the version-specific migrations

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # shellcheck source=src/mysql/utilities/mysql-utilities
 . "$SNAP/utilities/mysql-utilities"

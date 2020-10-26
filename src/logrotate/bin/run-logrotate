@@ -6,7 +6,7 @@
 # Clean non existent log file entries from status file
 test -e "$LOGROTATE_STATUS_FILE" || touch "$LOGROTATE_STATUS_FILE"
 head -1 "$LOGROTATE_STATUS_FILE" > "${LOGROTATE_STATUS_FILE}.clean"
-sed 's/"//g' "$LOGROTATE_STATUS_FILE" | while read -r logfile date
+sed '1d; s/"//g' "$LOGROTATE_STATUS_FILE" | while read -r logfile date
 do
     [ -e "$logfile" ] && echo "\"$logfile\" $date"
 done >> "${LOGROTATE_STATUS_FILE}.clean"
@@ -20,4 +20,9 @@ trap 'rm -f "$configuration_file"' EXIT
 
 envsubst < "$SNAP/config/logrotate/logrotate.conf" > "$configuration_file"
 
-logrotate --verbose --state "$LOGROTATE_STATUS_FILE" "$configuration_file"
+# If logrotate fails, it could be due to corruption in the status file. Try
+# removing it so we start with a clean slate next time around.
+if ! logrotate --verbose --state "$LOGROTATE_STATUS_FILE" "$configuration_file"; then
+    rm -f "$LOGROTATE_STATUS_FILE"
+    exit 1
+fi

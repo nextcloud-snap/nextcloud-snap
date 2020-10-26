@@ -1,3 +1,7 @@
+v 20.0.1snap1
+  - nextcloud: workaround invalid json from occ
+  - nextcloud: update to 20.0.1
+
 v 19.0.4snap2
   - logrotate: skip first line of status file when cleaning
   - logrotate: remove status file if it seems corrupted

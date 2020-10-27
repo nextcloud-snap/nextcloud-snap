@@ -4,7 +4,7 @@ feature "Logging in" do
 		fill_in "User", with: "admin"
 		fill_in "Password", with: "admin"
 		click_button "Log in"
-		expect(page).to have_content "Recommended files"
+		expect(page).to have_content /(Recommended|All) files/
 	end
 
 	scenario "Logging in with incorrect credentials" do

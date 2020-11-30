@@ -1,3 +1,8 @@
+v 20.0.2snap1
+  - php: update to 7.4.13
+  - nextcloud: update to 20.0.2
+  - php: fix shebang in reload-php
+
 v 20.0.1snap1
   - nextcloud: workaround invalid json from occ
   - nextcloud: update to 20.0.1

@@ -1,4 +1,4 @@
-#!#!/bin/sh
+#!/bin/sh
 
 # shellcheck source=src/php/utilities/php-utilities
 . "$SNAP/utilities/php-utilities"

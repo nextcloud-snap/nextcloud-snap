@@ -1,3 +1,6 @@
+v 20.0.2snap2
+  - nextcloud-fixer: run db:add-missing-primary-keys
+
 v 20.0.2snap1
   - php: update to 7.4.13
   - nextcloud: update to 20.0.2

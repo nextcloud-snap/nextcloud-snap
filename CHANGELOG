@@ -1,3 +1,9 @@
+v 19.0.5snap1
+  - nextcloud: update to 19.0.5
+  - nextcloud: workaround invalid json from occ
+  - php: update to 7.4.13
+  - php: fix shebang in reload-php
+
 v 19.0.4snap2
   - logrotate: skip first line of status file when cleaning
   - logrotate: remove status file if it seems corrupted

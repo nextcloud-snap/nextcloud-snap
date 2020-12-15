@@ -134,6 +134,26 @@ headers and error pages. Debug mode can be enabled with:
 
 "debug" and "production" are the only valid modes.
 
+#### Reducing CPU usage from password hashing
+
+On lower-powered systems you may find the `php-fpm` processes use a lot of CPU.
+There may be various causes for this, but one possibility is the password-
+hashing algorithm.
+
+*If you are prepared to accept less-secure password hashes*, you can reduce
+the amount of resources that are used to hash passwords by running these
+commands:
+
+    $ sudo nextcloud.occ config:system:set hashingThreads --type=integer --value=1
+    $ sudo nextcloud.occ config:system:set hashingTimeCost --type=integer --value=1
+    $ sudo nextcloud.occ config:system:set hashingMemoryCost --type=integer --value=8
+
+You can find more information about these settings in the
+[password-hash documentation](https://www.php.net/manual/en/function.password-hash).
+
+*Note:* if you use less-secure hashes, it will be easier for an attacker to
+find out your passwords if they get hold of your password database.  You should
+only make this change if you are prepared to accept the risks.
 
 ### Included CLI utilities
 

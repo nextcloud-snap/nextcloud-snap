@@ -1,3 +1,6 @@
+v 19.0.6snap1
+  - nextcloud: update to 19.0.6
+
 v 19.0.5snap1
   - nextcloud: update to 19.0.5
   - nextcloud: workaround invalid json from occ

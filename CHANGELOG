@@ -1,3 +1,7 @@
+v 20.0.4snap1
+  - nextcloud: update to 20.0.4
+  - mysql: use READ-COMMITTED instead of REPEATABLE-READ
+
 v 20.0.3snap1
   - nextcloud: update to 20.0.3
 

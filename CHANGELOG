@@ -1,3 +1,6 @@
+v 20.0.4snap2
+  - php: update to 7.4.14
+
 v 20.0.4snap1
   - nextcloud: update to 20.0.4
   - mysql: use READ-COMMITTED instead of REPEATABLE-READ

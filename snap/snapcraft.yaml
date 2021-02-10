@@ -11,10 +11,11 @@ base: core18
 
 architectures:
   - build-on: amd64
-  - build-on: i386
-  - build-on: arm64
-  - build-on: armhf
-  - build-on: ppc64el
+  # let'start with one build
+  # - build-on: i386
+  # - build-on: arm64
+  # - build-on: armhf
+  # - build-on: ppc64el
 
 apps:
   # Apache daemon

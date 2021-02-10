@@ -1,4 +1,4 @@
-name: nextcloud
+name: nextcloud-facerec
 version: git
 summary: Nextcloud Server - A safe home for all your data
 description: |
@@ -11,10 +11,11 @@ base: core18
 
 architectures:
   - build-on: amd64
-  - build-on: i386
-  - build-on: arm64
-  - build-on: armhf
-  - build-on: ppc64el
+  # let'start with one build
+  # - build-on: i386
+  # - build-on: arm64
+  # - build-on: armhf
+  # - build-on: ppc64el  
   
 package-repositories:
   - type: apt

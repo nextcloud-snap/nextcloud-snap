@@ -1,4 +1,4 @@
-name: nextcloud
+name: nextcloud-facerec
 version: git
 summary: Nextcloud Server - A safe home for all your data
 description: |

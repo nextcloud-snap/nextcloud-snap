@@ -163,6 +163,7 @@ parts:
       - slotmem_shm
       - log_config
       - logio
+      - deflate
 
     filesets:
       exclude:

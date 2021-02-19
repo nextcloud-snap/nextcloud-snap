@@ -164,6 +164,7 @@ parts:
       - log_config
       - logio
       - deflate
+      - filter
 
     filesets:
       exclude:

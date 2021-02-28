@@ -54,7 +54,8 @@ php_pid()
 php_reload()
 {
 	if php_is_running; then
-		kill -USR1 php_pid > /dev/null
+		pid="$(php_pid)"
+		kill -USR1 "$pid" > /dev/null
 	fi
 }
 

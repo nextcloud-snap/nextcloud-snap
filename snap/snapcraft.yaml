@@ -325,18 +325,10 @@ parts:
       # The collabora appimage requires this
       - libfontconfig1
 
-  # Download the boost headers for MySQL. Note that the version used may need to
-  # be updated if the version of MySQL changes.
   boost:
     plugin: dump
-    source: https://github.com/kyrofa/boost_tarball/raw/master/boost_1_59_0.tar.gz
-    source-checksum: sha1/5123209db194d66d69a9cfa5af8ff473d5941d97
-    # When building MySQL, the headers in the source directory 'boost/' are
-    # required. Previously, using the 'copy' plugin, the whole archive was put
-    # under 'boost/', making the headers reside in 'boost/boost/'. Due to a bug,
-    # we now only stage the 'boost/' directory without moving it.
-    #
-    # Bug: https://bugs.launchpad.net/snapcraft/+bug/1757093
+    source: https://sourceforge.net/projects/boost/files/boost/1.73.0/boost_1_73_0.tar.bz2
+    source-checksum: sha1/6d6ed02b29c860fd21b274fc4e1f820855e765e9
     stage:
       - boost/
     prime:
@@ -344,65 +336,66 @@ parts:
 
   mysql:
     plugin: cmake
-    source: https://github.com/mysql/mysql-server.git
-    source-tag: mysql-5.7.34
-    source-depth: 1
-    override-pull: |
-      snapcraftctl pull
-      git apply $SNAPCRAFT_STAGE/mysql-support-compile-time-disabling-of-setpriority.patch
-    after: [boost, patches]
+    after: [boost]
+
+    # Get from https://dev.mysql.com/downloads/mysql/
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.24.tar.gz
+    source-checksum: md5/e8cb8eafe07e22d5da123ffc5ca79e56
     configflags:
-      - -DWITH_BOOST=$SNAPCRAFT_STAGE
-      - -DWITH_INNODB_PAGE_CLEANER_PRIORITY=OFF
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
+      - -DCMAKE_BUILD_TYPE=Release
       - -DWITH_UNIT_TESTS=OFF
       - -DWITH_EMBEDDED_SERVER=OFF
       - -DWITH_ARCHIVE_STORAGE_ENGINE=OFF
+      - -DWITH_EXAMPLE_STORAGE_ENGINE=OFF
       - -DWITH_BLACKHOLE_STORAGE_ENGINE=OFF
       - -DWITH_FEDERATED_STORAGE_ENGINE=OFF
       - -DWITH_PARTITION_STORAGE_ENGINE=OFF
+      - -DWITH_PERFSCHEMA_STORAGE_ENGINE=OFF
+      - -DWITH_DEBUG=OFF
+      - -DWITH_INNODB_EXTRA_DEBUG=OFF
       - -DINSTALL_MYSQLTESTDIR=
+      - -DDOWNLOAD_BOOST=OFF
+      - -DWITH_BOOST=$SNAPCRAFT_STAGE
+
+    override-build: |
+      snapcraftctl build
+      # MySQL v8 is massive. Strip it.
+      find "$SNAPCRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
+
     build-packages:
-      - wget
-      - g++
-      - cmake
-      - bison
       - libncurses5-dev
-      - libaio-dev
-    stage-packages:
-      - libaio1
+      - binutils
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
       - -COPYING
-    prime:
-      # Remove scripts that we'll be replacing with our own
-      - -support-files/mysql.server
 
       # Remove unused binaries that waste space
+      - -bin/comp_err
+      - -bin/ibd2sdi
       - -bin/innochecksum
       - -bin/lz4_decompress
+      - -bin/myisam_ftdump
       - -bin/myisam*
-      - -bin/mysqladmin
-      - -bin/mysqlbinlog
       - -bin/mysql_client_test
       - -bin/mysql_config*
+      - -bin/mysql_secure_installation
+      - -bin/mysql_ssl_rsa_setup
+      - -bin/mysql_tzinfo_to_sql
+      - -bin/mysql_upgrade
+      - -bin/mysqladmin
+      - -bin/mysqlbinlog
+      - -bin/mysqlcheck
       - -bin/mysqld_multi
       - -bin/mysqlimport
-      - -bin/mysql_install_db
-      - -bin/mysql_plugin
       - -bin/mysqlpump
-      - -bin/mysql_secure_installation
+      - -bin/mysqlrouter*
       - -bin/mysqlshow
       - -bin/mysqlslap
-      - -bin/mysql_ssl_rsa_setup
-      - -bin/mysqltest
-      - -bin/mysql_tzinfo_to_sql
+      - -bin/mysqltest*
       - -bin/perror
-      - -bin/replace
-      - -bin/resolveip
-      - -bin/resolve_stack_dump
       - -bin/zlib_decompress
 
   # Copy over our MySQL scripts

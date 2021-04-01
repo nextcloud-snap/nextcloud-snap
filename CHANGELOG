@@ -1,3 +1,10 @@
+v 20.0.8snap1
+  - logrotate: rotate apache access log
+  - redis: update to 5.0.12
+  - nextcloud: update to 20.0.8
+  - Correctly obtain the PHP-FPM pid before sending a signal
+  - php: update to 7.4.15
+
 v 20.0.7snap1
   - nextcloud: update to 20.0.7
 

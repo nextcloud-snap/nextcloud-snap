@@ -21,7 +21,7 @@ RUN mkdir -p /snap/snapcraft
 RUN unsquashfs -d /snap/snapcraft/current snapcraft.snap
 
 # Grab the go snap from the stable channel and unpack it in the proper place
-RUN curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/go?channel=stable' | jq '.download_url' -r) --output go.snap
+RUN curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/go?channel=1.15/stable' | jq '.download_url' -r) --output go.snap
 RUN mkdir -p /snap/go
 RUN unsquashfs -d /snap/go/current go.snap
 

@@ -71,3 +71,57 @@ set_previous_cronjob_interval()
 {
 	snapctl set private.nextcloud.cron-interval="$1"
 }
+
+# Based on https://docs.nextcloud.com/server/21/admin_manual/installation/source_installation.html?highlight=htaccess%20rewritebase#pretty-urls
+is_htaccess_rewritebase_valid()
+{
+	local REWRITEBASE
+	REWRITEBASE="$(occ config:system:get htaccess.RewriteBase)"
+	if ! [ "$REWRITEBASE" = '/' ] && ! [[ "$REWRITEBASE" =~ ^/[a-z0-9]+$ ]]; then
+		echo "The htaccess.RewriteBase '$REWRITEBASE' isn't set correctly!"
+		return 1
+	fi
+}
+get_htaccess_rewritebase()
+{
+	local REWRITEBASE
+	REWRITEBASE="$(occ config:system:get htaccess.RewriteBase)"
+	echo "$REWRITEBASE"
+}
+
+nextcloud_previous_prettylink_status()
+{
+	snapctl get private.nextcloud.prettylink
+}
+
+nextcloud_set_previous_prettylink_status()
+{
+	snapctl set private.nextcloud.prettylink="$1"
+}
+
+nextcloud_set_prettylink_status()
+{
+	snapctl set nextcloud.prettylink="$1"
+}
+
+nextcloud_prettylink()
+{
+	prettylink="$(snapctl get nextcloud.prettylink)"
+
+	if [ -z "$prettylink" ]; then
+		prettylink="false"
+		nextcloud_set_prettylink_status "false"
+		nextcloud_set_previous_prettylink_status "false"
+	fi
+
+  echo "$prettylink"
+}
+
+should_enable_prettylink()
+{
+	if [ "$(nextcloud_prettylink)" = "true" ]; then
+		return 0
+	else
+		return 1
+	fi
+}

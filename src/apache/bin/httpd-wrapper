@@ -8,6 +8,8 @@
 . "$SNAP/utilities/php-utilities"
 # shellcheck source=src/hooks/utilities/configuration-utilities
 . "$SNAP/utilities/configuration-utilities"
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
 
 params=""
 if certificates_are_active; then
@@ -23,6 +25,19 @@ if certificates_are_active; then
 	fi
 else
 	echo "No certificates are active: using HTTP only"
+fi
+
+if should_enable_prettylink; then
+    if is_htaccess_rewritebase_valid; then
+		REWRITEBASE="$(get_htaccess_rewritebase)"
+		WEBROOT="${REWRITEBASE%/}"
+		echo "Prettylink is enabled"
+		params="$params -DEnablePrettylink"
+		export REWRITEBASE
+		export WEBROOT
+	fi
+else
+	echo "Prettylink is disabled"
 fi
 
 if debug_mode_enabled; then

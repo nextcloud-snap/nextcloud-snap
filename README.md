@@ -123,6 +123,15 @@ If you want to disable the cronjob completely, run:
 
 To reenable it again simply set the `nextcloud.cron-interval` snap variable to a value that isn't `-1`
 
+#### Nextcloud Prettylink configuration
+
+If desired the snap can remove the index.php from the URL:
+
+    $ sudo snap set nextcloud nextcloud.prettylink=true
+
+To disable it again just run:
+
+    $ sudo snap set nextcloud nextcloud.prettylink=false
 
 #### Debug mode
 

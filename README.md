@@ -125,7 +125,9 @@ To reenable it again simply set the `nextcloud.cron-interval` snap variable to a
 
 #### Nextcloud Prettylink configuration
 
-If desired the snap can remove the index.php from the URL:
+Before enabling this feature, please first set the correct `overwrite.cli.url` and `htaccess.RewriteBase` in Nextcloud by following [this doc](https://docs.nextcloud.com/server/latest/admin_manual/installation/source_installation.html#pretty-urls)
+
+Afterwards, if desired the snap can remove the index.php from the URL:
 
     $ sudo snap set nextcloud nextcloud.prettylink=true
 

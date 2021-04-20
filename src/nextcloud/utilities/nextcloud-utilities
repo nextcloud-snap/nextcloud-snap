@@ -76,7 +76,7 @@ set_previous_cronjob_interval()
 is_htaccess_rewritebase_valid()
 {
 	REWRITEBASE="$(occ config:system:get htaccess.RewriteBase)"
-	if ! [ "$REWRITEBASE" = '/' ] && ! [[ "$REWRITEBASE" =~ ^/[a-z0-9]+$ ]]; then
+	if ! [ "$REWRITEBASE" = '/' ] && ! echo "$REWRITEBASE" | grep -Eq '^/[a-z0-9]+$' ; then
 		echo "The htaccess.RewriteBase '$REWRITEBASE' isn't set correctly!"
 		return 1
 	fi

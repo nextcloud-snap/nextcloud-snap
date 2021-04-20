@@ -27,17 +27,17 @@ else
 	echo "No certificates are active: using HTTP only"
 fi
 
-if should_enable_prettylink; then
+if should_enable_prettyurl; then
     if is_htaccess_rewritebase_valid; then
 		REWRITEBASE="$(get_htaccess_rewritebase)"
 		WEBROOT="${REWRITEBASE%/}"
-		echo "Prettylink is enabled"
-		params="$params -DEnablePrettylink"
+		echo "Pretty URL is enabled"
+		params="$params -DEnablePrettyurl"
 		export REWRITEBASE
 		export WEBROOT
 	fi
 else
-	echo "Prettylink is disabled"
+	echo "Pretty URL is disabled"
 fi
 
 if debug_mode_enabled; then

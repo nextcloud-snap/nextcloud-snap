@@ -40,6 +40,7 @@ sed -i '/DO NOT CHANGE ANYTHING ABOVE THIS LINE/d' /tmp/apache.conf
 sed -i 's|.*"\\n||' /tmp/apache.conf
 sed -i 's|;$||' /tmp/apache.conf
 sed -i 's|"$||' /tmp/apache.conf
+sed -i 's|\\\\|\\|' /tmp/apache.conf
 
 # Overwrite Webroot config
 sed -i 's|ErrorDocument 403.*|ErrorDocument 403 \${WEBROOT}/|' /tmp/apache.conf

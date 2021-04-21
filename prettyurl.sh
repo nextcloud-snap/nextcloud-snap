@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# for testing
+# For testing:
 # rm -rf nextcloud-snap
 # git clone --branch prettyurl https://github.com/nextcloud/nextcloud-snap.git
 # cd nextcloud-snap

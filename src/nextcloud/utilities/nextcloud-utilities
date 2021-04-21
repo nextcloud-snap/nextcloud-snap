@@ -87,37 +87,37 @@ get_htaccess_rewritebase()
 	echo "$REWRITEBASE"
 }
 
-nextcloud_previous_prettyurl_status()
+nextcloud_previous_prettyurls_status()
 {
-	snapctl get private.nextcloud.prettyurl
+	snapctl get private.nextcloud.prettyurls
 }
 
-nextcloud_set_previous_prettyurl_status()
+nextcloud_set_previous_prettyurls_status()
 {
-	snapctl set private.nextcloud.prettyurl="$1"
+	snapctl set private.nextcloud.prettyurls="$1"
 }
 
-nextcloud_set_prettyurl_status()
+nextcloud_set_prettyurls_status()
 {
-	snapctl set nextcloud.prettyurl="$1"
+	snapctl set nextcloud.prettyurls="$1"
 }
 
-nextcloud_prettyurl()
+nextcloud_prettyurls()
 {
-	prettyurl="$(snapctl get nextcloud.prettyurl)"
+	prettyurls="$(snapctl get nextcloud.prettyurls)"
 
-	if [ -z "$prettyurl" ]; then
-		prettyurl="false"
-		nextcloud_set_prettyurl_status "false"
-		nextcloud_set_previous_prettyurl_status "false"
+	if [ -z "$prettyurls" ]; then
+		prettyurls="false"
+		nextcloud_set_prettyurls_status "false"
+		nextcloud_set_previous_prettyurls_status "false"
 	fi
 
-  echo "$prettyurl"
+  echo "$prettyurls"
 }
 
-should_enable_prettyurl()
+should_enable_prettyurls()
 {
-	if [ "$(nextcloud_prettyurl)" = "true" ]; then
+	if [ "$(nextcloud_prettyurls)" = "true" ]; then
 		return 0
 	else
 		return 1

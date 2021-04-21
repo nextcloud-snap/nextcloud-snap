@@ -47,6 +47,7 @@ source /tmp/updateHtaccess.sh
 
 # Create file with final prettyurl config
 echo '#Prettyurl-start' > /tmp/apache.conf
+echo "# Retreived from $NC_DOMAIN"
 echo -e "$content" >> /tmp/apache.conf
 echo '#Prettyurl-end' >> /tmp/apache.conf
 

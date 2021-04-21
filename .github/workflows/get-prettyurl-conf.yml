@@ -16,7 +16,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Create local changes
         run: |
-          ./prettyurl.sh
+          chmod +x ./prettyurl.sh
+          bash ./prettyurl.sh
       - name: Commit files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"

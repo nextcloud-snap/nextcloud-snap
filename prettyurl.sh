@@ -28,35 +28,28 @@ updateHtaccess="$(sed -n "/function updateHtaccess/,/function/p" /tmp/nc/nextclo
 # Get all needed lines (containing the content variable)
 updateHtaccess="$(echo "$updateHtaccess" | grep '$content =\|$content \.=')"
 
-# Change the content variable and the syntax to work in shell
-updateHtaccess="$(echo "$updateHtaccess" | sed 's|$content = |content=|;s|$content \.= |content+=|')"
-
-# Create a shell script from the variable
-echo '#!/bin/bash' > /tmp/updateHtaccess.sh
-echo "$updateHtaccess" >> /tmp/updateHtaccess.sh
-
-# Fix $1
-sed -i 's|\$1|\\\$1|' /tmp/updateHtaccess.sh
-
-# Overwrite Webroot config
-sed -i 's|ErrorDocument 403.*|ErrorDocument 403 \\\${WEBROOT}/"|' /tmp/updateHtaccess.sh
-sed -i 's|ErrorDocument 404.*|ErrorDocument 404 \\\${WEBROOT}/"|' /tmp/updateHtaccess.sh
-
-# Overwrite Rewritebase config
-sed -i 's|RewriteBase.*|RewriteBase \\\${REWRITEBASE}"|' /tmp/updateHtaccess.sh
-
-# Source the updateHTaccess file to retreive the content variable
-source /tmp/updateHtaccess.sh
-
 # Create file with final prettyurl config
 echo '#Prettyurl-start' > /tmp/apache.conf
 echo "# Retreived from $NC_DOMAIN" >> /tmp/apache.conf
-echo -e "$content" >> /tmp/apache.conf
-echo '#Prettyurl-end' >> /tmp/apache.conf
+echo "$updateHtaccess" >> /tmp/apache.conf
 
-# Edit some lines
+# Remove comment line
 sed -i '/DO NOT CHANGE ANYTHING ABOVE THIS LINE/d' /tmp/apache.conf
-sed -i '/^$/d' /tmp/apache.conf
+
+# Edit file to be valid
+sed -i 's|.*"\\n||' /tmp/apache.conf
+sed -i 's|;$||' /tmp/apache.conf
+sed -i 's|"$||' /tmp/apache.conf
+
+# Overwrite Webroot config
+sed -i 's|ErrorDocument 403.*|ErrorDocument 403 \${WEBROOT}/|' /tmp/apache.conf
+sed -i 's|ErrorDocument 404.*|ErrorDocument 404 \${WEBROOT}/|' /tmp/apache.conf
+
+# Overwrite Rewritebase config
+sed -i 's|RewriteBase.*|RewriteBase \${REWRITEBASE}|' /tmp/apache.conf
+
+# Complete the file
+echo '#Prettyurl-end' >> /tmp/apache.conf
 
 # Remove current PrettyUrl config
 sed -i "/^#Prettyurl-start/,/^#Prettyurl-end/d" ./src/apache/conf/httpd.conf

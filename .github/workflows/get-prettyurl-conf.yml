@@ -1,11 +1,10 @@
 name: get prettyurl conf
 
-on:
-  push:
-    branches:    
-    - '**'
-    - '!master'
-    - '![12][0-9]'
+on: [push, pull_request]
+  branches:    
+  - '**'
+  - '!master'
+  - '![12][0-9]'
 
 jobs:
   get-prettyurl-conf:

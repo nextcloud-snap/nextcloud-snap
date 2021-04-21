@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# TODO remove when testing is done
-rm -rf nextcloud-snap
-git clone --branch prettyurl https://github.com/nextcloud/nextcloud-snap.git
-cd nextcloud-snap
-# TODO remove when testing is done
+# for testing
+# rm -rf nextcloud-snap
+# git clone --branch prettyurl https://github.com/nextcloud/nextcloud-snap.git
+# cd nextcloud-snap
 
 # Get the correct tar file from the branch itself
 NC_DOMAIN="$(grep 'https://download.nextcloud.com/server' ./snap/snapcraft.yaml | grep -oP 'https://.*')"

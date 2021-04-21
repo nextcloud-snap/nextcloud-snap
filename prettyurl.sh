@@ -37,19 +37,23 @@ echo '#!/bin/bash' > /tmp/updateHtaccess.sh
 echo "$updateHtaccess" >> /tmp/updateHtaccess.sh
 
 # Overwrite Webroot config
-sed -i 's|ErrorDocument 403.*|ErrorDocument 403 ${WEBROOT}/"|' /tmp/updateHtaccess.sh
-sed -i 's|ErrorDocument 404.*|ErrorDocument 404 ${WEBROOT}/"|' /tmp/updateHtaccess.sh
+sed -i 's|ErrorDocument 403.*|ErrorDocument 403 \\\${WEBROOT}/"|' /tmp/updateHtaccess.sh
+sed -i 's|ErrorDocument 404.*|ErrorDocument 404 \\\${WEBROOT}/"|' /tmp/updateHtaccess.sh
 
 # Overwrite Rewritebase config
-sed -i 's|RewriteBase.*|RewriteBase ${REWRITEBASE}"|' /tmp/updateHtaccess.sh
+sed -i 's|RewriteBase.*|RewriteBase \\\${REWRITEBASE}"|' /tmp/updateHtaccess.sh
 
 # Source the updateHTaccess file to retreive the content variable
 source /tmp/updateHtaccess.sh
 
 # Create file with final prettyurl config
 echo '#Prettyurl-start' > /tmp/apache.conf
-echo -e "$content" > /tmp/apache.conf
-echo '#Prettyurl-end' > /tmp/apache.conf
+echo -e "$content" >> /tmp/apache.conf
+echo '#Prettyurl-end' >> /tmp/apache.conf
+
+# Edit some lines
+sed -i '/DO NOT CHANGE ANYTHING ABOVE THIS LINE/d' /tmp/apache.conf
+sed -i '/^$/d' /tmp/apache.conf
 
 # Remove current PrettyUrl config
 sed -i "/^#Prettyurl-start/,/^#Prettyurl-end/d" ./src/apache/conf/httpd.conf

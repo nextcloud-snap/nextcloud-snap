@@ -35,6 +35,9 @@ updateHtaccess="$(echo "$updateHtaccess" | sed 's|$content = |content=|;s|$conte
 echo '#!/bin/bash' > /tmp/updateHtaccess.sh
 echo "$updateHtaccess" >> /tmp/updateHtaccess.sh
 
+# Fix $1
+sed -i 's|\$1|\\\$1|' /tmp/updateHtaccess.sh
+
 # Overwrite Webroot config
 sed -i 's|ErrorDocument 403.*|ErrorDocument 403 \\\${WEBROOT}/"|' /tmp/updateHtaccess.sh
 sed -i 's|ErrorDocument 404.*|ErrorDocument 404 \\\${WEBROOT}/"|' /tmp/updateHtaccess.sh

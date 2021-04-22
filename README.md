@@ -125,6 +125,8 @@ To reenable it again simply set the `nextcloud.cron-interval` snap variable to a
 
 #### Nextcloud Prettyurls configuration
 
+Disclaimer: Enabling prettyurls is currently only available if you've installed Nextcloud not in a subdirectory but on its own (sub)domain!
+
 First, make sure that you set the correct Rewritebase with this command:
 
     $ sudo nextcloud_occ config:system:set htaccess.RewriteBase --value="/"

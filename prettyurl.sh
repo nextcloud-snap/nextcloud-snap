@@ -38,7 +38,7 @@ echo '<IfDefine EnablePrettyurls>' >> /tmp/htaccess.conf
 echo "$updateHtaccess" >> /tmp/htaccess.conf
 
 # Remove comment line
-sed -i '/DO NOT CHANGE ANYTHING ABOVE THIS LINE/d' /tmp/apache.conf
+sed -i '/DO NOT CHANGE ANYTHING ABOVE THIS LINE/d' /tmp/htaccess.conf
 
 # Edit file to be valid
 sed -i 's|.*"\\n||' /tmp/htaccess.conf

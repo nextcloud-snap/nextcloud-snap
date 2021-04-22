@@ -86,7 +86,6 @@ Options -Indexes
 </IfModule>
 # Retreived from https://download.nextcloud.com/server/releases/nextcloud-20.0.8.tar.bz2
 <IfDefine EnablePrettyurls>
-		$content = "#### DO NOT CHANGE ANYTHING ABOVE THIS LINE ####\n
 ErrorDocument 403 ${WEBROOT}/
 ErrorDocument 404 ${WEBROOT}/
 <IfModule mod_rewrite.c>

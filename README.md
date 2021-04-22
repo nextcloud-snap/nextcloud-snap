@@ -125,7 +125,17 @@ To reenable it again simply set the `nextcloud.cron-interval` snap variable to a
 
 #### Nextcloud Prettyurls configuration
 
-Before enabling this feature, please first set the correct `overwrite.cli.url` and `htaccess.RewriteBase` in Nextcloud by following [this doc](https://docs.nextcloud.com/server/latest/admin_manual/installation/source_installation.html#pretty-urls)
+First, make sure that you set the correct Rewritebase with this command:
+
+    $ sudo nextcloud_occ config:system:set htaccess.RewriteBase --value="/"
+
+Then, make sure that your nextcloud has the correct domain. E.g.:
+
+    $ sudo nextcloud_occ config:system:set overwrite.cli.url https://cloud.yourdomain.com/
+
+(Don't forget the slash at the end here!)
+
+You can find more documentation about this in [this doc](https://docs.nextcloud.com/server/latest/admin_manual/installation/source_installation.html#pretty-urls)
 
 Afterwards, if desired the snap can remove the index.php from the URL:
 

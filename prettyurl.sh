@@ -16,11 +16,15 @@ mkdir -p /tmp/nc
 tar -xjf /tmp/ncpackage.tar.bz2 -C /tmp/nc
 
 # Test if the needed file exists
-if ! [ -f /tmp/nc/nextcloud/lib/private/Setup.php ]
+if ! [ -f /tmp/nc/nextcloud/lib/private/Setup.php ] || ! [ -f /tmp/nc/nextcloud/.htaccess ]
 then
     echo "The Setup couldn't get extracted."
     exit 1
 fi
+
+# Prepare the htaccess file
+rm -f ./src/nextcloud/.htaccess
+cp /tmp/nc/nextcloud/.htaccess ./src/nextcloud/
 
 # Get content of the updateHtaccess function and store it in a Variable called updateHtaccess
 updateHtaccess="$(sed -n "/function updateHtaccess/,/function/p" /tmp/nc/nextcloud/lib/private/Setup.php)"
@@ -29,31 +33,25 @@ updateHtaccess="$(sed -n "/function updateHtaccess/,/function/p" /tmp/nc/nextclo
 updateHtaccess="$(echo "$updateHtaccess" | grep '$content =\|$content \.=')"
 
 # Create file with final prettyurl config
-echo '#Prettyurl-start' > /tmp/apache.conf
-echo "# Retreived from $NC_DOMAIN" >> /tmp/apache.conf
-echo "$updateHtaccess" >> /tmp/apache.conf
-
-# Remove comment line
-sed -i '/DO NOT CHANGE ANYTHING ABOVE THIS LINE/d' /tmp/apache.conf
+echo "# Retreived from $NC_DOMAIN" >> /tmp/htaccess.conf
+echo '<IfDefine EnablePrettyurls>' >> /tmp/htaccess.conf
+echo "$updateHtaccess" >> /tmp/htaccess.conf
 
 # Edit file to be valid
-sed -i 's|.*"\\n||' /tmp/apache.conf
-sed -i 's|;$||' /tmp/apache.conf
-sed -i 's|"$||' /tmp/apache.conf
-sed -i 's|\\\\|\\|g' /tmp/apache.conf
+sed -i 's|.*"\\n||' /tmp/htaccess.conf
+sed -i 's|;$||' /tmp/htaccess.conf
+sed -i 's|"$||' /tmp/htaccess.conf
+sed -i 's|\\\\|\\|g' /tmp/htaccess.conf
 
 # Overwrite Webroot config
-sed -i 's|ErrorDocument 403.*|ErrorDocument 403 \${WEBROOT}/|' /tmp/apache.conf
-sed -i 's|ErrorDocument 404.*|ErrorDocument 404 \${WEBROOT}/|' /tmp/apache.conf
+sed -i 's|ErrorDocument 403.*|ErrorDocument 403 \${WEBROOT}/|' /tmp/htaccess.conf
+sed -i 's|ErrorDocument 404.*|ErrorDocument 404 \${WEBROOT}/|' /tmp/htaccess.conf
 
 # Overwrite Rewritebase config
-sed -i 's|RewriteBase.*|RewriteBase \${REWRITEBASE}|' /tmp/apache.conf
+sed -i 's|RewriteBase.*|RewriteBase \${REWRITEBASE}|' /tmp/htaccess.conf
 
-# Complete the file
-echo '#Prettyurl-end' >> /tmp/apache.conf
-
-# Remove current PrettyUrl config
-sed -i "/^#Prettyurl-start/,/^#Prettyurl-end/d" ./src/apache/conf/httpd.conf
+# Complement file
+echo '</IfDefine>' >> /tmp/htaccess.conf
 
 # Add the new config to the file
-sed -i '/<IfDefine EnablePrettyurls>/r /tmp/apache.conf' ./src/apache/conf/httpd.conf
+cat /tmp/htaccess.conf >> ./src/nextcloud/.htaccess

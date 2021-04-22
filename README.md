@@ -133,7 +133,7 @@ First, make sure that you set the correct Rewritebase with this command:
 
 Then, make sure that your nextcloud has the correct domain. E.g.:
 
-    $ sudo nextcloud_occ config:system:set overwrite.cli.url https://cloud.yourdomain.com/
+    $ sudo nextcloud_occ config:system:set overwrite.cli.url --value="https://cloud.yourdomain.com/"
 
 (Don't forget the slash at the end here!)
 

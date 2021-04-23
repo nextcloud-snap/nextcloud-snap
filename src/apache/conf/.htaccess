@@ -1,5 +1,4 @@
 # Retreived from https://download.nextcloud.com/server/releases/nextcloud-20.0.8.tar.bz2
-<IfDefine EnablePrettyurls>
 ErrorDocument 403 ${WEBROOT}/
 ErrorDocument 404 ${WEBROOT}/
 <IfModule mod_rewrite.c>
@@ -31,4 +30,3 @@ ErrorDocument 404 ${WEBROOT}/
     </IfModule>
   </IfModule>
 </IfModule>
-</IfDefine>

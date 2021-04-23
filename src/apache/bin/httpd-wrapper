@@ -29,7 +29,7 @@ fi
 
 if should_enable_prettyurls; then
 	REWRITEBASE="/"
-	WEBROOT=""
+	WEBROOT="${REWRITEBASE%/}"
 	echo "Prettyurls is enabled"
 	params="$params -DEnablePrettyurls"
 	export REWRITEBASE

@@ -123,23 +123,11 @@ If you want to disable the cronjob completely, run:
 
 To reenable it again simply set the `nextcloud.cron-interval` snap variable to a value that isn't `-1`
 
-#### Nextcloud Prettyurls configuration
+#### Nextcloud Pretty URLs configuration
 
-Disclaimer: Enabling prettyurls is currently only available if you've installed Nextcloud not in a subdirectory but on its own (sub)domain!
+Disclaimer: Enabling Pretty URLs is currently only working if you've installed Nextcloud on its own (sub)domain and not in a subdirectory!
 
-First, make sure that you set the correct Rewritebase with this command:
-
-    $ sudo nextcloud.occ config:system:set htaccess.RewriteBase --value="/"
-
-Then, make sure that your nextcloud has the correct domain. E.g.:
-
-    $ sudo nextcloud.occ config:system:set overwrite.cli.url --value="https://cloud.yourdomain.com/"
-
-(Don't forget the slash at the end here!)
-
-You can find more documentation about this in [this doc](https://docs.nextcloud.com/server/latest/admin_manual/installation/source_installation.html#pretty-urls)
-
-Afterwards, if desired the snap can remove the index.php from the URL:
+In this case and if desired, the snap can remove the index.php from the URL:
 
     $ sudo snap set nextcloud nextcloud.prettyurls=true
 

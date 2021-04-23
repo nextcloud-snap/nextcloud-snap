@@ -33,7 +33,6 @@ updateHtaccess="$(echo "$updateHtaccess" | grep '$content =\|$content \.=')"
 
 # Create file with final prettyurl config
 echo "# Retreived from $NC_DOMAIN" >> /tmp/htaccess.conf
-echo '<IfDefine EnablePrettyurls>' >> /tmp/htaccess.conf
 echo "$updateHtaccess" >> /tmp/htaccess.conf
 
 # Remove comment line
@@ -51,9 +50,6 @@ sed -i 's|ErrorDocument 404.*|ErrorDocument 404 \${WEBROOT}/|' /tmp/htaccess.con
 
 # Overwrite Rewritebase config
 sed -i 's|RewriteBase.*|RewriteBase \${REWRITEBASE}|' /tmp/htaccess.conf
-
-# Complement file
-echo '</IfDefine>' >> /tmp/htaccess.conf
 
 # Add the new config to the file
 cat /tmp/htaccess.conf >> ./src/apache/conf/.htaccess

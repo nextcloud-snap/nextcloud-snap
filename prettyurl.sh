@@ -23,7 +23,7 @@ then
 fi
 
 # Alway create a new htaccess file
-rm -f ./src/nextcloud/.htaccess
+rm -f ./src/apache/conf/.htaccess
 
 # Get content of the updateHtaccess function and store it in a Variable called updateHtaccess
 updateHtaccess="$(sed -n "/function updateHtaccess/,/function/p" /tmp/nc/nextcloud/lib/private/Setup.php)"
@@ -56,4 +56,4 @@ sed -i 's|RewriteBase.*|RewriteBase \${REWRITEBASE}|' /tmp/htaccess.conf
 echo '</IfDefine>' >> /tmp/htaccess.conf
 
 # Add the new config to the file
-cat /tmp/htaccess.conf >> ./src/nextcloud/.htaccess
+cat /tmp/htaccess.conf >> ./src/apache/conf/.htaccess

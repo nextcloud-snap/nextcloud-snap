@@ -318,7 +318,6 @@ parts:
     source: src/nextcloud/
     organize:
       config/: htdocs/config/
-      '.htaccess': .htaccess
     stage-packages:
       # jq is needed for parsing occ's json output
       - jq

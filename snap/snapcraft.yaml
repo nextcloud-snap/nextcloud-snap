@@ -192,6 +192,7 @@ parts:
     source-checksum: sha256/85746a4bda87bf754be5834cdb6489c365dc847653bab8ff3afccdaac3b356b5
     organize:
       '*': htdocs/
+      '.htaccess': htdocs/.htaccess
       '.user.ini': htdocs/.user.ini
 
     # This snap automatically updates. No need to include the updater to nag
@@ -317,7 +318,7 @@ parts:
     source: src/nextcloud/
     organize:
       config/: htdocs/config/
-      '.htaccess': htdocs/.htaccess
+      '.htaccess': .htaccess
     stage-packages:
       # jq is needed for parsing occ's json output
       - jq

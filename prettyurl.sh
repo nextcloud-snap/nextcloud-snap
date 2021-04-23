@@ -16,15 +16,14 @@ mkdir -p /tmp/nc
 tar -xjf /tmp/ncpackage.tar.bz2 -C /tmp/nc
 
 # Test if the needed file exists
-if ! [ -f /tmp/nc/nextcloud/lib/private/Setup.php ] || ! [ -f /tmp/nc/nextcloud/.htaccess ]
+if ! [ -f /tmp/nc/nextcloud/lib/private/Setup.php ]
 then
     echo "The Setup couldn't get extracted."
     exit 1
 fi
 
-# Prepare the htaccess file
+# Alway create a new htaccess file
 rm -f ./src/nextcloud/.htaccess
-cp /tmp/nc/nextcloud/.htaccess ./src/nextcloud/
 
 # Get content of the updateHtaccess function and store it in a Variable called updateHtaccess
 updateHtaccess="$(sed -n "/function updateHtaccess/,/function/p" /tmp/nc/nextcloud/lib/private/Setup.php)"

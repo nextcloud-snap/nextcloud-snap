@@ -129,11 +129,11 @@ Disclaimer: Enabling prettyurls is currently only available if you've installed 
 
 First, make sure that you set the correct Rewritebase with this command:
 
-    $ sudo nextcloud_occ config:system:set htaccess.RewriteBase --value="/"
+    $ sudo nextcloud.occ config:system:set htaccess.RewriteBase --value="/"
 
 Then, make sure that your nextcloud has the correct domain. E.g.:
 
-    $ sudo nextcloud_occ config:system:set overwrite.cli.url --value="https://cloud.yourdomain.com/"
+    $ sudo nextcloud.occ config:system:set overwrite.cli.url --value="https://cloud.yourdomain.com/"
 
 (Don't forget the slash at the end here!)
 

@@ -1,4 +1,4 @@
-# Retreived from https://download.nextcloud.com/server/releases/nextcloud-20.0.8.tar.bz2
+# Retreived from https://download.nextcloud.com/server/releases/nextcloud-20.0.9.tar.bz2
 ErrorDocument 403 ${WEBROOT}/
 ErrorDocument 404 ${WEBROOT}/
 <IfModule mod_rewrite.c>

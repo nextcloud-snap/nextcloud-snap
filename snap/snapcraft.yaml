@@ -203,7 +203,7 @@ parts:
   php:
     plugin: php
     source: https://php.net/get/php-7.4.18.tar.bz2/from/this/mirror
-    source-checksum: sha256/186606a0c52b7c05641abf4002cf1ceb4a3593d86a6faf275012d41872245767
+    source-checksum: sha256/2e455932e9c6f5889b1dc879f36fdd5744eaf1ff572b1b778958cbb8f5c1842f
     source-type: tar
     install-via: prefix
     configflags:

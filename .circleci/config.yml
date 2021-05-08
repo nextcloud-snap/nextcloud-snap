@@ -38,7 +38,7 @@ jobs:
          command: |
            sudo apt update -qq
            sudo apt install -y snapd
-           sudo snap install --beta review-tools
+           sudo snap install review-tools
            sudo /snap/bin/review-tools.snap-review *.snap
 
      - run:

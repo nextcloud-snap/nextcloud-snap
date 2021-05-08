@@ -56,7 +56,7 @@ if [ $new_install = true ]; then
 		ALTER USER 'root'@'localhost' IDENTIFIED BY '$root_password';
 		CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$nextcloud_password';
 		CREATE DATABASE nextcloud;
-		GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost' IDENTIFIED BY '$nextcloud_password';
+		GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
 		SQL
 	then
 		# Now the root mysql user has a password. Save that as well.
@@ -75,19 +75,9 @@ else
 	sed -ri "s|(socket\s*=\s*)/var/snap/.*mysql.sock|\1$MYSQL_SOCKET|" "$MYSQL_ROOT_OPTION_FILE"
 fi
 
-# Wait here until mysql is running
+# Wait here until mysql is running. MySQL 8 runs the upgrade automatically,
+# so no need to do that, anymore.
 wait_for_mysql -f
-
-# Check and upgrade mysql tables if necessary. This will return 0 if the upgrade
-# succeeded, in which case we need to restart mysql.
-echo "Checking/upgrading mysql tables if necessary..."
-if mysql_upgrade --defaults-file="$MYSQL_ROOT_OPTION_FILE"; then
-	echo "Restarting mysql server after upgrade..."
-	"$SNAP/support-files/mysql.server" restart
-
-	# Wait for server to come back after upgrade
-	wait_for_mysql -f
-fi
 
 # If this was a new installation, wait until the server is all up and running
 # before saving off the nextcloud user's password. This way the presence of the

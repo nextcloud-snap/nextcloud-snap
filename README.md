@@ -5,7 +5,7 @@ Nextcloud server packaged as a snap. It consists of:
 - Nextcloud 20.0.9
 - Apache 2.4
 - PHP 7.3
-- MySQL 5.7
+- MySQL 8
 - Redis 5.0
 - mDNS for network discovery
 

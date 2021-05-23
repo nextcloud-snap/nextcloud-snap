@@ -7,6 +7,7 @@ description: |
 
 grade: stable
 confinement: strict
+compression: lzo
 base: core18
 
 architectures:

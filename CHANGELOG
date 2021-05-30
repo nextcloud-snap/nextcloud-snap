@@ -1,3 +1,6 @@
+v 21.0.1snap2
+  - mysql: disable binary logging
+
 v 21.0.1snap1
   - nextcloud: update to 21.0.1
 

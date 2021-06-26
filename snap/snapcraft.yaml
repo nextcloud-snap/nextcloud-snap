@@ -196,8 +196,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-20.0.7.tar.bz2
-    source-checksum: sha256/8ced82b772bf0af67d5be1323e40f977429bc0a2bcc864095efc78767500b72b
+    source: https://download.nextcloud.com/server/releases/nextcloud-21.0.1.tar.bz2
+    source-checksum: sha256/dd7c8ccc01547914a75b44bbf86028289c8919dc39f4e2e720147b6bd596aebe
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -210,8 +210,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.4.15.tar.bz2/from/this/mirror
-    source-checksum: sha256/1bd7be0293446c3d3cbe3c9fae6045119af0798fb0869db61932796dc23a7757
+    source: https://php.net/get/php-7.4.18.tar.bz2/from/this/mirror
+    source-checksum: sha256/2e455932e9c6f5889b1dc879f36fdd5744eaf1ff572b1b778958cbb8f5c1842f
     source-type: tar
     install-via: prefix
     configflags:
@@ -297,13 +297,13 @@ parts:
       sbin/php-fpm: bin/php-fpm
     extensions:
       # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis/archive/5.3.1.tar.gz
-        source-checksum: sha256/930dc88ef126509b8991c52757fdc68908c753b476ad6f25dae0ce6925870f14
+      - source: https://github.com/phpredis/phpredis/archive/5.3.3.tar.gz
+        source-checksum: sha256/7b0f487f8ad4b93ed0542a9bb650d4d47bea64abc54c9440280458f329bc34e7
 
   redis:
     plugin: redis
-    source: http://download.redis.io/releases/redis-5.0.8.tar.gz
-    source-checksum: sha256/f3c7eac42f433326a8d981b50dba0169fdfaf46abb23fcda2f933a7552ee4ed7
+    source: http://download.redis.io/releases/redis-5.0.12.tar.gz
+    source-checksum: sha256/7040eba5910f7c3d38f05ea5a1d88b480488215bdbd2e10ec70d18380108e31e
 
   redis-customizations:
     plugin: dump
@@ -333,18 +333,10 @@ parts:
       # The collabora appimage requires this
       - libfontconfig1
 
-  # Download the boost headers for MySQL. Note that the version used may need to
-  # be updated if the version of MySQL changes.
   boost:
     plugin: dump
-    source: https://github.com/kyrofa/boost_tarball/raw/master/boost_1_59_0.tar.gz
-    source-checksum: sha1/5123209db194d66d69a9cfa5af8ff473d5941d97
-    # When building MySQL, the headers in the source directory 'boost/' are
-    # required. Previously, using the 'copy' plugin, the whole archive was put
-    # under 'boost/', making the headers reside in 'boost/boost/'. Due to a bug,
-    # we now only stage the 'boost/' directory without moving it.
-    #
-    # Bug: https://bugs.launchpad.net/snapcraft/+bug/1757093
+    source: https://sourceforge.net/projects/boost/files/boost/1.73.0/boost_1_73_0.tar.bz2
+    source-checksum: sha1/6d6ed02b29c860fd21b274fc4e1f820855e765e9
     stage:
       - boost/
     prime:
@@ -352,65 +344,66 @@ parts:
 
   mysql:
     plugin: cmake
-    source: https://github.com/mysql/mysql-server.git
-    source-tag: mysql-5.7.33
-    source-depth: 1
-    override-pull: |
-      snapcraftctl pull
-      git apply $SNAPCRAFT_STAGE/mysql-support-compile-time-disabling-of-setpriority.patch
-    after: [boost, patches]
+    after: [boost]
+
+    # Get from https://dev.mysql.com/downloads/mysql/
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.24.tar.gz
+    source-checksum: md5/e8cb8eafe07e22d5da123ffc5ca79e56
     configflags:
-      - -DWITH_BOOST=$SNAPCRAFT_STAGE
-      - -DWITH_INNODB_PAGE_CLEANER_PRIORITY=OFF
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
+      - -DCMAKE_BUILD_TYPE=Release
       - -DWITH_UNIT_TESTS=OFF
       - -DWITH_EMBEDDED_SERVER=OFF
       - -DWITH_ARCHIVE_STORAGE_ENGINE=OFF
+      - -DWITH_EXAMPLE_STORAGE_ENGINE=OFF
       - -DWITH_BLACKHOLE_STORAGE_ENGINE=OFF
       - -DWITH_FEDERATED_STORAGE_ENGINE=OFF
       - -DWITH_PARTITION_STORAGE_ENGINE=OFF
+      - -DWITH_PERFSCHEMA_STORAGE_ENGINE=OFF
+      - -DWITH_DEBUG=OFF
+      - -DWITH_INNODB_EXTRA_DEBUG=OFF
       - -DINSTALL_MYSQLTESTDIR=
+      - -DDOWNLOAD_BOOST=OFF
+      - -DWITH_BOOST=$SNAPCRAFT_STAGE
+
+    override-build: |
+      snapcraftctl build
+      # MySQL v8 is massive. Strip it.
+      find "$SNAPCRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
+
     build-packages:
-      - wget
-      - g++
-      - cmake
-      - bison
       - libncurses5-dev
-      - libaio-dev
-    stage-packages:
-      - libaio1
+      - binutils
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server
       - -COPYING
-    prime:
-      # Remove scripts that we'll be replacing with our own
-      - -support-files/mysql.server
 
       # Remove unused binaries that waste space
+      - -bin/comp_err
+      - -bin/ibd2sdi
       - -bin/innochecksum
       - -bin/lz4_decompress
+      - -bin/myisam_ftdump
       - -bin/myisam*
-      - -bin/mysqladmin
-      - -bin/mysqlbinlog
       - -bin/mysql_client_test
       - -bin/mysql_config*
+      - -bin/mysql_secure_installation
+      - -bin/mysql_ssl_rsa_setup
+      - -bin/mysql_tzinfo_to_sql
+      - -bin/mysql_upgrade
+      - -bin/mysqladmin
+      - -bin/mysqlbinlog
+      - -bin/mysqlcheck
       - -bin/mysqld_multi
       - -bin/mysqlimport
-      - -bin/mysql_install_db
-      - -bin/mysql_plugin
       - -bin/mysqlpump
-      - -bin/mysql_secure_installation
+      - -bin/mysqlrouter*
       - -bin/mysqlshow
       - -bin/mysqlslap
-      - -bin/mysql_ssl_rsa_setup
-      - -bin/mysqltest
-      - -bin/mysql_tzinfo_to_sql
+      - -bin/mysqltest*
       - -bin/perror
-      - -bin/replace
-      - -bin/resolveip
-      - -bin/resolve_stack_dump
       - -bin/zlib_decompress
 
   # Copy over our MySQL scripts

@@ -2,12 +2,12 @@ require 'net/http'
 
 feature "Change http compression" do
 	after(:all) do
-                set_config "apache.compression": "false"
+                set_config "http.compression": "false"
                 wait_for_nextcloud
 	end
 
 	scenario "compression" do
-                set_config "apache.compression": "true"
+                set_config "http.compression": "true"
                 wait_for_nextcloud
 
 		assert_apache_compression

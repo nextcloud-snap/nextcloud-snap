@@ -15,7 +15,7 @@
 # - nextcloud.cron-interval (string)
 #   Interval of the internal Nextcloud cronjob
 #
-# - apache.compression (string)
+# - http.compression (string)
 #   Setting if HTTP compression should be enabled. String can be true or false.
 
 # shellcheck source=src/apache/utilities/apache-utilities
@@ -135,7 +135,7 @@ handle_mode()
 
 handle_compression_setting()
 {
-	compression_status="$(snapctl get apache.compression)"
+	compression_status="$(snapctl get http.compression)"
 	previous_compression_status="$(apache_previous_compression_status)"
 
 	# Return if no new changes were requested

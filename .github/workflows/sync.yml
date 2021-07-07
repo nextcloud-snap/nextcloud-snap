@@ -6,7 +6,7 @@ on:
     branches:
       - master
       - develop
-      - [0-9]+
+      - '[0-9]+'
 
 jobs:
   sync:

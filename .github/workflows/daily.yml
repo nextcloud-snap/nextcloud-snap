@@ -5,7 +5,7 @@ on: [push]
   # - cron: $cron-daily
 
 jobs:
-  spawn builds:
+  spawn-builds:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

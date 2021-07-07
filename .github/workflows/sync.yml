@@ -22,5 +22,5 @@ jobs:
       - run: git config user.email "nextcloud-snappy-bot@git.launchpad.net"
       - run: git remote add deploy git+ssh://nextcloud-snappy-bot@git.launchpad.net/nextcloud-snap
 
-      - run: echo "Requesting build/deploy of ${GITHUB_REF##*/}..."
-      - run: git push deploy ${GITHUB_REF##*/} --force
+      - run: echo "Requesting build/deploy of ${GITHUB_REF#refs/heads/}..."
+      - run: git push deploy ${GITHUB_REF#refs/heads/} --force

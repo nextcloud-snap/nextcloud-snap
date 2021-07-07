@@ -19,7 +19,7 @@ request_build()
 	version="$3"
 	commit_message="$4"
 
-	git checkout -b "$1" "origin/${GITHUB_REF##*/}"
+	git checkout -b "$1" "origin/${GITHUB_REF#refs/heads/}"
 
 	# Rewrite the snapcraft.yaml to pull the requested source
 	rewrite_snapcraft_yaml "$url" "$version"

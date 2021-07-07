@@ -1,0 +1,21 @@
+name: Generate daily builds
+
+on: [push]
+  # schedule:
+  # - cron: $cron-daily
+
+jobs:
+  spawn builds:
+    runs-on: ubuntu-latest
+    steps:
+      - actions/checkout@v2
+
+      - uses: webfactory/ssh-agent@v0.5.3
+        with:
+          sh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - run: git config user.name "CI Bot"
+      - run: git config user.email "nextcloud-snappy-bot@git.launchpad.net"
+      - run: git remote add deploy git+ssh://nextcloud-snappy-bot@git.launchpad.net/nextcloud-snap
+
+      - run: ./.github/daily.sh

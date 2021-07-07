@@ -12,7 +12,7 @@ jobs:
 
       - uses: webfactory/ssh-agent@v0.5.3
         with:
-          sh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - run: git config user.name "CI Bot"
       - run: git config user.email "nextcloud-snappy-bot@git.launchpad.net"

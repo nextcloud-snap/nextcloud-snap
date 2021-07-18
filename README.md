@@ -125,9 +125,7 @@ To reenable it again simply set the `nextcloud.cron-interval` snap variable to a
 
 #### Nextcloud Pretty URLs configuration
 
-Disclaimer: Enabling Pretty URLs is currently only working if you've installed Nextcloud on its own (sub)domain and not in a subdirectory!
-
-In this case and if desired, the snap can remove the index.php from the URL:
+If desired, the snap can remove the index.php part from the URL:
 
     $ sudo snap set nextcloud nextcloud.prettyurls=true
 

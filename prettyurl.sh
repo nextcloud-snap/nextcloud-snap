@@ -59,12 +59,5 @@ updateHtaccess="$(sudo sed -e '1,/DO NOT CHANGE ANYTHING ABOVE THIS LINE/d' /tmp
 echo "# Retreived from $NC_DOMAIN" >> /tmp/htaccess.conf
 echo "$updateHtaccess" >> /tmp/htaccess.conf
 
-# Overwrite Webroot config
-sed -i 's|ErrorDocument 403.*|ErrorDocument 403 \${WEBROOT}/|' /tmp/htaccess.conf
-sed -i 's|ErrorDocument 404.*|ErrorDocument 404 \${WEBROOT}/|' /tmp/htaccess.conf
-
-# Overwrite Rewritebase config
-sed -i 's|RewriteBase.*|RewriteBase \${REWRITEBASE}|' /tmp/htaccess.conf
-
 # Overwrite changes
 cat /tmp/htaccess.conf > ./src/apache/conf/.htaccess

@@ -1,3 +1,8 @@
+v 21.0.3snap1
+  - nextcloud: update to 21.0.3
+  - php: update to 7.4.21
+  - apache: update to 2.4.48
+
 v 21.0.1snap2
   - mysql: disable binary logging
 

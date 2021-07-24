@@ -8,23 +8,33 @@
 . "$SNAP/utilities/nextcloud-utilities"
 
 COMMAND="nextcloud.manual-install"
+data_directory="$NEXTCLOUD_DATA_DIR"
 
 print_usage()
 {
 	echo "Usage:"
-	echo "    $COMMAND -h"
-	echo "    Display this help message."
+	echo "    $COMMAND [-h -d <directory>] <username> <password>"
 	echo ""
-	echo "    $COMMAND <username> <password>"
 	echo "    Install Nextcloud, creating the admin user with the provided"
 	echo "    credentials."
+	echo ""
+	echo "    -h: Display this help message."
+	echo "    -d <directory>: Use <directory> as data directory (defaults to"
+	echo "                    '$data_directory')"
 }
 
-while getopts ":h" opt; do
+while getopts ":hd:" opt; do
 	case $opt in
 		h)
 			print_usage
 			exit 0
+			;;
+		d)
+			data_directory="$OPTARG"
+			;;
+		:)
+			echo "Invalid option: $OPTARG requires an argument" >&2
+			exit 1
 			;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
@@ -63,7 +73,7 @@ if [ -n "$mysql_nextcloud_password" ]; then
 		--database-user="nextcloud" \
 		--database-host="localhost:$MYSQL_SOCKET" \
 		--database-pass="$mysql_nextcloud_password" \
-		--data-dir="$NEXTCLOUD_DATA_DIR" \
+		--data-dir="$data_directory" \
 		--admin-user="$username" \
 		--admin-pass="$password"
 fi

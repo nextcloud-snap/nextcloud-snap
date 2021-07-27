@@ -5,6 +5,7 @@
 
 DEFAULT_HTTP_PORT="80"
 DEFAULT_HTTPS_PORT="443"
+DEFAULT_HTTP_COMPRESSION="false"
 export APACHE_PIDFILE="/tmp/pids/httpd.pid"
 
 mkdir -p "$(dirname $APACHE_PIDFILE)"
@@ -123,9 +124,9 @@ apache_compression()
 	compression="$(snapctl get http.compression)"
 
 	if [ -z "$compression" ]; then
-		compression="false"
-		apache_set_compression_status "false"
-		apache_set_previous_compression_status "false"
+		compression="$DEFAULT_HTTP_COMPRESSION"
+		apache_set_compression_status $compression
+		apache_set_previous_compression_status $compression
 	fi
 
 	echo "$compression"

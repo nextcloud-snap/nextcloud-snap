@@ -134,8 +134,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.46.tar.bz2
-    source-checksum: sha256/740eddf6e1c641992b22359cabc66e6325868c3c5e2e3f98faf349b61ecf41ea
+    source: http://ftp.wayne.edu/apache/httpd/httpd-2.4.48.tar.bz2
+    source-checksum: sha256/1bc826e7b2e88108c7e4bf43c026636f77a41d849cfb667aa7b5c0b86dbf966c
 
     override-pull: |
       snapcraftctl pull
@@ -196,8 +196,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-21.0.1.tar.bz2
-    source-checksum: sha256/dd7c8ccc01547914a75b44bbf86028289c8919dc39f4e2e720147b6bd596aebe
+    source: https://download.nextcloud.com/server/releases/nextcloud-21.0.3.tar.bz2
+    source-checksum: sha256/8adcd175c7a70c33332586fa9ce36d03ba02d1df5d4c334d1210201d3fb953ee
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -210,8 +210,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.4.18.tar.bz2/from/this/mirror
-    source-checksum: sha256/2e455932e9c6f5889b1dc879f36fdd5744eaf1ff572b1b778958cbb8f5c1842f
+    source: https://php.net/get/php-7.4.21.tar.bz2/from/this/mirror
+    source-checksum: sha256/36ec6102e757e2c2b7742057a700bbff77c76fa0ccbe9c860398c3d24e32822a
     source-type: tar
     install-via: prefix
     configflags:
@@ -347,8 +347,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.24.tar.gz
-    source-checksum: md5/e8cb8eafe07e22d5da123ffc5ca79e56
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.26.tar.gz
+    source-checksum: md5/3b3e641a80005dde29ad52b4d1649c6b
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
@@ -375,6 +375,9 @@ parts:
     build-packages:
       - libncurses5-dev
       - binutils
+      - gcc-8
+      - g++-8
+
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server

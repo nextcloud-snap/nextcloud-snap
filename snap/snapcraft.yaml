@@ -188,8 +188,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-21.0.3.tar.bz2
-    source-checksum: sha256/8adcd175c7a70c33332586fa9ce36d03ba02d1df5d4c334d1210201d3fb953ee
+    source: https://download.nextcloud.com/server/releases/nextcloud-21.0.4.tar.bz2
+    source-checksum: sha256/4a0d30febfba53118ba990a0c2d2c16767b77aa676afc937d2018d6865c5fe3a
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -202,8 +202,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.4.21.tar.bz2/from/this/mirror
-    source-checksum: sha256/36ec6102e757e2c2b7742057a700bbff77c76fa0ccbe9c860398c3d24e32822a
+    source: https://php.net/get/php-7.4.23.tar.bz2/from/this/mirror
+    source-checksum: sha256/d1e094fe6e4f832e0a64be9c69464ba5d593fb216f914efa8bbb084e0a7a5727
     source-type: tar
     install-via: prefix
     configflags:
@@ -289,13 +289,13 @@ parts:
       sbin/php-fpm: bin/php-fpm
     extensions:
       # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis/archive/5.3.3.tar.gz
-        source-checksum: sha256/7b0f487f8ad4b93ed0542a9bb650d4d47bea64abc54c9440280458f329bc34e7
+      - source: https://github.com/phpredis/phpredis/archive/5.3.4.tar.gz
+        source-checksum: sha256/c0df53dc4e8cd2921503fefa224cfd51de7f74561324a6d3c66f30d4016178b3
 
   redis:
     plugin: redis
-    source: http://download.redis.io/releases/redis-5.0.12.tar.gz
-    source-checksum: sha256/7040eba5910f7c3d38f05ea5a1d88b480488215bdbd2e10ec70d18380108e31e
+    source: http://download.redis.io/releases/redis-6.0.15.tar.gz
+    source-checksum: sha256/4bc295264a95bc94423c162a9eee66135a24a51eefe5f53f18fc9bde5c3a9f74
 
   redis-customizations:
     plugin: dump

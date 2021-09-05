@@ -1,3 +1,9 @@
+v 20.0.12snap1
+  - php: update to 7.4.23
+  - redis: update to 6.0.15
+  - nextcloud: update to 20.0.12
+  - mysql: update to 8.0.26
+
 v 20.0.11snap1
   - php: upgrade to 7.4.21
   - nextcloud: upgrade to 20.0.11

@@ -1,3 +1,6 @@
+v 21.0.4snap2
+  - migrations: extract version sanity checks into common utilities
+
 v 21.0.4snap1
   - php: update to 7.4.23
   - redis: update to 6.0.15

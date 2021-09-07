@@ -7,6 +7,9 @@ require 'capybara/dsl'
 require 'capybara/rspec'
 require 'selenium-webdriver'
 
+# CircleCI has a chrome driver already in the image
+require 'webdrivers' unless ENV.include? 'CIRCLECI'
+
 if ENV['FIREFOX']
 	Capybara.register_driver :firefox do |app|
 		options = Selenium::WebDriver::Firefox::Options.new(

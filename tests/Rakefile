@@ -3,7 +3,7 @@ require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:test) do |t|
 	if ENV['TEST'].nil? or ENV['TEST'].empty?
-		t.pattern = Dir.glob('spec/**/*_spec.rb')
+		t.pattern = Dir.glob('integration/**/*_spec.rb')
 	else
 		t.pattern = Dir.glob(ENV['TEST'])
 	end

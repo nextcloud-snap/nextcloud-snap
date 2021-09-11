@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 21
+- Nextcloud 22
 - Apache 2.4
 - PHP 7.4
 - MySQL 8

@@ -1,3 +1,6 @@
+v 22.1.1snap1
+  - nextcloud: update to 22.1.1
+
 v 21.0.4snap2
   - migrations: extract version sanity checks into common utilities
 

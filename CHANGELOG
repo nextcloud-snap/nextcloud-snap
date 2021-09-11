@@ -1,3 +1,14 @@
+v 22.1.1snap1
+  - nextcloud: update to 22.1.1
+
+v 21.0.4snap2
+  - migrations: extract version sanity checks into common utilities
+
+v 21.0.4snap1
+  - php: update to 7.4.23
+  - redis: update to 6.0.15
+  - nextcloud: update to 21.0.4
+
 v 21.0.3snap2
   - nextcloud: support specifying data directory in manual-install
   - mysql: upgrade to 8.0.26

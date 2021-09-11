@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  static-tests:
+  static:
     working_directory: ~/nextcloud-snap
     docker:
       - image: ubuntu:bionic
@@ -10,11 +10,25 @@ jobs:
       - run:
          # Run the static tests
          command: |
-           apt update -qq
-           apt install shellcheck -y
-           ./tests/static.sh
+           apt-get update -qq
+           apt-get install -qq shellcheck
+           ./tests/run-tests.sh static
 
-  build:
+  unit:
+    working_directory: ~/nextcloud-snap
+    docker:
+      - image: ubuntu:bionic
+    steps:
+      - checkout
+
+      - run:
+         # Run the unit tests
+         command: |
+           apt-get update -qq
+           apt-get install -qq curl git
+           ./tests/run-tests.sh unit
+
+  integration:
     working_directory: ~/nextcloud-snap
     machine:
       image: ubuntu-1604:202004-01
@@ -36,8 +50,8 @@ jobs:
      - run:
          # Install and run the review tools on the resulting snap
          command: |
-           sudo apt update -qq
-           sudo apt install -y snapd
+           sudo apt-get update -qq
+           sudo apt-get install -qq snapd
            sudo snap install review-tools
            sudo /snap/bin/review-tools.snap-review *.snap
 
@@ -60,8 +74,8 @@ jobs:
       - run:
           # Install the snap and create an admin user
           command: |
-            sudo apt update -qq
-            sudo apt install -y snapd
+            sudo apt-get update -qq
+            sudo apt-get install -qq snapd
             sudo snap install --edge nextcloud
 
       - run:
@@ -78,8 +92,8 @@ jobs:
       - run:
           # Install the snap and create an admin user
           command: |
-            sudo apt update -qq
-            sudo apt install -y snapd
+            sudo apt-get update -qq
+            sudo apt-get install -qq snapd
             sudo snap install nextcloud --channel=19/edge
 
       - run:
@@ -96,8 +110,8 @@ jobs:
       - run:
           # Install the snap and create an admin user
           command: |
-            sudo apt update -qq
-            sudo apt install -y snapd
+            sudo apt-get update -qq
+            sudo apt-get install -qq snapd
             sudo snap install nextcloud --channel=20/edge
 
       - run:
@@ -114,8 +128,8 @@ jobs:
       - run:
           # Install the snap and create an admin user
           command: |
-            sudo apt update -qq
-            sudo apt install -y snapd
+            sudo apt-get update -qq
+            sudo apt-get install -qq snapd
             sudo snap install nextcloud --channel=21/edge
 
       - run:
@@ -125,7 +139,7 @@ jobs:
 workflows:
   version: 2
   commit:
-    jobs: [static-tests, build]
+    jobs: [static, unit, integration]
 
   daily-master:
     triggers:

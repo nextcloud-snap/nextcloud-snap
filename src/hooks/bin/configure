@@ -147,7 +147,7 @@ handle_compression_setting()
 	if [ "$compression_status" = "true" ] || [ "$compression_status" = "false" ]; then
 		apache_set_compression_status "$compression_status"
 		apache_set_previous_compression_status "$compression_status"
-        else
+	else
 		echo "value must be either 'true' or 'false'"
 		return 1
 	fi
@@ -155,7 +155,6 @@ handle_compression_setting()
 	if ! restart_apache_if_running; then
 		return 7
 	fi
-
 }
 
 handle_apache_port_config && \

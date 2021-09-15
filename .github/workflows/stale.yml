@@ -14,3 +14,8 @@ jobs:
 
     steps:
     - uses: actions/stale@v4
+      with:
+        days-before-stale: 60
+        days-before-close: 7
+        stale-issue-message: 'This issue is stale because it has been without activity for 60 days. It will be closed after 7 more days of inactivity.'
+        stale-pr-message: 'This pull request is stale because it has been without activity for 60 days. It will be closed after 7 more days of inactivity.'

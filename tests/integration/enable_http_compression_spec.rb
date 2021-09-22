@@ -14,6 +14,8 @@ feature "Change http compression" do
 	end
 
 	scenario "compression" do
+		assert_apache_compression_default
+
 		set_config "http.compression": "true"
 		wait_for_nextcloud
 
@@ -22,13 +24,27 @@ feature "Change http compression" do
 
 	protected
 
+	def assert_apache_compression_default
+		# Verify that Apache is not returning compressed reponses
+		response = nextcloud_response
+                puts response.to_hash
+		expect(response["content-encoding"]).to eq nil
+	end
+
 	def assert_apache_compression
 		# Verify that Apache is returning compressed reponses
 		response = nextcloud_response
+                puts response.to_hash
 		expect(response["content-encoding"]).to include "br"
 	end
 
 	def nextcloud_response(url: "http://localhost/core/img/favicon.ico")
-		return Net::HTTP.get_response(URI(url))
+		uri = URI(url)
+		req = Net::HTTP::Get.new(uri)
+		req['Accept-Encoding'] = "gzip, deflate, br"
+		res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+			http.request(req)
+		}
+		return res
 	end
 end

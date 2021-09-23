@@ -13,7 +13,7 @@ feature "Change http compression" do
 		expect(output).to include "value must be either 'true' or 'false'"
 	end
 
-	scenario "enabled" do
+	scenario "enable" do
 		assert_apache_compression_default
 
 		set_config "http.compression": "true"

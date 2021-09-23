@@ -13,7 +13,7 @@ feature "Change http compression" do
 		expect(output).to include "value must be either 'true' or 'false'"
 	end
 
-	scenario "compression" do
+	scenario "enabled" do
 		assert_apache_compression_default
 
 		set_config "http.compression": "true"
@@ -27,14 +27,12 @@ feature "Change http compression" do
 	def assert_apache_compression_default
 		# Verify that Apache is not returning compressed reponses
 		response = nextcloud_response
-                puts response.to_hash
 		expect(response["content-encoding"]).to eq nil
 	end
 
 	def assert_apache_compression
 		# Verify that Apache is returning compressed reponses
 		response = nextcloud_response
-                puts response.to_hash
 		expect(response["content-encoding"]).to include "br"
 	end
 

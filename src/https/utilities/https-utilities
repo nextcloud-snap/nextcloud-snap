@@ -1,13 +1,16 @@
 #!/bin/sh
 
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
 # shellcheck source=src/apache/utilities/apache-utilities
-. "$SNAP/utilities/apache-utilities"
+include "apache-utilities"
 
 SNAP_CURRENT="$(dirname "$SNAP_DATA")/current"
 
-LIVE_CERTS_DIRECTORY="$SNAP_CURRENT/certs/live"
+: "${LIVE_CERTS_DIRECTORY:="$SNAP_CURRENT/certs/live"}"
+: "${SELF_SIGNED_DIRECTORY:="$SNAP_CURRENT/certs/self-signed"}"
 
-SELF_SIGNED_DIRECTORY="$SNAP_CURRENT/certs/self-signed"
 SELF_SIGNED_KEY="$SELF_SIGNED_DIRECTORY/privkey.pem"
 SELF_SIGNED_CERT="$SELF_SIGNED_DIRECTORY/cert.pem"
 SELF_SIGNED_CHAIN="$SELF_SIGNED_DIRECTORY/chain.pem"
@@ -48,10 +51,10 @@ activate_self_signed_certificate()
 
 self_signed_certificates_are_active()
 {
-	live_path="$(realpath "$LIVE_CERTS_DIRECTORY")"
-	self_signed_path="$(realpath "$SELF_SIGNED_DIRECTORY")"
+	live_path="$(realpath -q "$LIVE_CERTS_DIRECTORY")"
+	self_signed_path="$(realpath -q "$SELF_SIGNED_DIRECTORY")"
 
-	[ "$live_path" = "$self_signed_path" ]
+	[ -n "$live_path" ] && [ -n "$self_signed_path" ] && [ "$live_path" = "$self_signed_path" ]
 }
 
 # If this function is run multiple times it will replace the certificate
@@ -87,10 +90,10 @@ activate_custom_certificate()
 
 custom_certificates_are_active()
 {
-	live_path="$(realpath "$LIVE_CERTS_DIRECTORY")"
-	custom_path="$(realpath "$CUSTOM_DIRECTORY")"
+	live_path="$(realpath -q "$LIVE_CERTS_DIRECTORY")"
+	custom_path="$(realpath -q "$CUSTOM_DIRECTORY")"
 
-	[ "$live_path" = "$custom_path" ]
+	[ -n "$live_path" ] && [ -n "$custom_path" ] && [ "$live_path" = "$custom_path" ]
 }
 
 certificates_are_active()

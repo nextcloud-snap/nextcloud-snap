@@ -1,5 +1,6 @@
 #!/bin/sh
 
+DEFAULT_NEXTCLOUD_SCRIPT_INCLUDE_PATH="$SNAP/utilities"
 SNAP_CURRENT="$(realpath -s "$SNAP/../current")"
 SNAP_DATA_CURRENT="$(realpath -s "$SNAP_DATA/../current")"
 export SNAP_CURRENT
@@ -53,6 +54,36 @@ wait_for_command()
 		done
 		echo "done"
 	fi
+}
+
+include()
+{
+	if [ -z "$NEXTCLOUD_SCRIPT_INCLUDE_PATH" ]; then
+		NEXTCLOUD_SCRIPT_INCLUDE_PATH="$DEFAULT_NEXTCLOUD_SCRIPT_INCLUDE_PATH"
+	fi
+
+	desired_include="$1"
+
+	oldIFS="$IFS"
+	IFS=":"
+	# shellcheck disable=SC2086
+	set -- $NEXTCLOUD_SCRIPT_INCLUDE_PATH
+	IFS=$oldIFS
+
+	for path; do
+		if [ -n "$path" ]; then
+			joined_path="$path/$desired_include"
+			if [ -f "$joined_path" ]; then
+				# shellcheck disable=SC1090
+				. "$joined_path"
+				return 0
+			fi
+		fi
+	done
+
+	echo "No such file in include path: '$desired_include'" >&2
+	echo "Searched the following path: $NEXTCLOUD_SCRIPT_INCLUDE_PATH" >&2
+	return 1
 }
 
 get_previous_snap_version()

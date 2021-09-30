@@ -10,7 +10,7 @@ feature "Change http compression" do
 		# This will print to stderr. Redirect so we can capture it easily.
 		output=`sudo snap set nextcloud http.compression=invalid 2>&1`
 		expect($?.to_i).to_not eq 0
-		expect(output).to include "value must be either 'true' or 'false'"
+		expect(output).to include "compression must be either 'true' or 'false'"
 	end
 
 	scenario "enable" do

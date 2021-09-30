@@ -9,8 +9,8 @@ feature "Maintenance mode" do
 		`sudo nextcloud.occ -n maintenance:mode --on 2>&1`
 		expect($?.to_i).to eq 0
 
-		# Maintenance mode takes one second to apply (opcache)
-		sleep 2
+		# Maintenance mode takes two seconds to apply (opcache)
+		sleep 3
 
 		# Now verify that maintenance mode is active
 		visit "/"
@@ -20,8 +20,8 @@ feature "Maintenance mode" do
 		`sudo nextcloud.occ -n maintenance:mode --off 2>&1`
 		expect($?.to_i).to eq 0
 
-		# Maintenance mode takes one second to apply (opcache)
-		sleep 2
+		# Maintenance mode takes two seconds to apply (opcache)
+		sleep 3
 
 		# Finally, verify that maintenance mode is not active again
 		visit "/"

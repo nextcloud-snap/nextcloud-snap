@@ -125,11 +125,11 @@ To reenable it again simply set the `nextcloud.cron-interval` snap variable to a
 
 #### HTTP compression configuration
 
-If desired the snap can use HTTP compression by running:
+By default, the snap does not enable HTTP compression. To enable it, run:
 
     $ sudo snap set nextcloud http.compression=true
 
-To disable it again just run:
+To disable it, run:
 
     $ sudo snap set nextcloud http.compression=false
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # Supported keys:
 # - ports.http (integer)
@@ -16,7 +16,12 @@
 #   Interval of the internal Nextcloud cronjob
 #
 # - http.compression (string)
-#   Setting if HTTP compression should be enabled. String can be true or false.
+#   Whether or not HTTP compression should be enabled. Valid values are 'true'
+#   and 'false'.
+#
+# - mode (string)
+#   Configure the operating mode of the snap. Valid values are 'debug' and
+#   'production'.
 
 # shellcheck source=src/apache/utilities/apache-utilities
 . "$SNAP/utilities/apache-utilities"
@@ -133,32 +138,26 @@ handle_mode()
 	snapctl restart nextcloud.php-fpm
 }
 
-handle_compression_setting()
+handle_http_compression()
 {
-	compression_status="$(snapctl get http.compression)"
-	previous_compression_status="$(apache_previous_compression_status)"
-
-	# Return if no new changes were requested
-	if [ "$compression_status" = "$previous_compression_status" ]; then
+	# If no changes were requested, then there's nothing to do here.
+	if ! apache_http_compression_has_changed; then
 		return 0
 	fi
 
 	# Validate input
-	if [ "$compression_status" = "true" ] || [ "$compression_status" = "false" ]; then
-		apache_set_compression_status "$compression_status"
-		apache_set_previous_compression_status "$compression_status"
-	else
-		echo "value must be either 'true' or 'false'"
+	value="$(apache_get_http_compression)"
+	if [ "$value" != "true" ] && [ "$value" != "false" ]; then
+		echo "HTTP compression must be either 'true' or 'false'"
 		return 1
 	fi
 
-	if ! restart_apache_if_running; then
-		return 7
-	fi
+	# Restart Apache to apply new config
+	snapctl restart nextcloud.apache
 }
 
-handle_apache_port_config && \
-handle_php_memory_limit && \
-handle_cronjob_interval && \
-handle_mode && \
-handle_compression_setting
+handle_apache_port_config
+handle_php_memory_limit
+handle_cronjob_interval
+handle_mode
+handle_http_compression

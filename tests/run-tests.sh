@@ -13,11 +13,15 @@ run_shellcheck()
 		fi
 
 		checks=$((checks+1))
-		if ! shellcheck -x "$file"; then
+		if shellcheck -x "$file"; then
+			printf '.'
+		else
+			printf 'F'
 			failures=$((failures+1))
 		fi
 	done
 
+	printf '\n'
 	echo "Checked $checks files ($failures failed)"
 
 	if [ $failures -gt 0 ]; then
@@ -29,13 +33,13 @@ run_shellcheck()
 
 run_static_tests()
 {
-	grep -rl "^#!/bin/sh" "$tests_dir/../src/" | run_shellcheck
+	grep -rl "^#!/bin/sh" "$tests_dir" "$tests_dir/../src/" | run_shellcheck
 }
 
 run_unit_tests()
 {
 	[ ! -f "$HOME/.local/bin/shellspec" ] && curl -fsSL https://git.io/shellspec | sh -s 0.28.1 -y
-	$HOME/.local/bin/shellspec --helperdir "$tests_dir/unit" --default-path "$tests_dir/unit" --load-path "$tests_dir/unit"
+	"$HOME/.local/bin/shellspec" --helperdir "$tests_dir/unit" --default-path "$tests_dir/unit" --load-path "$tests_dir/unit"
 }
 
 run_integration_tests()

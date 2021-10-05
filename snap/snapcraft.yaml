@@ -202,8 +202,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-7.4.23.tar.bz2/from/this/mirror
-    source-checksum: sha256/d1e094fe6e4f832e0a64be9c69464ba5d593fb216f914efa8bbb084e0a7a5727
+    source: https://php.net/get/php-7.4.24.tar.bz2/from/this/mirror
+    source-checksum: sha256/f50e32b788864349041f19e31dcc65b1fcc65bc19122918f607526432edf2f32
     source-type: tar
     install-via: prefix
     configflags:

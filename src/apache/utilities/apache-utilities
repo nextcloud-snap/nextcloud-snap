@@ -5,6 +5,7 @@
 
 DEFAULT_HTTP_PORT="80"
 DEFAULT_HTTPS_PORT="443"
+DEFAULT_HTTP_COMPRESSION="false"
 export APACHE_PIDFILE="/tmp/pids/httpd.pid"
 
 mkdir -p "$(dirname $APACHE_PIDFILE)"
@@ -101,4 +102,52 @@ apache_previous_https_port()
 apache_set_previous_https_port()
 {
 	snapctl set private.ports.https="$1"
+}
+
+apache_http_compression_enabled()
+{
+	[ "$(apache_get_http_compression)" = "true" ]
+}
+
+apache_enable_http_compression()
+{
+	_apache_set_http_compression "true"
+}
+
+apache_disable_http_compression()
+{
+	_apache_set_http_compression "false"
+}
+
+apache_http_compression_has_changed()
+{
+	[ "$(apache_get_http_compression)" != "$(_apache_get_previous_http_compression)" ]
+}
+
+apache_get_http_compression()
+{
+	compression="$(snapctl get http.compression)"
+
+	if [ -z "$compression" ]; then
+		compression="$DEFAULT_HTTP_COMPRESSION"
+		_apache_set_http_compression "$compression"
+	fi
+
+	echo "$compression"
+}
+
+_apache_set_http_compression()
+{
+	snapctl set http.compression="$1"
+	_apache_set_previous_http_compression "$1"
+}
+
+_apache_get_previous_http_compression()
+{
+	snapctl get private.http.compression
+}
+
+_apache_set_previous_http_compression()
+{
+	snapctl set private.http.compression="$1"
 }

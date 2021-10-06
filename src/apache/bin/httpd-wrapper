@@ -1,13 +1,16 @@
 #!/bin/sh
 
+# shellcheck source=src/common/utilities/common-utilities
+. "$SNAP/utilities/common-utilities"
+
 # shellcheck source=src/https/utilities/https-utilities
-. "$SNAP/utilities/https-utilities"
+include "https-utilities"
 # shellcheck source=src/apache/utilities/apache-utilities
-. "$SNAP/utilities/apache-utilities"
+include "apache-utilities"
 # shellcheck source=src/php/utilities/php-utilities
-. "$SNAP/utilities/php-utilities"
+include "php-utilities"
 # shellcheck source=src/hooks/utilities/configuration-utilities
-. "$SNAP/utilities/configuration-utilities"
+include "configuration-utilities"
 
 params=""
 if certificates_are_active; then
@@ -25,9 +28,17 @@ else
 	echo "No certificates are active: using HTTP only"
 fi
 
+if apache_http_compression_enabled; then
+	echo "HTTP compression is enabled"
+	params="$params -DEnableCompression"
+else
+	echo "HTTP compression is disabled"
+fi
+
 if debug_mode_enabled; then
 	params="$params -DDebug"
 fi
+
 
 HTTP_PORT="$(apache_http_port)"
 HTTPS_PORT="$(apache_https_port)"

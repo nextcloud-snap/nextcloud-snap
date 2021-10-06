@@ -1,3 +1,10 @@
+v 22.2.0snap1
+  - apache: update to 2.4.50
+  - apache: support http compression
+  - nextcloud: update to 22.2.0
+  - php: update to 8.0.11
+  - mysql: disable performance_schema
+
 v 22.1.1snap2
   - apache: update to 2.4.49
 

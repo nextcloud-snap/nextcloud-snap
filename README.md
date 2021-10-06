@@ -4,7 +4,7 @@ Nextcloud server packaged as a snap. It consists of:
 
 - Nextcloud 22
 - Apache 2.4
-- PHP 7.4
+- PHP 8.0
 - MySQL 8
 - Redis 6
 - mDNS for network discovery
@@ -123,6 +123,15 @@ If you want to disable the cronjob completely, run:
 
 To reenable it again simply set the `nextcloud.cron-interval` snap variable to a value that isn't `-1`
 
+#### HTTP compression configuration
+
+By default, the snap does not enable HTTP compression. To enable it, run:
+
+    $ sudo snap set nextcloud http.compression=true
+
+To disable it, run:
+
+    $ sudo snap set nextcloud http.compression=false
 
 #### Debug mode
 

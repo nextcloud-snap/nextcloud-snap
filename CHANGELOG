@@ -1,3 +1,9 @@
+v 21.0.5snap1
+  - apache: upgrade to 2.4.51
+  - nextcloud: update to 21.0.5
+  - php: update to 8.0.11
+  - mysql: disable performance_schema
+
 v 21.0.4snap2
   - migrations: extract version sanity checks into common utilities
 

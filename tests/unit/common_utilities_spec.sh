@@ -208,4 +208,65 @@ Describe 'common-utilities'
 			The error should equal ''
 		End
 	End
+
+	Describe 'get_previous_snap_version'
+		It 'defaults to nothing'
+			When call get_previous_snap_version
+			The output should equal ''
+		End
+
+	End
+
+	Describe 'set_previous_snap_version'
+		It 'sets the version properly'
+			set_previous_snap_version '1.2.3snap1'
+			When call get_previous_snap_version
+			The output should equal '1.2.3snap1'
+		End
+	End
+
+	Describe 'maintenance mode command'
+		Mock occ
+			while getopts ":n" opt; do
+				case $opt in
+					n)
+						# Skip
+						;;
+					\?)
+						echo "Unsupported option: -$OPTARG" >&2
+						exit 1
+						;;
+				esac
+			done
+			shift $((OPTIND-1))
+
+			ARGS="$@"
+			%preserve ARGS
+
+			exit ${EXIT_CODE:-0}
+		End
+
+		Mock sleep
+			SLEEP_ARGS="$@"
+			%preserve SLEEP_ARGS
+		End
+
+		Describe 'enable_maintenance_mode'
+			It 'calls occ as expected'
+				When call enable_maintenance_mode
+				The output should include 'Enabling maintenance mode'
+				The variable ARGS should equal 'maintenance:mode --on'
+				The variable SLEEP_ARGS should equal '3'
+			End
+		End
+
+		Describe 'disable_maintenance_mode'
+			It 'calls occ as expected'
+				When call disable_maintenance_mode
+				The output should include 'Disabling maintenance mode'
+				The variable ARGS should equal 'maintenance:mode --off'
+				The variable SLEEP_ARGS should equal '3'
+			End
+		End
+	End
 End

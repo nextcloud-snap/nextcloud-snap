@@ -5,7 +5,7 @@ setup(
 	name='nextcloud',
 	packages=find_packages(),
 	install_requires=[
-		'certbot~=0.33.1',
+		'certbot~=1.20.0',
 	],
 	entry_points={
 		'certbot.plugins': [

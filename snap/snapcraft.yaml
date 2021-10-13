@@ -438,7 +438,6 @@ parts:
       snapcraftctl build
       _CERTBOT_PKGDIR=$SNAPCRAFT_PART_INSTALL/lib/python$(python3 -c "import sys; print('{}.{}'.format(*sys.version_info[0:2]))")/site-packages/certbot
       patch -p1 -d $_CERTBOT_PKGDIR < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
-      patch -p1 -d $_CERTBOT_PKGDIR < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
 
   setup-https:
     plugin: dump

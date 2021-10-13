@@ -1,16 +1,13 @@
---- a/constants.py	2019-04-25 13:54:51.740610037 -0700
-+++ b/constants.py	2019-04-25 13:55:14.996430304 -0700
-@@ -15,12 +15,7 @@
- """Plugins Setuptools entry point before rename."""
+--- a/_internal/constants.py      2021-10-13 11:27:41.539254415 +0000
++++ b/_internal/constants.py      2021-10-13 11:37:41.203246935 +0000
+@@ -15,10 +15,6 @@
  
  CLI_DEFAULTS = dict(
--    config_files=[
+     config_files=[
 -        os.path.join(misc.get_default_folder('config'), 'cli.ini'),
--        # http://freedesktop.org/wiki/Software/xdg-user-dirs/
+-        # https://freedesktop.org/wiki/Software/xdg-user-dirs/
 -        os.path.join(os.environ.get("XDG_CONFIG_HOME", "~/.config"),
 -                     "letsencrypt", "cli.ini"),
--    ],
-+    config_files=[],
+     ],
  
      # Main parser
-     verbose_count=-int(logging.INFO / 10),

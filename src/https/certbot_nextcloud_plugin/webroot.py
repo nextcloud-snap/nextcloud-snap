@@ -3,8 +3,7 @@
 from importlib import import_module
 
 AUTHENTICATOR_PACKAGES = [
-    'certbot._internal.plugins.webroot',
-    'certbot.plugins.webroot'
+    'certbot._internal.plugins.webroot'
 ]
 
 

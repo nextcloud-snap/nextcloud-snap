@@ -137,14 +137,6 @@ parts:
     source: https://dlcdn.apache.org/httpd/httpd-2.4.51.tar.bz2
     source-checksum: sha256/20e01d81fecf077690a4439e3969a9b22a09a8d43c525356e863407741b838f4
 
-    override-pull: |
-      snapcraftctl pull
-
-      # For some reason, all directories in (and after) 2.4.32 are setgid.
-      # Reported as https://bz.apache.org/bugzilla/show_bug.cgi?id=62298
-      # Work around by unsetting setgid. FIXME: Remove when bug is fixed.
-      find . -perm -g+s -exec chmod g-s {} \;
-
     build-packages:
       - libbrotli-dev
 

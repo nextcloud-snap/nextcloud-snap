@@ -42,8 +42,9 @@ jobs:
       - name: Build snap
         run: snapcraft --destructive-mode
 
-      - name: Review snap
-        run: sudo snap install review-tools && sudo /snap/bin/review-tools.snap-review *.snap
+      # This fails with a permissions error when opening the snap
+      # - name: Review snap
+      #   run: sudo snap install review-tools && sudo /snap/bin/review-tools.snap-review *.snap
 
       - name: Install the snap
         run: sudo snap install *.snap --dangerous

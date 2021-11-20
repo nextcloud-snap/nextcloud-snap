@@ -188,8 +188,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-22.2.0.tar.bz2
-    source-checksum: sha256/273dba3ce43501b897e8b78996b50329e31da2b5402866ac20b318cdaddf3e1f
+    source: https://download.nextcloud.com/server/releases/nextcloud-22.2.3.tar.bz2
+    source-checksum: sha256/66a29a6a490738c0abedb677cb68c7c91fabab3e6419a3c99d8b406899eb942a
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess

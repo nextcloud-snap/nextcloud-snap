@@ -99,8 +99,8 @@ set_previous_snap_version()
 enable_maintenance_mode()
 {
 	if run_command "Enabling maintenance mode" occ -n maintenance:mode --on; then
-		# The opcache might cache changes for one second. Wait for two to be safe.
-		sleep 2
+		# The opcache might cache changes for two seconds. Wait for three to be safe.
+		sleep 3
 		return 0
 	fi
 	return 1
@@ -109,8 +109,8 @@ enable_maintenance_mode()
 disable_maintenance_mode()
 {
 	if run_command "Disabling maintenance mode" occ -n maintenance:mode --off; then
-		# The opcache might cache changes for one second. Wait for two to be safe.
-		sleep 2
+		# The opcache might cache changes for two seconds. Wait for three to be safe.
+		sleep 3
 		return 0
 	fi
 	return 1

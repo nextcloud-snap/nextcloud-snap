@@ -137,14 +137,6 @@ parts:
     source: https://dlcdn.apache.org/httpd/httpd-2.4.51.tar.bz2
     source-checksum: sha256/20e01d81fecf077690a4439e3969a9b22a09a8d43c525356e863407741b838f4
 
-    override-pull: |
-      snapcraftctl pull
-
-      # For some reason, all directories in (and after) 2.4.32 are setgid.
-      # Reported as https://bz.apache.org/bugzilla/show_bug.cgi?id=62298
-      # Work around by unsetting setgid. FIXME: Remove when bug is fixed.
-      find . -perm -g+s -exec chmod g-s {} \;
-
     build-packages:
       - libbrotli-dev
 
@@ -196,8 +188,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-22.2.0.tar.bz2
-    source-checksum: sha256/273dba3ce43501b897e8b78996b50329e31da2b5402866ac20b318cdaddf3e1f
+    source: https://download.nextcloud.com/server/releases/nextcloud-22.2.3.tar.bz2
+    source-checksum: sha256/66a29a6a490738c0abedb677cb68c7c91fabab3e6419a3c99d8b406899eb942a
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -210,8 +202,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.0.11.tar.bz2/from/this/mirror
-    source-checksum: sha256/70ed874285e4010c1e2e8937bfb56b13b9ed1b3789dcaf274b793b00c1f4403a
+    source: https://php.net/get/php-8.0.13.tar.bz2/from/this/mirror
+    source-checksum: sha256/c2419d7ba4395f44747043f4e6f5b47fa08125705fb9f88377e453068a815836
     source-type: tar
     install-via: prefix
     configflags:
@@ -302,8 +294,8 @@ parts:
 
   redis:
     plugin: redis
-    source: http://download.redis.io/releases/redis-6.0.15.tar.gz
-    source-checksum: sha256/4bc295264a95bc94423c162a9eee66135a24a51eefe5f53f18fc9bde5c3a9f74
+    source: https://download.redis.io/releases/redis-6.0.16.tar.gz
+    source-checksum: sha256/3639bbf29aca1a1670de1ab2ce224d6511c63969e7e590d3cdf8f7888184fa19
 
   redis-customizations:
     plugin: dump
@@ -347,8 +339,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.26.tar.gz
-    source-checksum: md5/3b3e641a80005dde29ad52b4d1649c6b
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.27.tar.gz
+    source-checksum: md5/80310c5a1b24145fa072927ab99a4c0d
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

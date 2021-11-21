@@ -1,0 +1,53 @@
+name: Run tests against changes
+
+on: [push, pull_request]
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: sudo apt-get update -qq && sudo apt-get install -qq shellcheck
+
+      - name: Run tests
+        run: ./tests/static.sh
+
+  unit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Skip
+        run: echo "This branch has no unit tests"
+
+  integration:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: sudo apt-get update -qq && sudo snap install --classic snapcraft
+
+      - name: Build snap
+        run: snapcraft --destructive-mode
+
+      - name: Review snap
+        run: sudo snap install review-tools && /snap/bin/review-tools.snap-review *.snap
+
+      - name: Install the snap
+        run: sudo snap install *.snap --dangerous
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run integration tests
+        working-directory: tests
+        run: bundle exec rake test

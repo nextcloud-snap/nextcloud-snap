@@ -62,7 +62,7 @@ editing `/var/snap/nextcloud/current/nextcloud/config/config.php`), the snap
 exposes extra configuration options via the `snap set` command.
 
 
-#### HTTP/HTTPS port configuration
+#### HTTP/HTTPS configuration
 
 By default, the snap will listen on port 80. If you enable HTTPS, it will listen
 on both 80 and 443, and HTTP traffic will be redirected to HTTPS. But perhaps
@@ -81,6 +81,10 @@ Note that, assuming HTTPS is enabled, this will cause HTTP traffic to be
 redirected to port 444. You can specify both of these simultaneously as well:
 
     $ sudo snap set nextcloud ports.http=81 ports.https=444
+    
+To enable SSL (and automatic redirect from HTTP to HTTPS) using Let's Encrypt:
+
+    $ sudo nextcloud.enable-https lets-encrypt
 
 **Note:** Let's Encrypt will expect that Nextcloud is exposed on ports 80 and
 443. If you change ports and _don't_ put Nextcloud behind a proxy such that

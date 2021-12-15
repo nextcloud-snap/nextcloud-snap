@@ -17,5 +17,6 @@ jobs:
       with:
         days-before-stale: 60
         days-before-close: 7
+        exempt-issue-labels: feature,bug,dependency,security
         stale-issue-message: 'This issue is stale because it has been without activity for 60 days. It will be closed after 7 more days of inactivity.'
         stale-pr-message: 'This pull request is stale because it has been without activity for 60 days. It will be closed after 7 more days of inactivity.'

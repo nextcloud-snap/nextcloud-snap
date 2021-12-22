@@ -1,3 +1,6 @@
+v 22.2.3snap2
+  - apache: update to 2.4.52
+
 v 22.2.3snap1
   - php: update to 8.0.13
   - nextcloud: update to 22.2.3

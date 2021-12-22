@@ -1,0 +1,82 @@
+name: Test daily builds
+
+on:
+  schedule:
+  - cron: "0 5 * * *"
+
+jobs:
+  test-daily-master:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install nextcloud
+        run: sudo snap install --edge nextcloud
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run tests
+        working-directory: tests
+        run: bundle exec ./run-tests.sh integration
+
+  test-daily-v20:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install nextcloud
+        run: sudo snap install nextcloud --channel=20/edge
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run tests
+        working-directory: tests
+        run: bundle exec ./run-tests.sh integration
+
+  test-daily-v21:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install nextcloud
+        run: sudo snap install nextcloud --channel=21/edge
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run tests
+        working-directory: tests
+        run: bundle exec ./run-tests.sh integration
+
+  test-daily-v22:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install nextcloud
+        run: sudo snap install nextcloud --channel=22/edge
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run tests
+        working-directory: tests
+        run: bundle exec ./run-tests.sh integration

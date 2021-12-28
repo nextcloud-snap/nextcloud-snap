@@ -29,7 +29,7 @@ jobs:
       - name: Run tests
         run: ./tests/run-tests.sh unit
 
-  integration:
+  build:
     runs-on: ubuntu-18.04
 
     steps:
@@ -41,6 +41,25 @@ jobs:
 
       - name: Build snap
         run: snapcraft --destructive-mode
+
+      - name: Upload snap artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: snap
+          path: '*.snap'
+
+  integration:
+    runs-on: ubuntu-18.04
+    needs: build
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Download snap artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: snap
 
       - name: Review snap
         run: sudo snap install review-tools && /snap/bin/review-tools.snap-review *.snap

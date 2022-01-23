@@ -202,8 +202,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.0.13.tar.bz2/from/this/mirror
-    source-checksum: sha256/c2419d7ba4395f44747043f4e6f5b47fa08125705fb9f88377e453068a815836
+    source: https://php.net/get/php-8.0.15.tar.bz2/from/this/mirror
+    source-checksum: sha256/881171c90aba746d28df768f3d99fa3261999e506415be4c7352078a64fe59dc
     source-type: tar
     install-via: prefix
     configflags:
@@ -339,8 +339,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.27.tar.gz
-    source-checksum: md5/80310c5a1b24145fa072927ab99a4c0d
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.28.tar.gz
+    source-checksum: md5/362b8141ecaf425b803fe55292e2df98
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

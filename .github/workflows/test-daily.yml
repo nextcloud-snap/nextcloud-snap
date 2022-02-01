@@ -24,25 +24,6 @@ jobs:
         working-directory: tests
         run: bundle exec ./run-tests.sh integration
 
-  test-daily-v20:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Install nextcloud
-        run: sudo snap install nextcloud --channel=20/edge
-
-      - name: Setup ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          working-directory: tests
-          bundler-cache: true
-
-      - name: Run tests
-        working-directory: tests
-        run: bundle exec ./run-tests.sh integration
-
   test-daily-v21:
     runs-on: ubuntu-latest
     steps:

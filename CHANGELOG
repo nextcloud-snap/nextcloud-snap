@@ -1,5 +1,5 @@
-v 23.0.1snap1
-  - nextcloud: update to 23.0.1
+v 23.0.2snap1
+  - nextcloud: update to 23.0.2
 
 v 22.2.3snap3
   - php: update to 8.0.15

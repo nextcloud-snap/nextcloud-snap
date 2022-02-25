@@ -281,9 +281,17 @@ parts:
       - libzip4
       - libargon2-0
       - libonig4
+      # For video thumbnails
+      - ffmpeg
+      - libslang2
     prime:
      - -sbin/
      - -etc/
+     # ffmpeg related
+     - -usr/share/man/
+     - -usr/lib/x86_64-linux-gnu/dri/
+     - -usr/share/alsa/
+     - -usr/share/doc/
     organize:
       # Put php-fpm in bin with everything else, not sbin.
       sbin/php-fpm: bin/php-fpm

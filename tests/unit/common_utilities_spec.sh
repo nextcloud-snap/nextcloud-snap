@@ -16,6 +16,21 @@ Describe 'common-utilities'
 			The status should be failure
 		End
 
+		It 'handles dev less than'
+			When call version_less_than '22.2.3snap3+git1.5252525' '22.2.3snap3+git2.4242424'
+			The status should be success
+		End
+
+		It 'handles dev greater than'
+			When call version_less_than '22.2.3snap3+git2.4242424' '22.2.3snap3+git1.5252525'
+			The status should be failure
+		End
+
+		It 'handles dev equal'
+			When call version_less_than '22.2.3snap3+git2.4242424' '22.2.3snap3+git2.4242424'
+			The status should be failure
+		End
+
 		It 'handles daily less than'
 			When call version_less_than '18-2021-05-14' '18-2021-05-15'
 			The status should be success
@@ -98,6 +113,11 @@ Describe 'common-utilities'
 
 		It 'accepts snap version'
 			When call is_semver '1.2.3snap4'
+			The status should be success
+		End
+
+		It 'accepts dev version'
+			When call is_semver '22.2.3snap3+git1.5252525'
 			The status should be success
 		End
 	End

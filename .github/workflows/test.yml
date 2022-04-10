@@ -37,10 +37,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: sudo apt-get update -qq && sudo snap install --classic snapcraft
+        run: sudo apt-get update -qq && sudo apt-get remove -qq lxd lxd-client && sudo snap install lxd && sudo lxd init --auto && sudo snap install --classic snapcraft
 
+      # Using sudo here because our CI user isn't a member of the lxd group
       - name: Build snap
-        run: snapcraft --destructive-mode
+        run: sudo snapcraft --provider lxd
 
       - name: Review snap
         run: sudo snap install review-tools && /snap/bin/review-tools.snap-review *.snap

@@ -139,9 +139,11 @@ parts:
 
     build-packages:
       - libbrotli-dev
+      - libpcre2-dev
 
     stage-packages:
       - libbrotli1
+      - libpcre2-8-0
 
       # The built-in Apache modules to enable
     modules:

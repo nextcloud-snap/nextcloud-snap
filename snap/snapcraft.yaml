@@ -134,14 +134,16 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://dlcdn.apache.org/httpd/httpd-2.4.52.tar.bz2
-    source-checksum: sha256/0127f7dc497e9983e9c51474bed75e45607f2f870a7675a86dc90af6d572f5c9
+    source: https://dlcdn.apache.org/httpd/httpd-2.4.53.tar.bz2
+    source-checksum: sha256/d0bbd1121a57b5f2a6ff92d7b96f8050c5a45d3f14db118f64979d525858db63
 
     build-packages:
       - libbrotli-dev
+      - libpcre2-dev
 
     stage-packages:
       - libbrotli1
+      - libpcre2-8-0
 
       # The built-in Apache modules to enable
     modules:

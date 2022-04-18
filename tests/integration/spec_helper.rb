@@ -162,11 +162,10 @@ RSpec.configure do |config|
 		Capybara.current_session.driver.quit
 
 		# After each test, make sure maintenance mode is reset
-		`sudo nextcloud.occ -n maintenance:mode --off 2>&1`
-		expect($?.to_i).to eq 0
+		run 'sudo nextcloud.occ -n maintenance:mode --off 2>&1'
 
-		# Maintenance mode takes a second to apply (opcache)
-		sleep 2
+		# Maintenance mode takes two seconds to apply (opcache)
+		sleep 3
 
 		# Make sure any and all backups are removed
 		`sudo rm -rf /var/snap/nextcloud/common/backups`
@@ -176,8 +175,7 @@ RSpec.configure do |config|
 	end
 
 	def enable_https(port: nil)
-		`sudo nextcloud.enable-https self-signed`
-		expect($?.to_i).to eq 0
+		run 'sudo nextcloud.enable-https self-signed'
 		wait_for_nextcloud(https: true, port: port)
 	end
 
@@ -229,10 +227,8 @@ RSpec.configure do |config|
 			options_string += "#{key}=#{value} "
 		end
 
-		`sudo snap set nextcloud #{options_string}`
-		expect($?.to_i).to eq 0
-		`snap watch --last=configure-snap`
-		expect($?.to_i).to eq 0
+		run "sudo snap set nextcloud #{options_string}"
+		run 'snap watch --last=configure-snap'
 	end
 
 	def nextcloud_is_installed
@@ -242,8 +238,16 @@ RSpec.configure do |config|
 
 	def install_nextcloud
 		unless nextcloud_is_installed
-			`sudo nextcloud.manual-install admin admin`
+			run 'sudo nextcloud.manual-install admin admin'
+		end
+	end
+
+	def run(command, expect_success: true)
+		system(command)
+		if expect_success
 			expect($?.to_i).to eq 0
+		else
+			expect($?.to_i).not_to eq 0
 		end
 	end
 end

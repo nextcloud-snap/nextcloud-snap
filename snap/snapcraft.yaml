@@ -327,8 +327,8 @@ parts:
 
   boost:
     plugin: dump
-    source: https://sourceforge.net/projects/boost/files/boost/1.73.0/boost_1_73_0.tar.bz2
-    source-checksum: sha1/6d6ed02b29c860fd21b274fc4e1f820855e765e9
+    source: https://sourceforge.net/projects/boost/files/boost/1.77.0/boost_1_77_0.tar.bz2
+    source-checksum: sha1/0cb4f947d094fc311e13ffacaff00418130ef5ef
     stage:
       - boost/
     prime:
@@ -339,8 +339,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.28.tar.gz
-    source-checksum: md5/362b8141ecaf425b803fe55292e2df98
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.29.tar.gz
+    source-checksum: md5/42fbfe0569089c20f9aa457b3f367d50
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

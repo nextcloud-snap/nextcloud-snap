@@ -294,8 +294,8 @@ parts:
 
   redis:
     plugin: redis
-    source: https://download.redis.io/releases/redis-6.0.16.tar.gz
-    source-checksum: sha256/3639bbf29aca1a1670de1ab2ce224d6511c63969e7e590d3cdf8f7888184fa19
+    source: https://download.redis.io/releases/redis-6.2.7.tar.gz
+    source-checksum: sha256/b7a79cc3b46d3c6eb52fa37dde34a4a60824079ebdfb3abfbbfa035947c55319
 
   redis-customizations:
     plugin: dump

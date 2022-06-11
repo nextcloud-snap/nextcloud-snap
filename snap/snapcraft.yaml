@@ -134,8 +134,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://dlcdn.apache.org/httpd/httpd-2.4.53.tar.bz2
-    source-checksum: sha256/d0bbd1121a57b5f2a6ff92d7b96f8050c5a45d3f14db118f64979d525858db63
+    source: https://dlcdn.apache.org/httpd/httpd-2.4.54.tar.bz2
+    source-checksum: sha256/eb397feeefccaf254f8d45de3768d9d68e8e73851c49afd5b7176d1ecf80c340
 
     build-packages:
       - libbrotli-dev
@@ -188,8 +188,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-23.0.5.tar.bz2
-    source-checksum: sha256/3cf51a795f8439e5d34f0a521d939cefafbae38450cce64c6673016984195f29
+    source: https://download.nextcloud.com/server/releases/nextcloud-24.0.1.tar.bz2
+    source-checksum: sha256/d32a8f6c4722a45cb67de7018163cfafcfa22a871fbac0f623c3875fa4304e5a
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -202,8 +202,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.0.19.tar.bz2/from/this/mirror
-    source-checksum: sha256/eba0e67fdaf6904b2e4b84e064be0a0d61b2cb64a23f81a0ca9b1a51bc3a8330
+    source: https://php.net/get/php-8.0.20.tar.bz2/from/this/mirror
+    source-checksum: sha256/cb7666bf67ed9f6c987d4836caf03d4b364537e6a75e56cd5c986760ecc2fdd8
     source-type: tar
     install-via: prefix
     configflags:

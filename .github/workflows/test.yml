@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: sudo apt-get update -qq && sudo apt-get remove -qq lxd lxd-client && sudo snap install lxd && sudo lxd init --auto && sudo snap install --classic snapcraft
+        run: sudo apt-get update -qq && sudo apt-get remove -qq lxd lxd-client && sudo snap install lxd && sudo lxd init --auto && sudo snap install --classic --channel=6.x/stable snapcraft
 
       # Using sudo here because our CI user isn't a member of the lxd group
       - name: Build snap

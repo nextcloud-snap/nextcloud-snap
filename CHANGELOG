@@ -1,3 +1,8 @@
+v 23.0.7snap1
+  - php: update to 8.0.21
+  - nextcloud: update to 23.0.7
+  - apache: update to 2.4.54
+
 v 23.0.5snap1
   - redis: update to 6.2.7
   - phpredis: update to 5.3.7

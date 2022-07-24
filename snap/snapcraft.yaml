@@ -188,8 +188,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-24.0.1.tar.bz2
-    source-checksum: sha256/d32a8f6c4722a45cb67de7018163cfafcfa22a871fbac0f623c3875fa4304e5a
+    source: https://download.nextcloud.com/server/releases/nextcloud-24.0.3.tar.bz2
+    source-checksum: sha256/320c81f9b902922b4bcef3eacf858596a14347fd45bddd26dac198562d212439
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -202,8 +202,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.0.20.tar.bz2/from/this/mirror
-    source-checksum: sha256/cb7666bf67ed9f6c987d4836caf03d4b364537e6a75e56cd5c986760ecc2fdd8
+    source: https://php.net/get/php-8.0.21.tar.bz2/from/this/mirror
+    source-checksum: sha256/1cb7762d1ffecceaeebafb9f6e24132ca23fb1443cb5630d0fccf53f04cfa126
     source-type: tar
     install-via: prefix
     configflags:

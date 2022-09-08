@@ -202,8 +202,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.0.21.tar.bz2/from/this/mirror
-    source-checksum: sha256/1cb7762d1ffecceaeebafb9f6e24132ca23fb1443cb5630d0fccf53f04cfa126
+    source: https://php.net/get/php-8.0.23.tar.bz2/from/this/mirror
+    source-checksum: sha256/1412db46800a45ced377c2892ec6261b3c412f13dc133bfc998cfb2f147b40cf
     source-type: tar
     install-via: prefix
     configflags:

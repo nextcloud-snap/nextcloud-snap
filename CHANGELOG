@@ -1,3 +1,7 @@
+v 23.0.10snap1
+  - nextcloud: update to 23.0.10
+  - php: update to 8.0.24
+
 v 23.0.9snap1
   - nextcloud: update to 23.0.9
   - php: update to 8.0.23

@@ -195,6 +195,21 @@ There are a few CLI utilities included:
 - `$SNAP_COMMON` (`/var/snap/nextcloud/common/` by default)
     - Nextcloud data
 
+#### What about ZFS?
+- Zpools may be bind mounted to accomplish data access by the snap 
+    - For example, create a new directory (e.g. `mkdir -p /mnt/zpool_nc`)
+    - Depending on where your zpool exists (e.g. `/pool/tank01`), you can create a
+      bind mount to allow the snap to acces/manage your data
+        - For example: `mount --bind /mnt/zpool_nc /pool/tank01`
+    - NOTE: This requires that `removable-media` be connected:
+        - `sudo snap connect nextcloud:removable-media`
+    - You'll need to edit your `config.php` file to ensure that your data 
+      directory is present in the configuration:
+        - Edit `/var/snap/nextcloud/current/nextcloud/config/config.php` to note the
+          data location (e.g. `'datadirectory' => '/mnt/zpool_nc',`)
+        - Ensure that the `.ocdata` file exists within the directory
+          (e.g. `sudo touch /mnt/zpool_nc/.ocdata`)
+    - Restart the snap `sudo snap restart nextcloud`
 
 ## Hacking
 

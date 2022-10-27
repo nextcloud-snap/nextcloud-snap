@@ -4,19 +4,6 @@ feature "Change OPCache Memory Consumption Value" do
 		wait_for_nextcloud
 	end
 
-	scenario "unlimited" do
-		set_config "php.php.opcache_memory_consumption": -1
-		wait_for_nextcloud
-
-		assert_login
-
-		# Also assert that we can change it back to the default
-		set_config "php.opcache_memory_consumption": "128M"
-		wait_for_nextcloud
-
-		assert_logged_in
-	end
-
 	scenario "bytes" do
 		set_config "php.opcache_memory_consumption": 134217728
 		wait_for_nextcloud

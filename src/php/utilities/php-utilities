@@ -5,6 +5,7 @@
 
 DEFAULT_MEMORY_LIMIT="512M"
 DEFAULT_OPCACHE_CONSUMPTION="128"
+DEFAULT_OPCACHE_ISB="8"
 export PHP_FPM_PIDFILE="/tmp/pids/php-fpm.pid"
 export PHP_FPM_SOCKET="/tmp/sockets/php-fpm.sock"
 
@@ -117,4 +118,31 @@ php_previous_opcache_memory_consumption()
 php_set_previous_opcache_memory_consumption()
 {
     snapctl set private.opcache.memory_consumption="$1"
+}
+
+php_opcache_memory_consumption()
+{
+    opcache_mc="$(php_previous_opcache_memory_consumption)"
+    if [ -z "$opcache_mc" ]; then
+        opcache_mc="$DEFAULT_OPCACHE_CONSUMPTION"
+        php_set_opcache_memory_consumption "$opcache_mc"
+        php_set_previous_opcache_memory_consumption "$opcache_mc"
+    fi
+    
+    echo "$opcache_mc"
+}
+
+php_set_opcache_interned_strings_buffer()
+{
+    snapctl set opcache.interned_strings_buffer="$1"
+}
+
+php_previous_opcache_interned_strings_buffer()
+{
+    snapctl get private.opcache.interned_strings_buffer
+}
+
+php_set_previous_opcache_interned_strings_buffer()
+{
+    snapctl set private.opcache.interned_strings_buffer="$1"
 }

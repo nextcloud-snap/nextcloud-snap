@@ -1,9 +1,0 @@
-#!/bin/sh
-
-# shellcheck source=src/common/utilities/common-utilities
-. "$SNAP/utilities/common-utilities"
-
-export LOGROTATE_STATUS_FILE="$SNAP_DATA/logrotate/status"
-
-mkdir -p "$(dirname "$LOGROTATE_STATUS_FILE")"
-chmod 750 "$(dirname "$LOGROTATE_STATUS_FILE")"

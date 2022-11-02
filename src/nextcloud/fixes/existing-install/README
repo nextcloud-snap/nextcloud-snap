@@ -1,3 +1,0 @@
-This directory contains a set of executables to be run when an existing
-instance of Nextcloud is launched (this may or may not be an upgrade).
-None of these should require maintenance mode.

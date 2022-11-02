@@ -1,6 +1,0 @@
-#!/bin/sh -e
-
-# shellcheck source=src/mysql/utilities/mysql-utilities
-. "$SNAP/utilities/mysql-utilities"
-
-mysql --defaults-file="$MYSQL_ROOT_OPTION_FILE" "$@"

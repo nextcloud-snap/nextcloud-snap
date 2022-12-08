@@ -1,7 +1,7 @@
 acme==0.33.1
 asn1crypto==0.24.0
 certbot==0.33.1
-certifi==2019.3.9
+certifi==2022.12.7
 cffi==1.12.3
 chardet==3.0.4
 ConfigArgParse==0.14.0

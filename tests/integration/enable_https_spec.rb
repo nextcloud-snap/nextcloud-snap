@@ -7,8 +7,8 @@ feature "Enabling HTTPS" do
 		enable_https
 
 		visit "/"
-		fill_in "User", with: "admin"
-		fill_in "Password", with: "admin"
+		fill_in "user", with: "admin"
+		fill_in "password", with: "admin"
 		click_button "Log in"
 		expect(page).to have_content /(Recommended|All) files/
 	end

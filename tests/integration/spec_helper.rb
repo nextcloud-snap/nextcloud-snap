@@ -221,6 +221,20 @@ RSpec.configure do |config|
 		end
 	end
 
+	def wait_for_maintenance_mode_to_be_off
+		begin
+			Timeout.timeout(30) do
+				success = false
+				while not success
+					success = !nextcloud_is_in_maintenance_mode
+					sleep 1
+				end
+			end
+		rescue Timeout::Error
+				fail "Timed out waiting for maintenance mode to be off"
+		end
+	end
+
 	def set_config(options)
 		options_string = ""
 		options.each do |key, value|
@@ -233,6 +247,11 @@ RSpec.configure do |config|
 
 	def nextcloud_is_installed
 		`sudo snap run --shell nextcloud.occ -c '. "$SNAP/utilities/nextcloud-utilities" && nextcloud_is_installed'`
+		$?.to_i == 0
+	end
+
+	def nextcloud_is_in_maintenance_mode
+		`sudo snap run --shell nextcloud.occ -c '. "$SNAP/utilities/nextcloud-utilities" && nextcloud_is_in_maintenance_mode'`
 		$?.to_i == 0
 	end
 

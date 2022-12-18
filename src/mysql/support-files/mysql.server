@@ -113,7 +113,7 @@ other_args="$*"   # uncommon, but needed when called from an RPM upgrade action
            # of the "spec" file author to give correct arguments only.
 
 # Upstream mysql stuff, no need to fix this
-# shellcheck disable=SC2116,SC2039
+# shellcheck disable=SC2116,SC2039,SC3037
 case "$(echo "testing\c")","$(echo -n testing)" in
     *c*,-n*) echo_n=""   echo_c=""   ;;
     *c*,*)   echo_n=-n echo_c=""     ;;
@@ -162,6 +162,8 @@ wait_for_pid () {
       fi
     fi
 
+    # Upstream mysql stuff, no need to fix this
+    # shellcheck disable=SC2086
     echo $echo_n ".$echo_c"
     i=$((i + 1))
     sleep 1
@@ -197,6 +199,8 @@ case "$mode" in
     # Safeguard (relative paths, core dumps..)
     cd "$basedir" || exit
 
+    # Upstream mysql stuff, no need to fix this
+    # shellcheck disable=SC2086
     echo $echo_n "Starting MySQL"
     if test -x "$bindir/mysqld_safe"
     then
@@ -230,6 +234,8 @@ case "$mode" in
 
       if (kill -0 "$mysqld_pid" 2>/dev/null)
       then
+        # Upstream mysql stuff, no need to fix this
+        # shellcheck disable=SC2086
         echo $echo_n "Shutting down MySQL"
         kill "$mysqld_pid"
         # mysqld should remove the pid file when it exits, so wait for it.

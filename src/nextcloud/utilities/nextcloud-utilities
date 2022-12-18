@@ -30,6 +30,13 @@ wait_for_nextcloud_to_be_installed()
 	wait_for_command "Waiting for Nextcloud to be installed" nextcloud_is_installed
 }
 
+nextcloud_is_in_maintenance_mode()
+{
+	# Urgh, occ still prints text warnings even with JSON output. Thus fromjson?.
+	maintenance="$(occ -n status --output=json | jq -R 'fromjson? | .maintenance')"
+	[ "$maintenance" = "true" ]
+}
+
 # nextcloud_notify_admins <short message> <long message>
 nextcloud_notify_admins()
 {

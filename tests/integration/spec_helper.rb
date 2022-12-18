@@ -197,27 +197,43 @@ RSpec.configure do |config|
 			uri.port = port
 		end
 
-		success = false
+		wait_for("Timed out trying to access Nextcloud: #{uri.to_s}") do
+			begin
+				output = open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).readlines.join('')
+				next output.include? 'Nextcloud'
+			rescue Errno::ECONNREFUSED
+				# Do nothing: try again
+			rescue OpenURI::HTTPError => error
+				# Ignore 503s, wait for PHP to come up and try again
+				if error.io.status[0] != '503'
+					raise
+				end
+			end
+			false
+		end
+	end
 
+	def wait_for_maintenance_mode_to_be_off
+		wait_for('Timed out waiting for maintenance mode to be off') do
+			!nextcloud_is_in_maintenance_mode
+		end
+	end
+
+	def wait_for_nextcloud_fixer
+		wait_for('Timed out waiting for Nextcloud Fixer to finish') do
+			!nextcloud_fixer_is_running
+		end
+	end
+
+	def wait_for(failure_message)
 		begin
 			Timeout.timeout(30) do
-				while not success
-					begin
-						output = open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE})
-						success = output.readlines.join('').include? 'Nextcloud'
-					rescue Errno::ECONNREFUSED
-						# Do nothing: try again
-					rescue OpenURI::HTTPError => error
-						# Ignore 503s, wait for PHP to come up and try again
-						if error.io.status[0] != '503'
-							raise
-						end
-					end
+				while !yield
 					sleep 1
 				end
 			end
 		rescue Timeout::Error
-			fail "Timed out trying to access Nextcloud: #{uri.to_s}"
+			fail failure_message
 		end
 	end
 
@@ -233,6 +249,16 @@ RSpec.configure do |config|
 
 	def nextcloud_is_installed
 		`sudo snap run --shell nextcloud.occ -c '. "$SNAP/utilities/nextcloud-utilities" && nextcloud_is_installed'`
+		$?.to_i == 0
+	end
+
+	def nextcloud_is_in_maintenance_mode
+		`sudo snap run --shell nextcloud.occ -c '. "$SNAP/utilities/nextcloud-utilities" && nextcloud_is_in_maintenance_mode'`
+		$?.to_i == 0
+	end
+
+	def nextcloud_fixer_is_running
+		`snap services nextcloud.nextcloud-fixer | grep -qw active`
 		$?.to_i == 0
 	end
 

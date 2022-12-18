@@ -28,6 +28,8 @@ feature "Import and export data" do
 		`sudo mv "#{moved_backup}" "#{backup}"`
 		`sudo nextcloud.import "#{backup}"`
 		wait_for_nextcloud
+		wait_for_nextcloud_fixer
+		wait_for_maintenance_mode_to_be_off
 		assert_loginable
 	end
 
@@ -35,8 +37,8 @@ feature "Import and export data" do
 
 	def assert_loginable
 		visit "/"
-		fill_in "User", with: "admin"
-		fill_in "Password", with: "admin"
+		fill_in "user", with: "admin"
+		fill_in "password", with: "admin"
 		click_button "Log in"
 		expect(page).to have_content /(Recommended|All) files/
 	end

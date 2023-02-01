@@ -134,9 +134,9 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://dlcdn.apache.org/httpd/httpd-2.4.54.tar.bz2
-    source-checksum: sha256/eb397feeefccaf254f8d45de3768d9d68e8e73851c49afd5b7176d1ecf80c340
-
+    source: https://dlcdn.apache.org/httpd/httpd-2.4.55.tar.bz2
+    source-checksum: sha256/11d6ba19e36c0b93ca62e47e6ffc2d2f2884942694bce0f23f39c71bdc5f69ac
+    
     build-packages:
       - libbrotli-dev
 
@@ -188,8 +188,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-25.0.2.tar.bz2
-    source-checksum: sha256/d6ab40faa108937bda42395f570ff111f4c97343b55be1420024da3177e37d59
+    source: https://download.nextcloud.com/server/releases/nextcloud-25.0.3.tar.bz2
+    source-checksum: sha256/4b2b1423736ef92469096fe24f61c24cad87a34e07c1c7a81b385d3ea25c00ec
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -202,8 +202,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.0.25.tar.bz2/from/this/mirror
-    source-checksum: sha256/09d716bceb5b3db76d9023b10c1681ebbe040e51f4c18dfd35f9ff8b73bbcf8c
+    source: https://php.net/get/php-8.0.27.tar.bz2/from/this/mirror
+    source-checksum: sha256/5fd882b14377c158c1b55cc6ace91fb8c19b77c596d5831ad124fbbbc902dbc8
     source-type: tar
     install-via: prefix
     configflags:
@@ -339,8 +339,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.31.tar.gz
-    source-checksum: md5/0899fd341ce46f26446e428a7fbd2d46
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.32.tar.gz
+    source-checksum: md5/ac9445f619135336c8b4553d4e81b684
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

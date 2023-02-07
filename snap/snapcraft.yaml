@@ -327,8 +327,8 @@ parts:
 
   boost:
     plugin: dump
-    source: https://sourceforge.net/projects/boost/files/boost/1.77.0/boost_1_77_0.tar.bz2
-    source-checksum: sha1/0cb4f947d094fc311e13ffacaff00418130ef5ef
+    source: https://sourceforge.net/projects/boost/files/boost/1.81.0/boost_1_81_0.tar.bz2
+    source-checksum: sha1/898469f1ae407f5cbfca84f63ad602962eebf4cc
     stage:
       - boost/
     prime:

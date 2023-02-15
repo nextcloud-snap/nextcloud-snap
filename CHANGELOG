@@ -1,7 +1,3 @@
-v 25.0.3snap2
-  - php: bump interned strings buffer to a quarter of opcache buffer
-  - redis: update to 6.2.10
-
 v 25.0.3snap1
   - apache: update to 2.4.55
   - nextcloud: update to 25.0.3

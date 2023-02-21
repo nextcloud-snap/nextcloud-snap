@@ -24,14 +24,14 @@ jobs:
         working-directory: tests
         run: bundle exec ./run-tests.sh integration
 
-  test-daily-v21:
+  test-daily-v24:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
       - name: Install nextcloud
-        run: sudo snap install nextcloud --channel=21/edge
+        run: sudo snap install nextcloud --channel=24/edge
 
       - name: Setup ruby
         uses: ruby/setup-ruby@v1
@@ -43,14 +43,14 @@ jobs:
         working-directory: tests
         run: bundle exec ./run-tests.sh integration
 
-  test-daily-v22:
+  test-daily-v25:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
       - name: Install nextcloud
-        run: sudo snap install nextcloud --channel=22/edge
+        run: sudo snap install nextcloud --channel=25/edge
 
       - name: Setup ruby
         uses: ruby/setup-ruby@v1

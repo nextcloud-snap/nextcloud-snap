@@ -1,3 +1,9 @@
+v 24.0.10snap1
+  - apache: update to 2.4.56
+  - redis: update to 6.2.11
+  - nextcloud: update to 24.0.10
+  - php: update to 8.1.16
+
 v 24.0.9snap1
   - nexcloud: update to 24.0.9
   - apache: update to 2.4.55

@@ -1,3 +1,6 @@
+v 25.0.5snap1
+  - nextcloud: update to 25.0.5
+
 v 25.0.4snap1
   - apache: update to 2.4.56
   - redis: update to 6.2.11

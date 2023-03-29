@@ -180,7 +180,10 @@ There are a few CLI utilities included:
     - Import data exported from another Nextcloud snap instance (via
       `nextcloud.export`). By default this imports the database, config, and
       data. See `nextcloud.import -h` for more information. Note that it
-      requires `sudo`.
+      requires `sudo`. The path needs to be available from confinement, 
+      so put it in /var/snap/nextcloud/common or /var/snap/nextcloud/current/ somewhere. 
+      User root needs to be the owner.
+
 
 
 ## Where is my stuff?

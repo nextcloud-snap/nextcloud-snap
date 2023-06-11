@@ -1,3 +1,8 @@
+v 25.0.7snap1
+  - php: update to 8.1.20
+  - certbot: use most recent certs
+  - nextcloud: update to 25.0.7
+
 v 25.0.6snap1
   - nextcloud: update to 25.0.6
   - mysql: update to 8.0.33

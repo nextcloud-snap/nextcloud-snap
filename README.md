@@ -1,4 +1,4 @@
-# Nextcloud-snap, your Nextcloud in a Snap
+# Nextcloud in a snap
 Nextcloud server packaged as a Snap. It consists of:
 
 - Nextcloud 25

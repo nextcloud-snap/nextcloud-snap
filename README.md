@@ -1,5 +1,5 @@
-# Nextcloud-snap, your Nextcloud in a snap
-Nextcloud server packaged as a snap. It consists of:
+# Nextcloud-snap, your Nextcloud in a Snap
+Nextcloud server packaged as a Snap. It consists of:
 
 - Nextcloud 25
 - Apache 2.4
@@ -23,5 +23,5 @@ sudo snap install nextcloud
 **That's it, you're done!**
 
 * [**Configure**](https://github.com/nextcloud-snap/nextcloud-snap/wiki/configure-Nextcloud-snap) Nextcloud and regain control over your data.
-* **[Wiki](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Nextcloud-snap-wiki)** for more details.
+* [**Wiki**](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Nextcloud-snap-wiki) for more details.
 * [**Getting help**](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Getting-help)

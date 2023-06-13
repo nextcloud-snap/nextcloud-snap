@@ -13,8 +13,17 @@ Specifically, the snap consists of:
 * [**Hardware requirements**](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Hardware-requirements)
 * [**OS requirements**](https://github.com/nextcloud-snap/nextcloud-snap/wiki/OS-requirements)
 
-## Installation
-Find instructions on how to install Snap and Nextcloud-snap in the [Snapstore](https://snapcraft.io/nextcloud). However Snap will be pre-installed on the latest Ubuntu versions.
+## How to install
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/nextcloud)
+
+Type the following in your terminal:
+
+```
+$ sudo snap install nextcloud
+```
+
+By default you'll get the latest stable release, and it will automatically update to subsequent stable releases, but there are [other releases available as well](https://github.com/nextcloud/nextcloud-snap/wiki/Release-strategy).
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/nextcloud)
 

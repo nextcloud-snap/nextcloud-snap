@@ -24,4 +24,4 @@ sudo snap install nextcloud
 
 * [**Configure**](https://github.com/nextcloud-snap/nextcloud-snap/wiki/configure-Nextcloud-snap) Nextcloud and regain control over your data.
 * **[Wiki](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Nextcloud-snap-wiki)** for more details.
-* [**Getting help**]([https://github.com/nextcloud-snap/nextcloud-snap/issues](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Getting-help)
+* [**Getting help**](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Getting-help)

@@ -1,5 +1,7 @@
 # Nextcloud in a snap
-Nextcloud server packaged as a Snap. It consists of:
+The Nextcloud snap is designed to offer a fully production-ready instance of Nextcloud with minimal setup and maintenance (it updates automatically). If you aren't a web developer and don't need to tweak Nextcloud like one, the snap will probably work perfectly for you.
+
+Specifically, the snap consists of:
 
 - Nextcloud 25
 - Apache 2.4

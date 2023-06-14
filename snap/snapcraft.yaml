@@ -228,6 +228,7 @@ parts:
       - --disable-rpath
       - --enable-ftp
       - --enable-bcmath
+      - --enable-sysvsem
 
       # Enable ldap
       - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET

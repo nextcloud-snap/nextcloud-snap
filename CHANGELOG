@@ -1,3 +1,8 @@
+v 26.0.2snap1
+  - import: add documentation about confinement
+  - php: add config flag --enable-sysvsem
+  - nextcloud: update to 26.0.2
+
 v 25.0.7snap1
   - php: update to 8.1.20
   - certbot: use most recent certs

@@ -188,8 +188,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-25.0.7.tar.bz2
-    source-checksum: sha256/2e90147125d6d6b885a56dcf9c00bbef8b4a1353cd13aca95515d996766f345f
+    source: https://download.nextcloud.com/server/releases/nextcloud-26.0.2.tar.bz2
+    source-checksum: sha256/f3db0ec5e0aaff7c088eb34f752d77d79913bc6784e0fc47a84cdaa28e567a33
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -228,6 +228,7 @@ parts:
       - --disable-rpath
       - --enable-ftp
       - --enable-bcmath
+      - --enable-sysvsem
 
       # Enable ldap
       - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET

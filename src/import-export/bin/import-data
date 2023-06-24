@@ -31,6 +31,11 @@ print_usage()
 	echo "    -b: Import the database"
 	echo "    -c: Import the config"
 	echo "    -d: Import the data"
+	echo ""
+	echo "Notice:"
+	echo "    The path needs to be available from confinement,"
+	echo "    so put it in /var/snap/nextcloud/common or /var/snap/nextcloud/current/ somewhere."
+	echo "    User root needs to be the owner."
 }
 
 import_apps()

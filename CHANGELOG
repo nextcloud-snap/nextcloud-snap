@@ -1,3 +1,7 @@
+v 26.0.3snap1
+  - nextcloud: update to 26.0.3
+  - mdns-publisher: remove from the snap
+
 v 26.0.2snap1
   - import: add documentation about confinement
   - php: add config flag --enable-sysvsem

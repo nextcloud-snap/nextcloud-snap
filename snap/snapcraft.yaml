@@ -58,13 +58,6 @@ apps:
     restart-condition: always
     plugs: [network, network-bind]
 
-  # mDNS daemon
-  mdns-publisher:
-    command: bin/delay-on-failure mdns-publisher nextcloud
-    daemon: simple
-    restart-condition: always
-    plugs: [network, network-bind]
-
   # MySQL client
   mysql-client:
     command: bin/run-mysql
@@ -188,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-26.0.2.tar.bz2
-    source-checksum: sha256/f3db0ec5e0aaff7c088eb34f752d77d79913bc6784e0fc47a84cdaa28e567a33
+    source: https://download.nextcloud.com/server/releases/nextcloud-26.0.3.tar.bz2
+    source-checksum: sha256/a5a810cbcd7c3dcff25f22809321f2ed41ed7cc0601204489ac90e258060b5c9
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -412,11 +405,6 @@ parts:
     plugin: dump
     prime:
       - -*
-
-  mdns-publisher:
-    plugin: godeps
-    source: https://github.com/kyrofa/mdns-publisher.git
-    go-importpath: github.com/kyrofa/mdns-publisher
 
   delay-on-failure:
     plugin: dump

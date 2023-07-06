@@ -7,7 +7,6 @@ Nextcloud server packaged as a snap. It consists of:
 - PHP 8.0
 - MySQL 8
 - Redis 6
-- mDNS for network discovery
 
 
 ## How to install
@@ -19,12 +18,6 @@ stable one, but you may be interested in others.
 
 
 ## How to use
-
-After install, assuming you and the device on which it was installed are on the
-same network, you should be able to reach the Nextcloud installation by visiting
-`<hostname>.local` in your browser. If your hostname is `localhost` or
-`localhost.localdomain`, like on an Ubuntu Core device, `nextcloud.local` will
-be used instead.
 
 Upon visiting the Nextcloud installation for the first time, you'll be prompted
 for an admin username and password. After you provide that information you'll be

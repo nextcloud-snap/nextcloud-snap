@@ -1,3 +1,7 @@
+v 25.0.8snap1
+  - nextcloud: update to 25.0.8
+  - mdns-publisher: remove from the snap
+
 v 25.0.7snap1
   - php: update to 8.1.20
   - certbot: use most recent certs

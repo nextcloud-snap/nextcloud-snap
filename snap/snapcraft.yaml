@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-26.0.3.tar.bz2
-    source-checksum: sha256/a5a810cbcd7c3dcff25f22809321f2ed41ed7cc0601204489ac90e258060b5c9
+    source: https://download.nextcloud.com/server/releases/nextcloud-26.0.4.tar.bz2
+    source-checksum: sha256/801c9ae912cf6264be72c141e418d3d87d4e671c7a9dd643008f5d7d6991ea2e
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -288,8 +288,8 @@ parts:
 
   redis:
     plugin: redis
-    source: https://download.redis.io/releases/redis-6.2.12.tar.gz
-    source-checksum: sha256/75352eef41e97e84bfa94292cbac79e5add5345fc79787df5cbdff703353fb1b
+    source: https://download.redis.io/releases/redis-6.2.13.tar.gz
+    source-checksum: sha256/89ff27c80d420456a721ccfb3beb7cc628d883c53059803513749e13214a23d1
 
   redis-customizations:
     plugin: dump
@@ -333,8 +333,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.33.tar.gz
-    source-checksum: md5/20ffc71fb8acd705cdc4a8ae4cdedf23
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.34.tar.gz
+    source-checksum: md5/c8cfab52fbde1cca55accb3113c235eb
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

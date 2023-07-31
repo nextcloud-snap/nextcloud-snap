@@ -196,7 +196,7 @@ RSpec.configure do |config|
 
 		wait_for("Timed out trying to access Nextcloud: #{uri.to_s}") do
 			begin
-				output = open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).readlines.join('')
+				output = URI.open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).readlines.join('')
 				next output.include? 'Nextcloud'
 			rescue Errno::ECONNREFUSED
 				# Do nothing: try again

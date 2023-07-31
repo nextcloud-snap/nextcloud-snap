@@ -7,9 +7,6 @@ require 'capybara/dsl'
 require 'capybara/rspec'
 require 'selenium-webdriver'
 
-# CircleCI has a chrome driver already in the image
-require 'webdrivers' unless ENV.include? 'CIRCLECI'
-
 if ENV['FIREFOX']
 	Capybara.register_driver :firefox do |app|
 		options = Selenium::WebDriver::Firefox::Options.new(
@@ -199,7 +196,7 @@ RSpec.configure do |config|
 
 		wait_for("Timed out trying to access Nextcloud: #{uri.to_s}") do
 			begin
-				output = open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).readlines.join('')
+				output = URI.open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).readlines.join('')
 				next output.include? 'Nextcloud'
 			rescue Errno::ECONNREFUSED
 				# Do nothing: try again

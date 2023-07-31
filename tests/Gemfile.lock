@@ -17,6 +17,8 @@ GEM
     mini_mime (1.1.2)
     nokogiri (1.15.3-x64-mingw-ucrt)
       racc (~> 1.4)
+    nokogiri (1.15.3-x86_64-linux)
+      racc (~> 1.4)
     public_suffix (5.0.3)
     racc (1.7.1)
     rack (3.0.8)
@@ -53,6 +55,7 @@ GEM
 
 PLATFORMS
   x64-mingw-ucrt
+  x86_64-linux
 
 DEPENDENCIES
   capybara

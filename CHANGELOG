@@ -1,3 +1,9 @@
+v 25.0.9snap1
+  - nextcloud: update to 25.0.9
+  - mysql: update to 8.0.34
+  - redis: update to 6.2.13
+  - php: update to 8.1.22
+
 v 25.0.8snap1
   - nextcloud: update to 25.0.8
   - mdns-publisher: remove from the snap

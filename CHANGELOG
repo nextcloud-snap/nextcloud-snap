@@ -1,3 +1,7 @@
+v 27.0.2snap1
+  - nextcloud: update to 27.0.2
+  - php: update to 8.1.22
+
 v 26.0.4snap1
   - nextcloud: update to 26.0.4
   - mysql: update to 8.0.34

@@ -1,0 +1,10 @@
+--- a/CMakeLists.txt	2023-08-27 22:32:14.822992843 +0200
++++ b/CMakeLists.txt	2023-08-27 22:33:03.023469591 +0200
+@@ -55,7 +55,6 @@
+   mf_wcomp.cc
+   mulalloc.cc
+   my_access.cc
+-  my_aligned_malloc.cc
+   my_alloc.cc
+   my_bit.cc
+   my_bitmap.cc

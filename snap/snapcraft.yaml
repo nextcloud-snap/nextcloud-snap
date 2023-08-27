@@ -330,11 +330,18 @@ parts:
 
   mysql:
     plugin: cmake
-    after: [boost]
+    after: [boost, patches]
 
     # Get from https://dev.mysql.com/downloads/mysql/
     source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.34.tar.gz
     source-checksum: md5/c8cfab52fbde1cca55accb3113c235eb
+    override-pull: |
+      snapcraftctl pull
+      patch -p1 $SNAPCRAFT_PART_SRC/mysys/CMakeLists.txt < $SNAPCRAFT_STAGE/mysql-mysys_CMakeLists.txt.patch
+      patch -p1 $SNAPCRAFT_PART_SRC/sql/memory/aligned_atomic.h < $SNAPCRAFT_STAGE/mysql-sql_memory_aligned_atomic.h.patch
+      patch -p1 $SNAPCRAFT_PART_SRC/unittest/gunit/memory/aligned_atomic-t.cc < $SNAPCRAFT_STAGE/mysql-unittest_gunit_memory_aligned_atomic-t.cc.patch
+      rm $SNAPCRAFT_PART_SRC/include/my_aligned_malloc.h
+      rm $SNAPCRAFT_PART_SRC/mysys/my_aligned_malloc.cc
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

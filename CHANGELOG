@@ -1,3 +1,9 @@
+v 24.0.12snap1
+  - mysql: update to 8.0.33
+  - redis: update to 6.2.12
+  - nextcloud: update to 24.0.12
+  - apache: update to 2.4.57
+
 v 24.0.10snap1
   - apache: update to 2.4.56
   - redis: update to 6.2.11

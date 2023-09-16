@@ -1,0 +1,139 @@
+name: Release snap for pull request
+
+on:
+  workflow_run:
+    workflows: ["Run tests against changes"]
+    types:
+      - completed
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    environment: snapcraft
+    if: >
+      ${{ github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Determine pull request commit hash
+        uses: actions/github-script@v6
+        id: determine-sha
+        with:
+          result-encoding: string
+          script: |
+            const workflowRun = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{ github.event.workflow_run.id }},
+            });
+
+            return workflowRun.data.head_sha;
+
+      - name: Set initial commit status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: '${{ steps.determine-sha.outputs.result }}',
+              context: 'Snap Publisher',
+              state: 'pending',
+              description: 'Preparing environment...',
+            });
+
+      - name: Determine release channel
+        uses: actions/github-script@v6
+        id: determine-channel
+        with:
+          result-encoding: string
+          script: |
+            const workflowRun = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{ github.event.workflow_run.id }},
+            });
+
+            const pullRequestCount = workflowRun.data.pull_requests.length;
+            if (pullRequestCount != 1) {
+              throw new Error(`Expected one pull request, but got ${pullRequestCount}`);
+            }
+
+            const pullRequest = workflowRun.data.pull_requests[0];
+            return `latest/beta/pr-${pullRequest.number}`;
+
+      - name: Download snap artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{ github.event.workflow_run.id }},
+            });
+
+            const snapArtifacts = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "snap"
+            });
+            if (snapArtifacts.length != 1) {
+              throw new Error(`Expected one snap artifact, but got ${snapArtifacts.length}`);
+            }
+
+            var download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: snapArtifacts[0].id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/snap.zip', Buffer.from(download.data));
+
+      - name: Extract snap artifact
+        run: unzip snap.zip
+
+      - name: Install snapcraft
+        run: sudo apt-get update -qq && sudo snap install --classic snapcraft
+
+      - name: Set uploading commit status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: '${{ steps.determine-sha.outputs.result }}',
+              context: 'Snap Publisher',
+              state: 'pending',
+              description: 'Currently uploading/releasing snap...',
+            });
+
+      - name: Upload snap
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        run: snapcraft upload *.snap --release="${{ steps.determine-channel.outputs.result }}"
+
+      - name: Set final commit status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: '${{ steps.determine-sha.outputs.result }}',
+              context: 'Snap Publisher',
+              state: 'success',
+              description: "Snap built and released to '${{ steps.determine-channel.outputs.result }}'",
+            });
+
+      - name: Set error commit status
+        uses: actions/github-script@v6
+        if: failure()
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: '${{ steps.determine-sha.outputs.result }}',
+              context: 'Snap Publisher',
+              state: 'error',
+              description: 'Snap failed to upload/release',
+            });

@@ -1,0 +1,379 @@
+From 3ee9c37cf3a0a824c2301d355b477c600908338f Mon Sep 17 00:00:00 2001
+From: Kyle Fazzari <kyrofa@ubuntu.com>
+Date: Mon, 18 Sep 2023 17:53:05 -0700
+Subject: [PATCH] Revert "BUG#34849343 Aligned_atomic not working as intended -
+ aligned_alloc"
+
+This reverts commit be8348a7c3e8510b998a063065b626a459631b32.
+---
+ include/my_aligned_malloc.h               | 55 ----------------
+ mysys/CMakeLists.txt                      |  1 -
+ mysys/my_aligned_malloc.cc                | 79 -----------------------
+ sql/memory/aligned_atomic.h               | 71 ++++++--------------
+ unittest/gunit/memory/aligned_atomic-t.cc | 34 ----------
+ 5 files changed, 18 insertions(+), 222 deletions(-)
+ delete mode 100644 include/my_aligned_malloc.h
+ delete mode 100644 mysys/my_aligned_malloc.cc
+
+diff --git a/include/my_aligned_malloc.h b/include/my_aligned_malloc.h
+deleted file mode 100644
+index 1673b7444ae..00000000000
+--- a/include/my_aligned_malloc.h
++++ /dev/null
+@@ -1,55 +0,0 @@
+-/* Copyright (c) 2022, 2023, Oracle and/or its affiliates.
+-
+-  This program is free software; you can redistribute it and/or modify
+-  it under the terms of the GNU General Public License, version 2.0,
+-  as published by the Free Software Foundation.
+-
+-  This program is also distributed with certain software (including
+-  but not limited to OpenSSL) that is licensed under separate terms,
+-  as designated in a particular file or component or in included license
+-  documentation.  The authors of MySQL hereby grant you an additional
+-  permission to link the program and your derivative works with the
+-  separately licensed software that they have included with MySQL.
+-
+-  This program is distributed in the hope that it will be useful,
+-  but WITHOUT ANY WARRANTY; without even the implied warranty of
+-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-  GNU General Public License, version 2.0, for more details.
+-
+-  You should have received a copy of the GNU General Public License
+-  along with this program; if not, write to the Free Software
+-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
+-
+-#ifndef __MY_ALIGNED_MALLOC_H__
+-#define __MY_ALIGNED_MALLOC_H__
+-
+-#include <cstddef>
+-
+-/**
+- Function allocates size bytes and returns a pointer to the allocated memory.
+- Size and alignment parameters depend on platform on which the function is
+- executed. Please check posix_memalign, memalign and _aligned_malloc functions
+- for details. To conform with all platforms size should be multiple of aligment
+- and aligment should be power of two.
+-
+- We can use C++17 aligned new/aligned delete on non-windows platforms once the
+- minimum supported version of tcmalloc becomes >= 2.6.2. Right now TC malloc
+- crashes.
+-
+- @param[in] size Multiple of alignment.
+- @param[in] alignment Memory aligment, which must be power of two.
+-
+- @return Pointer to allocated memory.
+-
+- @see my_aligned_free
+-*/
+-void *my_aligned_malloc(size_t size, size_t alignment);
+-
+-/**
+- Free allocated memory using my_aligned_malloc function.
+-
+- @param[in] ptr Pointer to allocated memory using my_aligned_malloc function.
+-*/
+-void my_aligned_free(void *ptr);
+-
+-#endif /* __MY_ALIGNED_MALLOC_H__ */
+diff --git a/mysys/CMakeLists.txt b/mysys/CMakeLists.txt
+index 31030c67445..c9d1316cffa 100644
+--- a/mysys/CMakeLists.txt
++++ b/mysys/CMakeLists.txt
+@@ -55,7 +55,6 @@ SET(MYSYS_SOURCES
+   mf_wcomp.cc
+   mulalloc.cc
+   my_access.cc
+-  my_aligned_malloc.cc
+   my_alloc.cc
+   my_bit.cc
+   my_bitmap.cc
+diff --git a/mysys/my_aligned_malloc.cc b/mysys/my_aligned_malloc.cc
+deleted file mode 100644
+index 8de562463c0..00000000000
+--- a/mysys/my_aligned_malloc.cc
++++ /dev/null
+@@ -1,79 +0,0 @@
+-/* Copyright (c) 2022, 2023, Oracle and/or its affiliates.
+-
+-  This program is free software; you can redistribute it and/or modify
+-  it under the terms of the GNU General Public License, version 2.0,
+-  as published by the Free Software Foundation.
+-
+-  This program is also distributed with certain software (including
+-  but not limited to OpenSSL) that is licensed under separate terms,
+-  as designated in a particular file or component or in included license
+-  documentation.  The authors of MySQL hereby grant you an additional
+-  permission to link the program and your derivative works with the
+-  separately licensed software that they have included with MySQL.
+-
+-  This program is distributed in the hope that it will be useful,
+-  but WITHOUT ANY WARRANTY; without even the implied warranty of
+-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-  GNU General Public License, version 2.0, for more details.
+-
+-  You should have received a copy of the GNU General Public License
+-  along with this program; if not, write to the Free Software
+-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
+-#include "my_aligned_malloc.h"
+-
+-#include "config.h"
+-
+-#if defined(HAVE_POSIX_MEMALIGN)
+-#include <stdlib.h>
+-#elif defined(HAVE_MEMALIGN)
+-#include <memory.h>
+-#elif defined(HAVE_ALIGNED_MALLOC)
+-#include <malloc.h>
+-#include <cstdlib>
+-#else
+-#error "Missing implementation for posix_memalign, memalign or _aligned_malloc"
+-#endif
+-
+-void *my_aligned_malloc(size_t size, size_t alignment) {
+-  void *ptr = nullptr;
+-#if defined(HAVE_POSIX_MEMALIGN)
+-  /* Linux */
+-  if (posix_memalign(&ptr, alignment, size)) {
+-    return nullptr;
+-  }
+-#elif defined(HAVE_MEMALIGN)
+-  /* Solaris */
+-  ptr = memalign(alignment, size);
+-  if (ptr == NULL) {
+-    return NULL;
+-  }
+-#elif defined(HAVE_ALIGNED_MALLOC)
+-  /* Windows */
+-  ptr = _aligned_malloc(size, alignment);
+-  if (ptr == NULL) {
+-    return NULL;
+-  }
+-#else
+-#error "Missing implementation for posix_memalign, memalign or _aligned_malloc"
+-#endif
+-  return ptr;
+-}
+-
+-void my_aligned_free(void *ptr) {
+-  if (ptr == nullptr) {
+-    return;
+-  }
+-#if defined(HAVE_POSIX_MEMALIGN)
+-  /* Allocated with posix_memalign() */
+-  free(ptr);
+-#elif defined(HAVE_MEMALIGN)
+-  /* Allocated with memalign() */
+-  free(ptr);
+-#elif defined(HAVE_ALIGNED_MALLOC)
+-  /* Allocated with _aligned_malloc() */
+-  _aligned_free(ptr);
+-#else
+-  /* Allocated with malloc() */
+-  free(ptr);
+-#endif
+-}
+diff --git a/sql/memory/aligned_atomic.h b/sql/memory/aligned_atomic.h
+index 423366dab38..985efb758b1 100644
+--- a/sql/memory/aligned_atomic.h
++++ b/sql/memory/aligned_atomic.h
+@@ -38,9 +38,8 @@
+ #include <unistd.h>
+ #endif
+ 
+-#include "my_aligned_malloc.h"
+-
+ namespace memory {
++
+ /**
+  Calculates and returns the size of the CPU cache line.
+ 
+@@ -259,28 +258,14 @@ class Aligned_atomic {
+ 
+     @return The pointer to the underlying `std::atomic<T>` object.
+    */
+-  std::atomic<T> *operator->();
+-  /*
+-    Pointer operator that allows the access to the underlying `std::atomic<T>`
+-    object.
+-
+-    @return The const pointer to the underlying `std::atomic<T>` object.
+-   */
+-  const std::atomic<T> *operator->() const;
++  std::atomic<T> *operator->() const;
+   /*
+     Dereference operator that allows the access to the underlying
+     `std::atomic<T>` object.
+ 
+     @return The reference to the underlying `std::atomic<T>` object.
+    */
+-  std::atomic<T> &operator*();
+-  /*
+-    Dereference operator that allows the access to the underlying
+-    `std::atomic<T>` object.
+-
+-    @return The const reference to the underlying `std::atomic<T>` object.
+-   */
+-  const std::atomic<T> &operator*() const;
++  std::atomic<T> &operator*() const;
+   /*
+     The size of `std::atomic<T>`, as returned by `sizeof std::atomic<T>`.
+ 
+@@ -298,7 +283,7 @@ class Aligned_atomic {
+   /** The size of the byte buffer. */
+   size_t m_storage_size{0};
+   /** The byte buffer to use as underlying storage. */
+-  void *m_storage{nullptr};
++  alignas(std::max_align_t) unsigned char *m_storage{nullptr};
+   /** The pointer to the underlying `std::atomic<T>` object. */
+   std::atomic<T> *m_underlying{nullptr};
+ };
+@@ -306,10 +291,9 @@ class Aligned_atomic {
+ 
+ template <typename T>
+ memory::Aligned_atomic<T>::Aligned_atomic()
+-    : m_storage_size{memory::minimum_cacheline_for<std::atomic<T>>()} {
+-  m_storage = my_aligned_malloc(m_storage_size, cache_line_size());
+-  m_underlying = new (this->m_storage) std::atomic<T>();
+-}
++    : m_storage_size{memory::minimum_cacheline_for<std::atomic<T>>()},
++      m_storage{new unsigned char[m_storage_size]},
++      m_underlying{new (this->m_storage) std::atomic<T>()} {}
+ 
+ template <typename T>
+ memory::Aligned_atomic<T>::Aligned_atomic(T value)
+@@ -318,16 +302,12 @@ memory::Aligned_atomic<T>::Aligned_atomic(T value)
+ }
+ 
+ template <typename T>
+-memory::Aligned_atomic<T>::Aligned_atomic(Aligned_atomic<T> &&rhs) {
+-  if (this->m_underlying != nullptr) {
+-    this->m_underlying->~atomic();
+-  }
+-  my_aligned_free(this->m_storage);
++memory::Aligned_atomic<T>::Aligned_atomic(Aligned_atomic<T> &&rhs)
++    : m_storage_size{rhs.m_storage_size}, m_underlying{rhs.m_underlying} {
++  delete[] this->m_storage;
+   this->m_storage = rhs.m_storage;
+-  this->m_storage_size = rhs.m_storage_size;
+-  this->m_underlying = rhs.m_underlying;
+-  rhs.m_storage = nullptr;
+   rhs.m_storage_size = 0;
++  rhs.m_storage = nullptr;
+   rhs.m_underlying = nullptr;
+ }
+ 
+@@ -335,25 +315,22 @@ template <typename T>
+ memory::Aligned_atomic<T>::~Aligned_atomic() {
+   if (this->m_underlying != nullptr) {
+     this->m_underlying->~atomic();
++    this->m_underlying = nullptr;
+   }
+-  my_aligned_free(this->m_storage);
++  delete[] this->m_storage;
+   this->m_storage = nullptr;
+   this->m_storage_size = 0;
+-  this->m_underlying = nullptr;
+ }
+ 
+ template <typename T>
+ memory::Aligned_atomic<T> &memory::Aligned_atomic<T>::operator=(
+     Aligned_atomic<T> &&rhs) {
+-  if (this->m_underlying != nullptr) {
+-    this->m_underlying->~atomic();
+-  }
+-  my_aligned_free(this->m_storage);
+-  this->m_storage = rhs.m_storage;
++  delete[] this->m_storage;
+   this->m_storage_size = rhs.m_storage_size;
++  this->m_storage = rhs.m_storage;
+   this->m_underlying = rhs.m_underlying;
+-  rhs.m_storage = nullptr;
+   rhs.m_storage_size = 0;
++  rhs.m_storage = nullptr;
+   rhs.m_underlying = nullptr;
+   return (*this);
+ }
+@@ -393,25 +370,13 @@ bool memory::Aligned_atomic<T>::operator!=(T rhs) const {
+ }
+ 
+ template <typename T>
+-std::atomic<T> *memory::Aligned_atomic<T>::operator->() {
+-  assert(this->m_underlying != nullptr);
+-  return this->m_underlying;
+-}
+-
+-template <typename T>
+-const std::atomic<T> *memory::Aligned_atomic<T>::operator->() const {
++std::atomic<T> *memory::Aligned_atomic<T>::operator->() const {
+   assert(this->m_underlying != nullptr);
+   return this->m_underlying;
+ }
+ 
+ template <typename T>
+-std::atomic<T> &memory::Aligned_atomic<T>::operator*() {
+-  assert(this->m_underlying != nullptr);
+-  return *this->m_underlying;
+-}
+-
+-template <typename T>
+-const std::atomic<T> &memory::Aligned_atomic<T>::operator*() const {
++std::atomic<T> &memory::Aligned_atomic<T>::operator*() const {
+   assert(this->m_underlying != nullptr);
+   return *this->m_underlying;
+ }
+diff --git a/unittest/gunit/memory/aligned_atomic-t.cc b/unittest/gunit/memory/aligned_atomic-t.cc
+index 39ac0724025..63fdc3aa4bc 100644
+--- a/unittest/gunit/memory/aligned_atomic-t.cc
++++ b/unittest/gunit/memory/aligned_atomic-t.cc
+@@ -25,9 +25,7 @@
+ #include <chrono>
+ #include <vector>
+ 
+-#define private public
+ #include "sql/memory/aligned_atomic.h"
+-#undef private
+ 
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+@@ -59,37 +57,5 @@ TEST_F(Aligned_atomic_test, Class_template_test) {
+   EXPECT_EQ(atm3->load(), 2);
+ }
+ 
+-TEST_F(Aligned_atomic_test, minimum_cacheline_for) {
+-  EXPECT_EQ(memory::minimum_cacheline_for<char>(), memory::cache_line_size());
+-  EXPECT_EQ(memory::minimum_cacheline_for<int>(), memory::cache_line_size());
+-  EXPECT_EQ(memory::minimum_cacheline_for<std::atomic<bool>>(),
+-            memory::cache_line_size());
+-  EXPECT_EQ(memory::minimum_cacheline_for<std::atomic<int>>(),
+-            memory::cache_line_size());
+-}
+-
+-TEST_F(Aligned_atomic_test, aligned_allocation) {
+-  memory::Aligned_atomic<int> atm1{1};
+-  EXPECT_EQ((unsigned long long)atm1.m_underlying % memory::cache_line_size(),
+-            0);
+-
+-  memory::Aligned_atomic<bool> atm2{true};
+-  EXPECT_EQ((unsigned long long)atm2.m_underlying % memory::cache_line_size(),
+-            0);
+-
+-  memory::Aligned_atomic<short> atm3{0};
+-  EXPECT_EQ((unsigned long long)atm3.m_underlying % memory::cache_line_size(),
+-            0);
+-}
+-
+-TEST_F(Aligned_atomic_test, aligned_allocation_array) {
+-  static const int array_size = 10;
+-  memory::Aligned_atomic<int> atm[array_size];
+-
+-  for (int i = 0; i < array_size; i++)
+-    EXPECT_EQ(
+-        (unsigned long long)atm[i].m_underlying % memory::cache_line_size(), 0);
+-}
+-
+ }  // namespace unittests
+ }  // namespace memory
+-- 
+2.25.1
+

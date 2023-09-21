@@ -2,11 +2,13 @@ name: Deploy to Launchpad
 
 on:
   push:
-    # Only applies to our protected branches
+    # Only applies to our protected branches and tags
     branches:
       - master
       - develop
       - '[0-9]+'
+    tags:
+      - '*'
 
 jobs:
   deploy:

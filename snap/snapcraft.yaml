@@ -7,7 +7,7 @@ description: |
 
 grade: stable
 confinement: strict
-base: core18
+base: core22
 
 architectures:
   - build-on: amd64
@@ -224,7 +224,7 @@ parts:
       - --enable-sysvsem
 
       # Enable ldap
-      - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
+      - --with-libdir=lib/$CRAFT_ARCH_TRIPLET
       - --with-ldap
 
       # Enable gmp
@@ -336,8 +336,8 @@ parts:
     source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.34.tar.gz
     source-checksum: md5/c8cfab52fbde1cca55accb3113c235eb
     override-pull: |
-      snapcraftctl pull
-      patch -p1 -d $SNAPCRAFT_PART_SRC < $SNAPCRAFT_STAGE/mysql-revert-BUG-34849343-Aligned_atomic-not-working-as-in.patch
+      craftctl default
+      patch -p1 -d $CRAFT_PART_SRC < $CRAFT_STAGE/mysql-revert-BUG-34849343-Aligned_atomic-not-working-as-in.patch
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
@@ -354,12 +354,12 @@ parts:
       - -DWITH_INNODB_EXTRA_DEBUG=OFF
       - -DINSTALL_MYSQLTESTDIR=
       - -DDOWNLOAD_BOOST=OFF
-      - -DWITH_BOOST=$SNAPCRAFT_STAGE
+      - -DWITH_BOOST=$CRAFT_STAGE
 
     override-build: |
-      snapcraftctl build
+      craftctl default
       # MySQL v8 is massive. Strip it.
-      find "$SNAPCRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
+      find "$CRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
 
     build-packages:
       - libncurses5-dev
@@ -421,9 +421,9 @@ parts:
     build-packages: [libffi-dev]
     after: [patches]
     override-build: |
-      snapcraftctl build
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
+      craftctl default
+      patch -p1 -d $CRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $CRAFT_STAGE/certbot-remove-default-config-files.patch
+      patch -p1 -d $CRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $CRAFT_STAGE/certbot-remove-storage-chown.patch
 
   setup-https:
     plugin: dump

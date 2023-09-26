@@ -47,19 +47,21 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const workflowRun = await github.rest.actions.getWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: ${{ github.event.workflow_run.id }},
-            });
+            const pullRequests = await github.paginate(
+              `GET /repos/${process.env.GITHUB_REPOSITORY}/pulls`,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              }
+            );
 
-            const pullRequestCount = workflowRun.data.pull_requests.length;
+            const matchingPullRequests = pullRequests.filter(pr => pr.head.sha === '${{ steps.determine-sha.outputs.result }}');
+            const pullRequestCount = matchingPullRequests.length;
             if (pullRequestCount != 1) {
-              throw new Error(`Expected one pull request, but got ${pullRequestCount}`);
+              throw new Error(`Expected one pull request to contain commit, but got ${pullRequestCount}`);
             }
 
-            const pullRequest = workflowRun.data.pull_requests[0];
-            return `latest/beta/pr-${pullRequest.number}`;
+            return `latest/beta/pr-${matchingPullRequests[0].number}`;
 
       - name: Download snap artifact
         uses: actions/github-script@v6

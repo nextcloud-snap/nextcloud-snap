@@ -58,3 +58,9 @@ jobs:
       - name: Run integration tests
         working-directory: tests
         run: bundle exec ./run-tests.sh integration
+
+      - name: Upload snap artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: snap
+          path: '*.snap'

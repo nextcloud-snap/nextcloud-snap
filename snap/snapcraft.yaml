@@ -251,6 +251,7 @@ parts:
       - libgmp-dev
       - libzip-dev
       - libargon2-0-dev
+      - libpq-dev
 
       # This is no longer bundled with PHP as of v7.4
       - libonig-dev
@@ -278,6 +279,7 @@ parts:
       - libzip4
       - libargon2-0
       - libonig4
+      - libpq5
     prime:
      - -sbin/
      - -etc/

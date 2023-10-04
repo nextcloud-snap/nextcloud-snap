@@ -1,3 +1,14 @@
+v 27.1.1snap2
+  - nextcloud: enable theming by default
+
+v 27.1.1snap1
+  - mysql: revert BUG#34849343 Aligned_atomic not working as intended
+  - nextcloud: update to 27.1.1
+
+v 27.0.2snap1
+  - nextcloud: update to 27.0.2
+  - php: update to 8.1.22
+
 v 26.0.4snap1
   - nextcloud: update to 26.0.4
   - mysql: update to 8.0.34

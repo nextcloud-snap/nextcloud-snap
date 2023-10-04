@@ -1,11 +1,17 @@
-name: Daily builds
+name: Deploy to Launchpad
 
 on:
-  schedule:
-  - cron: "0 0 * * *"
+  push:
+    # Only applies to our protected branches and tags
+    branches:
+      - master
+      - develop
+      - '[0-9]+'
+    tags:
+      - '*'
 
 jobs:
-  generate:
+  deploy:
     runs-on: ubuntu-latest
     environment: launchpad
     steps:
@@ -29,5 +35,5 @@ jobs:
       - name: Setup launchpad keys
         run: echo "${{ vars.LAUNCHPAD_SSH_PUBLIC_KEYS }}" > ~/.ssh/known_hosts
 
-      - name: Spawn builds
-        run: ./.github/spawn-dailies.sh
+      - name: Start Launchpad build
+        run: git push deploy "$GITHUB_REF_NAME"

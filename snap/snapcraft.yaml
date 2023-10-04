@@ -234,7 +234,7 @@ parts:
       - --with-password-argon2
 
       # Enable pdo_pgsql
-      - --with-pgsql
+      - --with-pdo-pgsql
 
       # Disable sqlite (we use mysql)
       - --without-sqlite3

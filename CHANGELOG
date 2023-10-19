@@ -1,3 +1,6 @@
+v 27.1.2snap1
+  - nextcloud: update to 27.1.2
+
 v 27.1.1snap2
   - nextcloud: enable theming by default
 

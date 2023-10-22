@@ -127,7 +127,7 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://dlcdn.apache.org/httpd/httpd-2.4.58.tar.bz2
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.58.tar.bz2
     source-checksum: sha256/fa16d72a078210a54c47dd5bef2f8b9b8a01d94909a51453956b3ec6442ea4c5
     
     build-packages:

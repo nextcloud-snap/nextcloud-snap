@@ -332,8 +332,8 @@ parts:
     after: [boost, patches]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.34.tar.gz
-    source-checksum: md5/c8cfab52fbde1cca55accb3113c235eb
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.35.tar.gz
+    source-checksum: md5/9da2fff787551a12307002c1ead747bd
     override-pull: |
       snapcraftctl pull
       patch -p1 -d $SNAPCRAFT_PART_SRC < $SNAPCRAFT_STAGE/mysql-revert-BUG-34849343-Aligned_atomic-not-working-as-in.patch

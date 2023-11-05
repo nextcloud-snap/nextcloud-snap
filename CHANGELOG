@@ -1,3 +1,11 @@
+v 26.0.8snap1
+  - nextcloud: update to 26.0.8
+  - php: update to 8.1.25
+  - mysql: revert BUG#34849343 reversion
+  - mysql: update to 8.0.35
+  - redis: update to 6.2.14
+  - apache: update to 2.4.58
+
 v 26.0.7snap1
   - nextcloud: update to 26.0.7
   - enable theming by default

@@ -36,7 +36,7 @@ generate_self_signed_certificate()
 	chmod 750 "$(dirname "$SELF_SIGNED_CHAIN")"
 
 	openssl req -newkey rsa:4096 -nodes -keyout "$SELF_SIGNED_KEY" \
-	        -x509 -days 90 -out "$SELF_SIGNED_CERT" -subj "/O=Nextcloud/CN=Nextcloud"
+	        -x509 -days 90 -out "$SELF_SIGNED_CERT" -subj "/O=Nextcloud/CN=$(hostname -f)"
 
 	rm -f "$SELF_SIGNED_CHAIN"
 	ln -s "$SELF_SIGNED_CERT" "$SELF_SIGNED_CHAIN"

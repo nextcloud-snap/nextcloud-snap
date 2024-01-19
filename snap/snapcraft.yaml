@@ -213,6 +213,7 @@ parts:
       - --with-curl
       - --with-openssl
       - --with-bz2
+      - --with-sodium
       - --enable-exif
       - --enable-intl
       - --enable-pcntl
@@ -275,6 +276,7 @@ parts:
       - libzip4
       - libargon2-0
       - libonig4
+      - libsodium23
     prime:
      - -sbin/
      - -etc/

@@ -129,7 +129,7 @@ parts:
     plugin: apache
     source: https://archive.apache.org/dist/httpd/httpd-2.4.58.tar.bz2
     source-checksum: sha256/fa16d72a078210a54c47dd5bef2f8b9b8a01d94909a51453956b3ec6442ea4c5
-    
+
     build-packages:
       - libbrotli-dev
 
@@ -195,8 +195,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.1.25.tar.bz2/from/this/mirror
-    source-checksum: sha256/a86a88c1840c1bc832bcfd2fbec3b8a1942c8314da5dff53f09f9c98d0c12e8a
+    source: https://php.net/get/php-8.2.15.tar.bz2/from/this/mirror
+    source-checksum: sha256/50c3e220b7aa63a85716233c902eb44cc0a4667ed0b8335722ae2391b1355e7a
     source-type: tar
     install-via: prefix
     configflags:

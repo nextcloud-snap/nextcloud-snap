@@ -213,6 +213,7 @@ parts:
       - --with-curl
       - --with-openssl
       - --with-bz2
+      - --with-sodium
       - --enable-exif
       - --enable-intl
       - --enable-pcntl
@@ -248,6 +249,7 @@ parts:
       - libgmp-dev
       - libzip-dev
       - libargon2-0-dev
+      - libsodium-dev
 
       # This is no longer bundled with PHP as of v7.4
       - libonig-dev
@@ -275,6 +277,7 @@ parts:
       - libzip4
       - libargon2-0
       - libonig4
+      - libsodium23
     prime:
      - -sbin/
      - -etc/

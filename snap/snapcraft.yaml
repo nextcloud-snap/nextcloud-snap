@@ -249,6 +249,7 @@ parts:
       - libgmp-dev
       - libzip-dev
       - libargon2-0-dev
+      - libsodium-dev
 
       # This is no longer bundled with PHP as of v7.4
       - libonig-dev

@@ -1,3 +1,6 @@
+v 27.1.4snap1
+  - nextcloud: update to 27.1.4
+
 v 27.1.3snap1
   - php: update to 8.1.25
   - mysql: revert BUG#34849343 reversion

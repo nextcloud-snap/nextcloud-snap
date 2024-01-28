@@ -39,6 +39,13 @@ if debug_mode_enabled; then
 	params="$params -DDebug"
 fi
 
+if apache_notify_push_reverse_proxy_enabled; then
+	echo "notify_push reverse proxy is enabled"
+	params="$params -DEnableNotifyPushReverseProxy"
+else
+	echo "notify_push reverse proxy is disabled"
+fi
+
 
 HTTP_PORT="$(apache_http_port)"
 HTTPS_PORT="$(apache_https_port)"

@@ -19,6 +19,10 @@
 #   Whether or not HTTP compression should be enabled. Valid values are 'true'
 #   and 'false'.
 #
+# - http.notify-push-reverse-proxy (string)
+#   Whether or not the notify_push reverse proxy should be enabled. Valid
+#   values are 'true' and 'false'.
+#
 # - mode (string)
 #   Configure the operating mode of the snap. Valid values are 'debug' and
 #   'production'.
@@ -156,8 +160,27 @@ handle_http_compression()
 	snapctl restart nextcloud.apache
 }
 
+handle_notify_push_reverse_proxy()
+{
+	# If no changes were requested, then there's nothing to do here.
+	if ! apache_notify_push_reverse_proxy_enabled_has_changed; then
+		return 0
+	fi
+
+	# Validate input
+	value="$(apache_get_notify_push_reverse_proxy_enabled)"
+	if [ "$value" != "true" ] && [ "$value" != "false" ]; then
+		echo "http.notify-push-reverse-proxy must be either 'true' or 'false'"
+		return 1
+	fi
+
+	# Restart Apache to apply new config
+	snapctl restart nextcloud.apache
+}
+
 handle_apache_port_config
 handle_php_memory_limit
 handle_cronjob_interval
 handle_mode
 handle_http_compression
+handle_notify_push_reverse_proxy

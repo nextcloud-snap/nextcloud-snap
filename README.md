@@ -116,6 +116,7 @@ If you want to disable the cronjob completely, run:
 
 To reenable it again simply set the `nextcloud.cron-interval` snap variable to a value that isn't `-1`
 
+
 #### HTTP compression configuration
 
 By default, the snap does not enable HTTP compression. To enable it, run:
@@ -125,6 +126,22 @@ By default, the snap does not enable HTTP compression. To enable it, run:
 To disable it, run:
 
     $ sudo snap set nextcloud http.compression=false
+
+
+#### Reverse Proxy for Files High Performance Backeend
+
+This option simply enables the reverse proxy configuration mentioned in [Client Push Readme](https://github.com/nextcloud/notify_push#apache) that is required to setup the `notify_push` component. Read more [at our wiki](https://github.com/nextcloud-snap/nextcloud-snap/wiki/FAQ's#q-how-to-install-files-hpb-client-push)!
+
+By default, the snap does not enable the reverse proxy for notify_push. To enable it, run:
+
+    $ sudo snap set nextcloud http.notify-push-reverse-proxy=true
+
+To disable it, run:
+
+    $ sudo snap set nextcloud http.notify-push-reverse-proxy=false
+
+Note: You still need to setup `notify_push` yourself. This option only enables the reverse proxy, as the apache configuration is read-only.
+
 
 #### Debug mode
 

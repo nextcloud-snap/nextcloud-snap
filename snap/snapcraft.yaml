@@ -129,7 +129,7 @@ parts:
     plugin: apache
     source: https://archive.apache.org/dist/httpd/httpd-2.4.58.tar.bz2
     source-checksum: sha256/fa16d72a078210a54c47dd5bef2f8b9b8a01d94909a51453956b3ec6442ea4c5
-    
+
     build-packages:
       - libbrotli-dev
 
@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-27.1.4.tar.bz2
-    source-checksum: sha256/bec65f2166b82c9303baf476c1e424f71aa196dad010ffe4c0c39d03990d594c
+    source: https://download.nextcloud.com/server/releases/nextcloud-27.1.6.tar.bz2
+    source-checksum: sha256/ae7b72b7fc525ac49798c2de6a697a4cff25b34972d69d469959885d3351befa
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -195,8 +195,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.1.25.tar.bz2/from/this/mirror
-    source-checksum: sha256/a86a88c1840c1bc832bcfd2fbec3b8a1942c8314da5dff53f09f9c98d0c12e8a
+    source: https://php.net/get/php-8.2.15.tar.bz2/from/this/mirror
+    source-checksum: sha256/50c3e220b7aa63a85716233c902eb44cc0a4667ed0b8335722ae2391b1355e7a
     source-type: tar
     install-via: prefix
     configflags:
@@ -213,6 +213,7 @@ parts:
       - --with-curl
       - --with-openssl
       - --with-bz2
+      - --with-sodium
       - --enable-exif
       - --enable-intl
       - --enable-pcntl
@@ -248,6 +249,7 @@ parts:
       - libgmp-dev
       - libzip-dev
       - libargon2-0-dev
+      - libsodium-dev
 
       # This is no longer bundled with PHP as of v7.4
       - libonig-dev
@@ -275,6 +277,7 @@ parts:
       - libzip4
       - libargon2-0
       - libonig4
+      - libsodium23
     prime:
      - -sbin/
      - -etc/
@@ -333,8 +336,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.35.tar.gz
-    source-checksum: md5/9da2fff787551a12307002c1ead747bd
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.36.tar.gz
+    source-checksum: md5/6708e66d69bafc0dd7b481468e192203
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

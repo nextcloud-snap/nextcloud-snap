@@ -6,6 +6,7 @@
 DEFAULT_HTTP_PORT="80"
 DEFAULT_HTTPS_PORT="443"
 DEFAULT_HTTP_COMPRESSION="false"
+DEFAULT_HTTP_NOTIFY_PUSH_REVERSE_PROXY="false"
 
 : "${APACHE_PIDFILE:="/tmp/pids/httpd.pid"}"
 export APACHE_PIDFILE
@@ -152,4 +153,52 @@ _apache_get_previous_http_compression()
 _apache_set_previous_http_compression()
 {
 	snapctl set private.http.compression="$1"
+}
+
+apache_notify_push_reverse_proxy_enabled()
+{
+	[ "$(apache_get_notify_push_reverse_proxy_enabled)" = "true" ]
+}
+
+apache_enable_notify_push_reverse_proxy_enabled()
+{
+	_apache_set_notify_push_reverse_proxy_enabled "true"
+}
+
+apache_disable_notify_push_reverse_proxy_enabled()
+{
+	_apache_set_notify_push_reverse_proxy_enabled "false"
+}
+
+apache_notify_push_reverse_proxy_enabled_has_changed()
+{
+	[ "$(apache_get_notify_push_reverse_proxy_enabled)" != "$(_apache_get_previous_notify_push_reverse_proxy_enabled)" ]
+}
+
+apache_get_notify_push_reverse_proxy_enabled()
+{
+	notify_push_reverse_proxy="$(snapctl get http.notify-push-reverse-proxy)"
+
+	if [ -z "$notify_push_reverse_proxy" ]; then
+		notify_push_reverse_proxy="$DEFAULT_HTTP_NOTIFY_PUSH_REVERSE_PROXY"
+		_apache_set_notify_push_reverse_proxy_enabled "$notify_push_reverse_proxy"
+	fi
+
+	echo "$notify_push_reverse_proxy"
+}
+
+_apache_set_notify_push_reverse_proxy_enabled()
+{
+	snapctl set http.notify-push-reverse-proxy="$1"
+	_apache_set_previous_notify_push_reverse_proxy_enabled "$1"
+}
+
+_apache_get_previous_notify_push_reverse_proxy_enabled()
+{
+	snapctl get private.http.notify-push-reverse-proxy
+}
+
+_apache_set_previous_notify_push_reverse_proxy_enabled()
+{
+	snapctl set private.http.notify-push-reverse-proxy="$1"
 }

@@ -16,7 +16,6 @@ Nextcloud server packaged as a snap. It consists of:
 There are a [number of releases available][1]. By default you'll get the newest
 stable one, but you may be interested in others.
 
-
 ## How to use
 
 Upon visiting the Nextcloud installation for the first time, you'll be prompted

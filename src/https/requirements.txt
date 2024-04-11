@@ -8,7 +8,7 @@ ConfigArgParse==0.14.0
 configobj==5.0.6
 cryptography==2.6.1
 future==0.17.1
-idna==2.8
+idna==3.7
 josepy==1.1.0
 mock==2.0.0
 parsedatetime==2.4

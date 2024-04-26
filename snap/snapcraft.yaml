@@ -195,8 +195,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.2.15.tar.bz2/from/this/mirror
-    source-checksum: sha256/50c3e220b7aa63a85716233c902eb44cc0a4667ed0b8335722ae2391b1355e7a
+    source: https://php.net/get/php-8.2.18.tar.bz2/from/this/mirror
+    source-checksum: sha256/ca0b07c254200320f518ac5b3df540a9cf14d866f3c93edc3013b52e06fac796
     source-type: tar
     install-via: prefix
     configflags:

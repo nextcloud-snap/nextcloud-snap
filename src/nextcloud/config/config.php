@@ -55,4 +55,5 @@ $CONFIG = array(
 'log_type' => 'file',
 'logfile' => $snap_data_current.'/logs/nextcloud.log',
 'logfilemode' => 0640,
+'maintenance_window_start' => 1,
 );

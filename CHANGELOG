@@ -4,6 +4,7 @@ v 28.0.6snap1
   - redis: update to 7.0.15
   - apache: update to 2.4.59
   - mysql: use cmake snap to build
+  - mysql: update to 8.0.37
   - ci: enable dailies for nextcloud 29
   - ci: disable dailies for nextcloud 26
 

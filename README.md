@@ -4,7 +4,7 @@ Nextcloud server packaged as a snap. It consists of:
 
 - Nextcloud 27
 - Apache 2.4
-- PHP 8.1
+- PHP 8.2
 - MySQL 8
 - Redis 6
 
@@ -128,19 +128,10 @@ To disable it, run:
     $ sudo snap set nextcloud http.compression=false
 
 
-#### Reverse Proxy for Files High Performance Backeend
+#### Reverse Proxy for Files High Performance Backend
 
-This option simply enables the reverse proxy configuration mentioned in [Client Push Readme](https://github.com/nextcloud/notify_push#apache) that is required to setup the `notify_push` component. Read more [at our wiki](https://github.com/nextcloud-snap/nextcloud-snap/wiki/FAQ's#q-how-to-install-files-hpb-client-push)!
-
-By default, the snap does not enable the reverse proxy for notify_push. To enable it, run:
-
-    $ sudo snap set nextcloud http.notify-push-reverse-proxy=true
-
-To disable it, run:
-
-    $ sudo snap set nextcloud http.notify-push-reverse-proxy=false
-
-Note: You still need to setup `notify_push` yourself. This option only enables the reverse proxy, as the apache configuration is read-only.
+This option simply enables the reverse proxy configuration mentioned in the [Client Push README](https://github.com/nextcloud/notify_push#apache), that is the recommended way to setup the `notify_push` component.
+Read the complete instructions in [our wiki](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Configure-HPB-client-push-for-Nextcloud-snap).
 
 
 #### Debug mode

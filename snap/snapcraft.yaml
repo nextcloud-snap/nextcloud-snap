@@ -127,8 +127,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.58.tar.bz2
-    source-checksum: sha256/fa16d72a078210a54c47dd5bef2f8b9b8a01d94909a51453956b3ec6442ea4c5
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.59.tar.bz2
+    source-checksum: sha256/ec51501ec480284ff52f637258135d333230a7d229c3afa6f6c2f9040e321323
 
     build-packages:
       - libbrotli-dev
@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-27.1.6.tar.bz2
-    source-checksum: sha256/ae7b72b7fc525ac49798c2de6a697a4cff25b34972d69d469959885d3351befa
+    source: https://download.nextcloud.com/server/releases/nextcloud-28.0.6.tar.bz2
+    source-checksum: sha256/df0d3384b447cba1e128f22080f6780521f868169beabee8ea0d155bf9c66b8f
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -195,8 +195,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.2.15.tar.bz2/from/this/mirror
-    source-checksum: sha256/50c3e220b7aa63a85716233c902eb44cc0a4667ed0b8335722ae2391b1355e7a
+    source: https://php.net/get/php-8.2.18.tar.bz2/from/this/mirror
+    source-checksum: sha256/ca0b07c254200320f518ac5b3df540a9cf14d866f3c93edc3013b52e06fac796
     source-type: tar
     install-via: prefix
     configflags:
@@ -250,6 +250,8 @@ parts:
       - libzip-dev
       - libargon2-0-dev
       - libsodium-dev
+      - libaio-dev
+      - libaio1
 
       # This is no longer bundled with PHP as of v7.4
       - libonig-dev
@@ -278,6 +280,7 @@ parts:
       - libargon2-0
       - libonig4
       - libsodium23
+      - libaio1
     prime:
      - -sbin/
      - -etc/
@@ -286,13 +289,13 @@ parts:
       sbin/php-fpm: bin/php-fpm
     extensions:
       # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis/archive/5.3.7.tar.gz
-        source-checksum: sha256/6f5cda93aac8c1c4bafa45255460292571fb2f029b0ac4a5a4dc66987a9529e6
+      - source: https://github.com/phpredis/phpredis/archive/6.0.2.tar.gz
+        source-checksum: sha256/786944f1c7818cc7fd4289a0d0a42ea630a07ebfa6dfa9f70ba17323799fc430
 
   redis:
     plugin: redis
-    source: https://download.redis.io/releases/redis-6.2.14.tar.gz
-    source-checksum: sha256/34e74856cbd66fdb3a684fb349d93961d8c7aa668b06f81fd93ff267d09bc277
+    source: https://download.redis.io/releases/redis-7.0.15.tar.gz
+    source-checksum: sha256/98066f5363504b26c34dd20fbcc3c957990d764cdf42576c836fc021073f4341
 
   redis-customizations:
     plugin: dump
@@ -332,12 +335,13 @@ parts:
       - -*
 
   mysql:
+    build-snaps: [cmake]
     plugin: cmake
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.36.tar.gz
-    source-checksum: md5/6708e66d69bafc0dd7b481468e192203
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.37.tar.gz
+    source-checksum: md5/e0cb61cbf6e1144c452368c4535ae931
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

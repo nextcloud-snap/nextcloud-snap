@@ -1,3 +1,9 @@
+v 29.0.3snap1
+  - nextcloud: update to 29.0.3
+  - apache: update to 2.4.61
+  - mysql: update to 8.0.38
+  - apache: fix http compression of javascript files
+
 v 29.0.2snap1
   - nextcloud: update to 29.0.2
   - php: update to 8.2.20

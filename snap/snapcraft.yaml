@@ -127,8 +127,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.59.tar.bz2
-    source-checksum: sha256/ec51501ec480284ff52f637258135d333230a7d229c3afa6f6c2f9040e321323
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.62.tar.bz2
+    source-checksum: sha256/674188e7bf44ced82da8db522da946849e22080d73d16c93f7f4df89e25729ec
 
     build-packages:
       - libbrotli-dev

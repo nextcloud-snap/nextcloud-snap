@@ -1,3 +1,6 @@
+v 28.0.8snap2
+  - mysql: update to 8.0.39
+
 v 28.0.8snap1
   - nextcloud: update to 28.0.8
   - apache: update to 2.4.62

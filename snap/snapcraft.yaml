@@ -340,8 +340,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.38.tar.gz
-    source-checksum: md5/d1cfd3d1a6fcbf49d7f62a19eb864ec6
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.39.tar.gz
+    source-checksum: md5/07ee1d23908fc4ad7fc6a5cb8f2c99de
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

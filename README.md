@@ -8,14 +8,12 @@ Nextcloud server packaged as a snap. It consists of:
 - MySQL 8
 - Redis 7
 
-
 ## How to install
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/nextcloud)
 
 There are a [number of releases available][1]. By default you'll get the newest
 stable one, but you may be interested in others.
-
 
 ## How to use
 
@@ -225,3 +223,5 @@ And finally, run the tests:
     $ rake test
 
 [1]: https://github.com/nextcloud/nextcloud-snap/wiki/Release-strategy
+
+## See our [wiki](https://github.com/nextcloud-snap/nextcloud-snap/wiki) for more information

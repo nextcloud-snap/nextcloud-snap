@@ -1,3 +1,7 @@
+v 29.0.7snap1
+  - nextcloud: update to 29.0.7
+  - php: enable sqlite
+
 v 29.0.6snap1
   - nextcloud: update to 29.0.6
   - php: update to 8.2.22

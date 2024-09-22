@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-29.0.5.tar.bz2
-    source-checksum: sha256/c7fe9c61e5ec30a5e599e8f152a1825df684d30e899db0caa8868c8d67b53a2c
+    source: https://download.nextcloud.com/server/releases/nextcloud-29.0.7.tar.bz2
+    source-checksum: sha256/f532ffc31be5a8374b5e072b86fff8765ec19fda0c8509cee39873081db2c544
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -195,8 +195,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.2.20.tar.bz2/from/this/mirror
-    source-checksum: sha256/5dec6fa61c7b9c47aa1d76666be651f2642ed2bcf6cd8638c57e3571ce2aac61
+    source: https://php.net/get/php-8.2.22.tar.bz2/from/this/mirror
+    source-checksum: sha256/5aae5964c60533185f9be928cf7d79a13393cc5560cedf1f4b977944cc76a585
     source-type: tar
     install-via: prefix
     configflags:
@@ -234,9 +234,6 @@ parts:
       # Enable argon2
       - --with-password-argon2
 
-      # Disable sqlite (we use mysql)
-      - --without-sqlite3
-      - --without-pdo-sqlite
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
@@ -252,6 +249,7 @@ parts:
       - libsodium-dev
       - libaio-dev
       - libaio1
+      - libsqlite3-dev
 
       # This is no longer bundled with PHP as of v7.4
       - libonig-dev
@@ -281,6 +279,7 @@ parts:
       - libonig4
       - libsodium23
       - libaio1
+      - libsqlite3-0
     prime:
      - -sbin/
      - -etc/

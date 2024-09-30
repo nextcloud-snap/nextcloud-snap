@@ -1,9 +1,9 @@
 #!/bin/bash
 
 latest_master_url="https://download.nextcloud.com/server/daily/latest-master.tar.bz2"
-latest_stable27_url="https://download.nextcloud.com/server/daily/latest-stable27.tar.bz2"
 latest_stable28_url="https://download.nextcloud.com/server/daily/latest-stable28.tar.bz2"
 latest_stable29_url="https://download.nextcloud.com/server/daily/latest-stable29.tar.bz2"
+latest_stable30_url="https://download.nextcloud.com/server/daily/latest-stable30.tar.bz2"
 
 rewrite_snapcraft_yaml()
 {
@@ -37,11 +37,6 @@ request_build \
 	"latest-master" "$latest_master_url" "master-$today" \
 	"From CI: Use Nextcloud latest master"
 
-echo "Requesting build of latest 27..."
-request_build \
-	"latest-27" "$latest_stable27_url" "27-$today" \
-	"From CI: Use Nextcloud latest 27"
-
 echo "Requesting build of latest 28..."
 request_build \
 	"latest-28" "$latest_stable28_url" "28-$today" \
@@ -51,3 +46,8 @@ echo "Requesting build of latest 29..."
 request_build \
 	"latest-29" "$latest_stable29_url" "29-$today" \
 	"From CI: Use Nextcloud latest 29"
+
+echo "Requesting build of latest 30..."
+request_build \
+	"latest-30" "$latest_stable30_url" "30-$today" \
+	"From CI: Use Nextcloud latest 30"

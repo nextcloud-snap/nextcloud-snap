@@ -288,13 +288,13 @@ parts:
       sbin/php-fpm: bin/php-fpm
     extensions:
       # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis/archive/6.0.2.tar.gz
-        source-checksum: sha256/786944f1c7818cc7fd4289a0d0a42ea630a07ebfa6dfa9f70ba17323799fc430
+      - source: https://github.com/phpredis/phpredis/archive/6.1.0.tar.gz
+        source-checksum: sha256/57135db32a0ccb1659f56c75feb26c10ea94fb3d2471edd047d94a9800f959b0
 
   redis:
     plugin: redis
-    source: https://download.redis.io/releases/redis-7.0.15.tar.gz
-    source-checksum: sha256/98066f5363504b26c34dd20fbcc3c957990d764cdf42576c836fc021073f4341
+    source: https://download.redis.io/releases/redis-7.2.6.tar.gz
+    source-checksum: sha256/fb10d67a2fe2b4556f6cb840064dd6e6e3175ce8ca035f0726990ec2da9f3d0e
 
   redis-customizations:
     plugin: dump

@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-29.0.7.tar.bz2
-    source-checksum: sha256/f532ffc31be5a8374b5e072b86fff8765ec19fda0c8509cee39873081db2c544
+    source: https://download.nextcloud.com/server/releases/nextcloud-29.0.8.tar.bz2
+    source-checksum: sha256/0ab54b517f76cd26f2bd38b6fe184b9fbaed32f734246c58c1acf83473c0a4b9
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -195,8 +195,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.2.22.tar.bz2/from/this/mirror
-    source-checksum: sha256/5aae5964c60533185f9be928cf7d79a13393cc5560cedf1f4b977944cc76a585
+    source: https://php.net/get/php-8.2.24.tar.bz2/from/this/mirror
+    source-checksum: sha256/4cc76ec644eee97d17c92bfe8d0e84714fedf299a538b7dfadc0639dd0dc432f
     source-type: tar
     install-via: prefix
     configflags:
@@ -288,13 +288,13 @@ parts:
       sbin/php-fpm: bin/php-fpm
     extensions:
       # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis/archive/6.0.2.tar.gz
-        source-checksum: sha256/786944f1c7818cc7fd4289a0d0a42ea630a07ebfa6dfa9f70ba17323799fc430
+      - source: https://github.com/phpredis/phpredis/archive/6.1.0.tar.gz
+        source-checksum: sha256/57135db32a0ccb1659f56c75feb26c10ea94fb3d2471edd047d94a9800f959b0
 
   redis:
     plugin: redis
-    source: https://download.redis.io/releases/redis-7.0.15.tar.gz
-    source-checksum: sha256/98066f5363504b26c34dd20fbcc3c957990d764cdf42576c836fc021073f4341
+    source: https://download.redis.io/releases/redis-7.2.6.tar.gz
+    source-checksum: sha256/fb10d67a2fe2b4556f6cb840064dd6e6e3175ce8ca035f0726990ec2da9f3d0e
 
   redis-customizations:
     plugin: dump
@@ -339,8 +339,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.39.tar.gz
-    source-checksum: md5/07ee1d23908fc4ad7fc6a5cb8f2c99de
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.40.tar.gz
+    source-checksum: md5/8a3ce5a136cebbe7fe5d8e122afffd30
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

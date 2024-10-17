@@ -1,3 +1,10 @@
+v 28.0.11snap1
+  - nextcloud: update to 28.0.11
+  - php: update to 8.2.24
+  - mysql: update to 8.0.40
+  - redis: update to 7.2.6
+  - fixer: include expensive steps when regenerating assets
+
 v 28.0.10snap1
   - nextcloud: update to 28.0.10
   - php: enable sqlite

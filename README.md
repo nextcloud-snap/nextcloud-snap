@@ -6,8 +6,7 @@ Nextcloud server packaged as a snap. It consists of:
 - Apache 2.4
 - PHP 8.2
 - MySQL 8
-- Redis 7
-
+- Redis 7.2
 
 ## How to install
 
@@ -15,7 +14,6 @@ Nextcloud server packaged as a snap. It consists of:
 
 There are a [number of releases available][1]. By default you'll get the newest
 stable one, but you may be interested in others.
-
 
 ## How to use
 
@@ -225,3 +223,5 @@ And finally, run the tests:
     $ rake test
 
 [1]: https://github.com/nextcloud/nextcloud-snap/wiki/Release-strategy
+
+## See our [wiki](https://github.com/nextcloud-snap/nextcloud-snap/wiki) for more information

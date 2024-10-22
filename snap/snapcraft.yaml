@@ -187,6 +187,7 @@ parts:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
       '.user.ini': htdocs/.user.ini
+      '.reuse': htdocs/.reuse
 
     # This snap automatically updates. No need to include the updater to nag
     # users. This does not result in an integrity check failure.

@@ -10,7 +10,7 @@ jobs:
     environment: launchpad
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Fetch all history so we can push
           fetch-depth: 0

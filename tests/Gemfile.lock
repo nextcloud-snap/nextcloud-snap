@@ -28,7 +28,7 @@ GEM
       rack (>= 1.0, < 3)
     rake (13.0.6)
     regexp_parser (2.1.1)
-    rexml (3.2.6)
+    rexml (3.3.9)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)

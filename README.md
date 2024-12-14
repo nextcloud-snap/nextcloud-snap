@@ -102,7 +102,7 @@ To set it to be unlimited (not recommended), use -1:
 
 #### Cronjob interval configuration
 
-By default the cronjob interval is 15 minutes.
+By default the cronjob interval is 5 minutes.
 
 To adjust it (say, 10 minutes) simply run:
 

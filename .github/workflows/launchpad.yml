@@ -20,6 +20,7 @@ jobs:
         with:
           # Fetch all history so we can push
           fetch-depth: 0
+          fetch-tags: true
 
       - name: Setup git
         run: |
@@ -35,5 +36,5 @@ jobs:
       - name: Setup launchpad keys
         run: echo "${{ vars.LAUNCHPAD_SSH_PUBLIC_KEYS }}" > ~/.ssh/known_hosts
 
-      - name: Start Launchpad build
+      - name: Push code to Launchpad
         run: git push deploy "$GITHUB_REF_NAME"

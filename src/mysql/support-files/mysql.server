@@ -250,7 +250,7 @@ case "$mode" in
       then
         rm -f "$lock_file_path"
       fi
-      exit $return_value
+      exit "$return_value"
     else
       log_failure_msg "MySQL server PID file could not be found!"
     fi

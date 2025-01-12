@@ -21,7 +21,7 @@ Upon visiting the Nextcloud installation for the first time, you'll be prompted
 for an admin username and password. After you provide that information you'll be
 logged in and able to create users, install apps, and upload files.
 
-Note that this snap includes a service that runs cron.php every 15 minutes,
+Note that this snap includes a service that runs cron.php every 5 minutes,
 which will automatically change the cron admin setting to Cron for you.
 
 

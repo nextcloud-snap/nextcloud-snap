@@ -20,7 +20,9 @@ jobs:
         with:
           # Fetch all history so we can push
           fetch-depth: 0
-          fetch-tags: true
+
+      - name: Fetch tags with annotations
+        run: git fetch --tags --force origin # WA: https://github.com/actions/checkout/issues/882
 
       - name: Setup git
         run: |

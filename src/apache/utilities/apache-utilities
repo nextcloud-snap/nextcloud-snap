@@ -11,8 +11,8 @@ DEFAULT_HTTP_NOTIFY_PUSH_REVERSE_PROXY="false"
 : "${APACHE_PIDFILE:="/tmp/pids/httpd.pid"}"
 export APACHE_PIDFILE
 
-mkdir -p "$(dirname $APACHE_PIDFILE)"
-chmod 750 "$(dirname $APACHE_PIDFILE)"
+mkdir -p "$(dirname "$APACHE_PIDFILE")"
+chmod 750 "$(dirname "$APACHE_PIDFILE")"
 
 restart_apache_if_running()
 {

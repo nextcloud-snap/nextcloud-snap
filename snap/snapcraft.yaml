@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-30.0.4.tar.bz2
-    source-checksum: sha256/eb6aaba9acef442f2b3e4a996b7ee8a5ed24442f9bba681237fb28ed970e1fa5
+    source: https://download.nextcloud.com/server/releases/nextcloud-30.0.5.tar.bz2
+    source-checksum: sha256/248c6e6e612ceeeb170c4d25b8579b0af0e6613abdfa07f2fe6993426b781bea
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -196,8 +196,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.2.26.tar.bz2/from/this/mirror
-    source-checksum: sha256/be57c347d451c905bcb4336832a864d9928dd0e20989b872705fea0ba6476c6b
+    source: https://php.net/get/php-8.3.14.tar.bz2/from/this/mirror
+    source-checksum: sha256/f56fa669ce4c01452a2921f40034d779d8c2b97d0749493ad4781813b9221cf8
     source-type: tar
     install-via: prefix
     configflags:
@@ -294,8 +294,8 @@ parts:
 
   redis:
     plugin: redis
-    source: https://download.redis.io/releases/redis-7.2.6.tar.gz
-    source-checksum: sha256/fb10d67a2fe2b4556f6cb840064dd6e6e3175ce8ca035f0726990ec2da9f3d0e
+    source: https://download.redis.io/releases/redis-7.2.7.tar.gz
+    source-checksum: sha256/72c081e3b8cfae7144273d26d76736f08319000af46c01515cad5d29765cead5
 
   redis-customizations:
     plugin: dump

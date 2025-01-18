@@ -1,3 +1,9 @@
+v 30.0.5snap1
+  - nextcloud: update to 30.0.5
+  - redis: update to 7.2.7
+  - php: update to 8.3.14
+  - ci: disable dailies for nextcloud 28
+
 v 30.0.4snap1
   - nextcloud: update to 30.0.4
 

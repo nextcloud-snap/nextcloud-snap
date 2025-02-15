@@ -127,8 +127,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.62.tar.bz2
-    source-checksum: sha256/674188e7bf44ced82da8db522da946849e22080d73d16c93f7f4df89e25729ec
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.63.tar.bz2
+    source-checksum: sha256/88fc236ab99b2864b248de7d49a008ec2afd7551e64dce8b95f58f32f94c46ab
 
     build-packages:
       - libbrotli-dev
@@ -195,8 +195,8 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.3.14.tar.bz2/from/this/mirror
-    source-checksum: sha256/f56fa669ce4c01452a2921f40034d779d8c2b97d0749493ad4781813b9221cf8
+    source: https://php.net/get/php-8.3.17.tar.bz2/from/this/mirror
+    source-checksum: sha256/4e034dca7ab16fc6062c8c53067528f4ecaa246bf22310e6841f7008094264ac
     source-type: tar
     install-via: prefix
     configflags:

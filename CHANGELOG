@@ -1,3 +1,9 @@
+v 30.0.6snap1
+  - nextcloud: update to 30.0.6
+  - php: update to 8.3.17
+  - mysql: update to 8.0.41
+  - apache: update to 2.4.63 
+
 v 30.0.5snap1
   - nextcloud: update to 30.0.5
   - redis: update to 7.2.7

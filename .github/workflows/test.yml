@@ -30,14 +30,18 @@ jobs:
         run: ./tests/run-tests.sh unit
 
   integration:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: sudo apt-get update -qq && sudo apt-get remove -qq lxd lxd-client && sudo snap install lxd && sudo lxd init --auto && sudo snap install --classic --channel=7.x/stable snapcraft
+        run: sudo apt-get update -qq && sudo snap refresh lxd && sudo lxd init --auto && sudo snap install --classic --channel=7.x/stable snapcraft
+
+      # See https://andreas.scherbaum.la/post/2023-01-18_fix-lxc-network-issues-in-ubuntu-22.04/  
+      - name: Disable Docker firewall
+        run: sudo iptables -I DOCKER-USER -i lxdbr0 -o eth0 -j ACCEPT && sudo iptables -I DOCKER-USER -o lxdbr0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
       # Using sudo here because our CI user isn't a member of the lxd group
       - name: Build snap

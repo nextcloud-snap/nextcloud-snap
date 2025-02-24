@@ -2,19 +2,19 @@ name: nextcloud
 version: git
 summary: Nextcloud Server - A safe home for all your data
 description: |
- Access, share and protect your files, calendars, contacts, communication and
- more at home and in your enterprise.
+  Access, share and protect your files, calendars, contacts, communication and
+  more at home and in your enterprise.
 
 grade: stable
 confinement: strict
-base: core18
+base: core22
 
 architectures:
   - build-on: amd64
-  - build-on: i386
-  - build-on: arm64
-  - build-on: armhf
-  - build-on: ppc64el
+  # - build-on: i386
+  # - build-on: arm64
+  # - build-on: armhf
+  # - build-on: ppc64el
 
 apps:
   # Apache daemon
@@ -126,54 +126,62 @@ hooks:
 
 parts:
   apache:
-    plugin: apache
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.63.tar.bz2
-    source-checksum: sha256/88fc236ab99b2864b248de7d49a008ec2afd7551e64dce8b95f58f32f94c46ab
+    plugin: autotools
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.58.tar.bz2
+    source-checksum: sha256/fa16d72a078210a54c47dd5bef2f8b9b8a01d94909a51453956b3ec6442ea4c5
 
     build-packages:
+      - pkg-config
+      - libapr1-dev
+      - libaprutil1-dev
+      - libpcre2-dev
+      - libssl-dev
       - libbrotli-dev
 
     stage-packages:
+      - libapr1
+      - libaprutil1
       - libbrotli1
+      - libpcre2-16-0
 
-      # The built-in Apache modules to enable
-    modules:
-      - headers
-      - proxy
-      - proxy_fcgi
-      - setenvif
-      - env
-      - rewrite
-      - mime
-      - dir
-      - authz_core
-      - unixd
-      - alias
-      - ssl
-      - socache_shmcb
-      - slotmem_shm
-      - log_config
-      - logio
-      - brotli
-      - filter
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --enable-modules=none
+      - --enable-mods-static="headers proxy proxy_fcgi setenvif env rewrite mime dir authz_core unixd alias ssl socache_shmcb slotmem_shm log_config logio brotli filter"
+      - --enable-proxy
+      - --enable-proxy-connect
 
-    filesets:
-      exclude:
-        - -man
-        - -manual
-        - -htdocs
-        - -include
-        - -build
-        - -conf/httpd.conf
-        - -conf/magic
-        - -conf/original
-        - -conf/extra
-        - -bin/apachectl
-        - -bin/envvars*
-    stage:
-      - $exclude
+    # modules:
+    #   - headers
+    #   - proxy
+    #   - proxy_fcgi
+    #   - setenvif
+    #   - env
+    #   - rewrite
+    #   - mime
+    #   - dir
+    #   - authz_core
+    #   - unixd
+    #   - alias
+    #   - ssl
+    #   - socache_shmcb
+    #   - slotmem_shm
+    #   - log_config
+    #   - logio
+    #   - brotli
+    #   - filter
     prime:
-      - $exclude
+      - -man
+      - -manual
+      - -htdocs
+      - -include
+      - -build
+      - -conf/httpd.conf
+      - -conf/magic
+      - -conf/original
+      - -conf/extra
+      - -bin/apachectl
+      - -bin/envvars*
 
   apache-customizations:
     plugin: dump
@@ -181,13 +189,12 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-30.0.6.tar.bz2
-    source-checksum: sha256/ac0e091be6920965dc0c82f149b632d6b5ade7adee84a7b3c8cfd847450a8ddc
+    source: https://download.nextcloud.com/server/releases/nextcloud-27.1.6.tar.bz2
+    source-checksum: sha256/ae7b72b7fc525ac49798c2de6a697a4cff25b34972d69d469959885d3351befa
     organize:
-      '*': htdocs/
-      '.htaccess': htdocs/.htaccess
-      '.user.ini': htdocs/.user.ini
-      '.reuse': htdocs/.reuse
+      . : htdocs/
+      .htaccess: htdocs/.htaccess
+      .user.ini: htdocs/.user.ini
 
     # This snap automatically updates. No need to include the updater to nag
     # users. This does not result in an integrity check failure.
@@ -195,12 +202,12 @@ parts:
       - -htdocs/apps/updatenotification
 
   php:
-    plugin: php
-    source: https://php.net/get/php-8.3.17.tar.bz2/from/this/mirror
-    source-checksum: sha256/4e034dca7ab16fc6062c8c53067528f4ecaa246bf22310e6841f7008094264ac
+    plugin: autotools
+    source: https://php.net/get/php-8.2.15.tar.bz2/from/this/mirror
+    source-checksum: sha256/50c3e220b7aa63a85716233c902eb44cc0a4667ed0b8335722ae2391b1355e7a
     source-type: tar
-    install-via: prefix
-    configflags:
+    autotools-configure-parameters:
+      - --prefix=$CRAFT_PART_INSTALL/usr
       - --enable-fpm
       - --disable-cgi
       - --disable-phar
@@ -226,7 +233,7 @@ parts:
       - --enable-sysvsem
 
       # Enable ldap
-      - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
+      - --with-libdir=lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       - --with-ldap
 
       # Enable gmp
@@ -235,6 +242,9 @@ parts:
       # Enable argon2
       - --with-password-argon2
 
+      # Disable sqlite (we use mysql)
+      - --without-sqlite3
+      - --without-pdo-sqlite
     build-packages:
       - libxml2-dev
       - libcurl4-openssl-dev
@@ -248,9 +258,6 @@ parts:
       - libzip-dev
       - libargon2-0-dev
       - libsodium-dev
-      - libaio-dev
-      - libaio1
-      - libsqlite3-dev
 
       # This is no longer bundled with PHP as of v7.4
       - libonig-dev
@@ -263,10 +270,10 @@ parts:
       - libheimbase1-heimdal
       - libheimntlm0-heimdal
       - libhx509-5-heimdal
-      - libicu60
+      - libicu70
       - libjpeg8
       - libkrb5-26-heimdal
-      - libldap-2.4-2
+      - libldap-2.5-0
       - libnghttp2-14
       - libpng16-16
       - libpsl5
@@ -277,25 +284,33 @@ parts:
       - libxml2
       - libzip4
       - libargon2-0
-      - libonig4
+      - libonig5
       - libsodium23
-      - libaio1
-      - libsqlite3-0
     prime:
-     - -sbin/
-     - -etc/
+      - -usr/sbin/
+      - -etc/
     organize:
       # Put php-fpm in bin with everything else, not sbin.
-      sbin/php-fpm: bin/php-fpm
-    extensions:
-      # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis/archive/6.1.0.tar.gz
-        source-checksum: sha256/57135db32a0ccb1659f56c75feb26c10ea94fb3d2471edd047d94a9800f959b0
+      usr/sbin/php-fpm: usr/bin/php-fpm
+      usr/lib/php/extensions/no-debug-non-zts-20220829: usr/lib/php/extensions/
+
+  redis-php:
+    after: [php]
+    source: https://github.com/phpredis/phpredis/archive/5.3.7.tar.gz
+    source-checksum: sha256/6f5cda93aac8c1c4bafa45255460292571fb2f029b0ac4a5a4dc66987a9529e6
+    plugin: autotools
+    autotools-configure-parameters:
+      - --prefix=/usr
+    override-build: |
+      $CRAFT_STAGE/usr/bin/phpize
+      craftctl default
 
   redis:
-    plugin: redis
-    source: https://download.redis.io/releases/redis-7.2.7.tar.gz
-    source-checksum: sha256/72c081e3b8cfae7144273d26d76736f08319000af46c01515cad5d29765cead5
+    plugin: make
+    source: https://download.redis.io/releases/redis-6.2.14.tar.gz
+    source-checksum: sha256/34e74856cbd66fdb3a684fb349d93961d8c7aa668b06f81fd93ff267d09bc277
+    make-parameters:
+      - PREFIX=$CRAFT_PART_INSTALL/usr
 
   redis-customizations:
     plugin: dump
@@ -335,15 +350,14 @@ parts:
       - -*
 
   mysql:
-    build-snaps: [cmake]
     plugin: cmake
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.41.tar.gz
-    source-checksum: md5/6836fe6426f9d5b6c3ff576b9d1e147f
-    configflags:
-      - -DCMAKE_INSTALL_PREFIX=/
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.36.tar.gz
+    source-checksum: md5/6708e66d69bafc0dd7b481468e192203
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
       - -DBUILD_CONFIG=mysql_release
       - -DCMAKE_BUILD_TYPE=Release
       - -DWITH_UNIT_TESTS=OFF
@@ -358,18 +372,18 @@ parts:
       - -DWITH_INNODB_EXTRA_DEBUG=OFF
       - -DINSTALL_MYSQLTESTDIR=
       - -DDOWNLOAD_BOOST=OFF
-      - -DWITH_BOOST=$SNAPCRAFT_STAGE
+      - -DWITH_BOOST=$CRAFT_STAGE
 
     override-build: |
-      snapcraftctl build
+      craftctl default
       # MySQL v8 is massive. Strip it.
-      find "$SNAPCRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
+      find $CRAFT_PART_INSTALL/usr/bin -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
 
     build-packages:
       - libncurses5-dev
       - binutils
-      - gcc-8
-      - g++-8
+      - gcc-10
+      - g++-10
 
     stage:
       # Remove scripts that we'll be replacing with our own
@@ -419,15 +433,15 @@ parts:
 
   certbot:
     plugin: python
-    python-version: python2
     source: src/https/
-    requirements: ["requirements.txt"]
     build-packages: [libffi-dev]
+    # build-environment:
+    #   - PARTS_PYTHON_INTERPRETER: python2
     after: [patches]
-    override-build: |
-      snapcraftctl build
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
+    # override-build: |
+    #   snapcraftctl build
+    #   patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
+    #   patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
 
   setup-https:
     plugin: dump
@@ -456,10 +470,10 @@ parts:
     source: src/logrotate/
     organize:
       config/*: config/logrotate/
-      usr/sbin/*: bin/
+      usr/sbin/*: usr/bin/
     stage-packages: [logrotate]
     stage:
-      - bin/*
+      - usr/bin/*
       - config/*
       - utilities/*
     after: [envsubst]

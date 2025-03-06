@@ -127,8 +127,8 @@ hooks:
 parts:
   apache:
     plugin: autotools
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.58.tar.bz2
-    source-checksum: sha256/fa16d72a078210a54c47dd5bef2f8b9b8a01d94909a51453956b3ec6442ea4c5
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.63.tar.bz2
+    source-checksum: sha256/88fc236ab99b2864b248de7d49a008ec2afd7551e64dce8b95f58f32f94c46ab
 
     build-packages:
       - pkg-config
@@ -189,8 +189,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-27.1.6.tar.bz2
-    source-checksum: sha256/ae7b72b7fc525ac49798c2de6a697a4cff25b34972d69d469959885d3351befa
+    source: https://download.nextcloud.com/server/releases/nextcloud-30.0.6.tar.bz2
+    source-checksum: sha256/ac0e091be6920965dc0c82f149b632d6b5ade7adee84a7b3c8cfd847450a8ddc
     organize:
       . : htdocs/
       .htaccess: htdocs/.htaccess
@@ -203,8 +203,8 @@ parts:
 
   php:
     plugin: autotools
-    source: https://php.net/get/php-8.2.15.tar.bz2/from/this/mirror
-    source-checksum: sha256/50c3e220b7aa63a85716233c902eb44cc0a4667ed0b8335722ae2391b1355e7a
+    source: https://php.net/get/php-8.3.17.tar.bz2/from/this/mirror
+    source-checksum: sha256/4e034dca7ab16fc6062c8c53067528f4ecaa246bf22310e6841f7008094264ac
     source-type: tar
     autotools-configure-parameters:
       - --prefix=$CRAFT_PART_INSTALL/usr
@@ -296,8 +296,8 @@ parts:
 
   redis-php:
     after: [php]
-    source: https://github.com/phpredis/phpredis/archive/5.3.7.tar.gz
-    source-checksum: sha256/6f5cda93aac8c1c4bafa45255460292571fb2f029b0ac4a5a4dc66987a9529e6
+    source: https://github.com/phpredis/phpredis/archive/6.1.0.tar.gz
+    source-checksum: sha256/57135db32a0ccb1659f56c75feb26c10ea94fb3d2471edd047d94a9800f959b0
     plugin: autotools
     autotools-configure-parameters:
       - --prefix=/usr
@@ -307,8 +307,8 @@ parts:
 
   redis:
     plugin: make
-    source: https://download.redis.io/releases/redis-6.2.14.tar.gz
-    source-checksum: sha256/34e74856cbd66fdb3a684fb349d93961d8c7aa668b06f81fd93ff267d09bc277
+    source: https://download.redis.io/releases/redis-7.2.7.tar.gz
+    source-checksum: sha256/72c081e3b8cfae7144273d26d76736f08319000af46c01515cad5d29765cead5
     make-parameters:
       - PREFIX=$CRAFT_PART_INSTALL/usr
 
@@ -354,8 +354,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.36.tar.gz
-    source-checksum: md5/6708e66d69bafc0dd7b481468e192203
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.41.tar.gz
+    source-checksum: md5/6836fe6426f9d5b6c3ff576b9d1e147f
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DBUILD_CONFIG=mysql_release

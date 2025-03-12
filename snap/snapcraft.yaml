@@ -192,9 +192,10 @@ parts:
     source: https://download.nextcloud.com/server/releases/nextcloud-30.0.6.tar.bz2
     source-checksum: sha256/ac0e091be6920965dc0c82f149b632d6b5ade7adee84a7b3c8cfd847450a8ddc
     organize:
-      . : htdocs/
-      .htaccess: htdocs/.htaccess
-      .user.ini: htdocs/.user.ini
+      '*': htdocs/
+      '.htaccess': htdocs/.htaccess
+      '.user.ini': htdocs/.user.ini
+      '.reuse': htdocs/.reuse
 
     # This snap automatically updates. No need to include the updater to nag
     # users. This does not result in an integrity check failure.

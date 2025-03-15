@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'capybara'
 
 # Webdriver for chrome headless
-gem 'selenium-webdriver --full-index'
+gem 'selenium-webdriver'
 
 # Use nice acceptance tests DSL
 gem 'rspec'

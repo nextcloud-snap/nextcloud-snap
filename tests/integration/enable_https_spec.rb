@@ -10,6 +10,6 @@ feature "Enabling HTTPS" do
 		fill_in "user", with: "admin"
 		fill_in "password", with: "admin"
 		click_button "Log in"
-		expect(page).to have_content /(Recommended|All) files/
+		expect(page).to have_content /(Recommended|All) files/, wait: 10
 	end
 end

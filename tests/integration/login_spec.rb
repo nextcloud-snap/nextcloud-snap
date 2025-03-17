@@ -4,6 +4,7 @@ feature "Logging in" do
 		fill_in "user", with: "admin"
 		fill_in "password", with: "admin"
 		click_button "Log in"
+		sleep 3
 		expect(page).to have_content /(Recommended|All) files/
 	end
 
@@ -12,6 +13,7 @@ feature "Logging in" do
 		fill_in "user", with: "wronguser"
 		fill_in "password", with: "wrongpassword"
 		click_button "Log in"
+		sleep 3
 		expect(page).to have_content /Wrong.*password/
 	end
 end

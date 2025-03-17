@@ -5,8 +5,6 @@ gem 'capybara'
 
 # Webdriver for chrome headless
 gem 'selenium-webdriver'
-gem 'base64'
-gem 'logger'
 
 # Use nice acceptance tests DSL
 gem 'rspec'

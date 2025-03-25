@@ -1,6 +1,16 @@
 name: Run tests against changes
 
-on: [push, pull_request]
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - master
+      - develop
+      - '[0-9]+'
+    tags:
+      - '*'
 
 jobs:
   static:

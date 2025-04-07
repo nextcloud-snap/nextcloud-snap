@@ -46,6 +46,7 @@ feature "Change PHP memory limit" do
 		fill_in "user", with: "admin"
 		fill_in "password", with: "admin"
 		click_button "Log in"
+		sleep 3
 		expect(page).to have_content /(Recommended|All) files/
 	end
 

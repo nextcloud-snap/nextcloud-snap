@@ -1,3 +1,9 @@
+v 31.0.2snap1
+  - nextcloud: update to 31.0.2
+  - php: update to 8.3.19
+  - phpredis: update to 6.2.0
+  - fixer: configure database tables row format to DYNAMIC
+
 v 30.0.6snap1
   - nextcloud: update to 30.0.6
   - php: update to 8.3.17

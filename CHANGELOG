@@ -1,3 +1,7 @@
+v 31.0.3snap1
+  - nextcloud: update to 31.0.3
+  - fixer: actually fix row format
+
 v 31.0.2snap1
   - nextcloud: update to 31.0.2
   - php: update to 8.3.19

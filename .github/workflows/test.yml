@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install dependencies
         run: sudo apt-get update -qq && sudo apt-get install -qq shellcheck
@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install dependencies
         run: sudo apt-get update -qq && sudo apt-get install -qq curl git
@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install dependencies
         run: sudo apt-get update -qq && sudo snap refresh lxd && sudo lxd init --auto && sudo snap install --classic --channel=7.x/stable snapcraft
@@ -64,7 +64,7 @@ jobs:
         run: sudo snap install *.snap --dangerous
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@354a1ad156761f5ee2b7b13fa8e09943a5e8d252 # v1.229.0
         with:
           working-directory: tests
           bundler-cache: true
@@ -74,7 +74,7 @@ jobs:
         run: bundle exec ./run-tests.sh integration
 
       - name: Upload snap artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: snap
           path: '*.snap'

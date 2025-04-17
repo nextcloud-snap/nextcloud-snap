@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-31.0.2.tar.bz2
-    source-checksum: sha256/00b572111b7c2b98842d95c046de79ef463ccfadc8a04b54006c786e1f94c310
+    source: https://download.nextcloud.com/server/releases/nextcloud-31.0.3.tar.bz2
+    source-checksum: sha256/9283aebd8fda5ad739cda56f7cabaa835cc3bf98f79536c36dccd7309e2b305a
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -340,8 +340,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.41.tar.gz
-    source-checksum: md5/6836fe6426f9d5b6c3ff576b9d1e147f
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.42.tar.gz
+    source-checksum: md5/0f9afecb6fcfc6bdbb31e192e9b9e598
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

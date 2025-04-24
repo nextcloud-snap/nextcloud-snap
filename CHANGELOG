@@ -1,3 +1,7 @@
+v 30.0.10snap1
+  - nextcloud: update to 30.0.10
+  - mysql: update to 8.0.42
+
 v 30.0.9snap1
   - nextcloud: update to 30.0.9
 

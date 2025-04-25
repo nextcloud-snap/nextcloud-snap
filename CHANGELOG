@@ -1,3 +1,7 @@
+v 31.0.4snap1
+  - nextcloud: update to 31.0.4
+  - mysql: update to 8.0.42
+
 v 31.0.2snap2
   - fixer: actually fix row format
 

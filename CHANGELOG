@@ -1,3 +1,7 @@
+v 29.0.16snap1
+  - nextcloud: update to 29.0.16
+  - mysql: update to 8.0.42
+
 v 29.0.15snap1
   - nextcloud: update to 29.0.15
   - phpredis: update to 6.2.0

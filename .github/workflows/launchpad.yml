@@ -31,7 +31,7 @@ jobs:
           git remote add deploy git+ssh://nextcloud-snappy-bot@git.launchpad.net/nextcloud-snap
 
       - name: Setup SSH
-        uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
+        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         with:
             ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 

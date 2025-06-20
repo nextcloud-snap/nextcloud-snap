@@ -1,3 +1,8 @@
+v 31.0.6snap1
+  - nextcloud: update to 31.0.6
+  - php: update to 8.3.22
+  - redis: update to 7.2.9
+
 v 31.0.5snap1
   - nextcloud: update to 31.0.5
   - redis: update to 7.2.8

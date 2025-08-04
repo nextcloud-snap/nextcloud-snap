@@ -37,11 +37,6 @@ request_build \
 	"latest-master" "$latest_master_url" "master-$today" \
 	"From CI: Use Nextcloud latest master"
 
-echo "Requesting build of latest 29..."
-request_build \
-	"latest-29" "$latest_stable29_url" "29-$today" \
-	"From CI: Use Nextcloud latest 29"
-
 echo "Requesting build of latest 30..."
 request_build \
 	"latest-30" "$latest_stable30_url" "30-$today" \

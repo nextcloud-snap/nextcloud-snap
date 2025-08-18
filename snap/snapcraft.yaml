@@ -127,8 +127,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.64.tar.bz2
-    source-checksum: sha256/120b35a2ebf264f277e20f9a94f870f2063342fbff0861404660d7dd0ab1ac29
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.65.tar.bz2
+    source-checksum: sha256/58b8be97d9940ec17f7656c0c6b9f41b618aac468b894b534148e3296c53b8b3
 
     build-packages:
       - libbrotli-dev
@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-31.0.7.tar.bz2
-    source-checksum: sha256/002a5d03ae05a7f0c3056947d6da0b79a44d3d720f5728fe5155a0c5a3b4ec69
+    source: https://download.nextcloud.com/server/releases/nextcloud-31.0.8.tar.bz2
+    source-checksum: sha256/62117db783fe775677ce8b680f4b48c13b9591657fed3b508bdc3a32b4115cb0
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -340,8 +340,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.42.tar.gz
-    source-checksum: md5/0f9afecb6fcfc6bdbb31e192e9b9e598
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.43.tar.gz
+    source-checksum: md5/5f44ad3ef68dc943e145f26574dcf435
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

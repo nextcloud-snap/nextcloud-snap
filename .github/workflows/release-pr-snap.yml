@@ -15,7 +15,7 @@ jobs:
       github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Determine pull request commit hash
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         id: determine-sha
         with:
           result-encoding: string
@@ -29,7 +29,7 @@ jobs:
             return workflowRun.data.head_sha;
 
       - name: Set initial commit status
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
             await github.rest.repos.createCommitStatus({
@@ -42,7 +42,7 @@ jobs:
             });
 
       - name: Determine release channel
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         id: determine-channel
         with:
           result-encoding: string
@@ -64,7 +64,7 @@ jobs:
             return `latest/beta/pr-${matchingPullRequests[0].number}`;
 
       - name: Download snap artifact
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -96,7 +96,7 @@ jobs:
         run: sudo apt-get update -qq && sudo snap install --classic snapcraft
 
       - name: Set uploading commit status
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
             await github.rest.repos.createCommitStatus({
@@ -114,7 +114,7 @@ jobs:
         run: snapcraft upload *.snap --release="${{ steps.determine-channel.outputs.result }}"
 
       - name: Set final commit status
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
             await github.rest.repos.createCommitStatus({
@@ -127,7 +127,7 @@ jobs:
             });
 
       - name: Set error commit status
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         if: failure()
         with:
           script: |

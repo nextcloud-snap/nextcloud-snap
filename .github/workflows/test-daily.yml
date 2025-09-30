@@ -31,7 +31,45 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install nextcloud
-        run: sudo snap install nextcloud --channel=29/edge
+        run: sudo snap install nextcloud --channel=30/edge
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@cf7216d52fba1017929b4d7162fabe2b30af5b49 # v1.262.0
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run tests
+        working-directory: tests
+        run: bundle exec ./run-tests.sh integration
+
+  test-daily-v31:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install nextcloud
+        run: sudo snap install nextcloud --channel=31/edge
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@cf7216d52fba1017929b4d7162fabe2b30af5b49 # v1.262.0
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run tests
+        working-directory: tests
+        run: bundle exec ./run-tests.sh integration
+
+  test-daily-v32:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install nextcloud
+        run: sudo snap install nextcloud --channel=32/edge
 
       - name: Setup ruby
         uses: ruby/setup-ruby@cf7216d52fba1017929b4d7162fabe2b30af5b49 # v1.262.0

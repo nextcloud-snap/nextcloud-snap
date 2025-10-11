@@ -15,7 +15,7 @@ jobs:
         run: sudo snap install --edge nextcloud
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@44511735964dcb71245e7e55f72539531f7bc0eb # v1.257.0
+        uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
         with:
           working-directory: tests
           bundler-cache: true
@@ -31,10 +31,48 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install nextcloud
-        run: sudo snap install nextcloud --channel=29/edge
+        run: sudo snap install nextcloud --channel=30/edge
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@44511735964dcb71245e7e55f72539531f7bc0eb # v1.257.0
+        uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run tests
+        working-directory: tests
+        run: bundle exec ./run-tests.sh integration
+
+  test-daily-v31:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install nextcloud
+        run: sudo snap install nextcloud --channel=31/edge
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+        with:
+          working-directory: tests
+          bundler-cache: true
+
+      - name: Run tests
+        working-directory: tests
+        run: bundle exec ./run-tests.sh integration
+
+  test-daily-v32:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install nextcloud
+        run: sudo snap install nextcloud --channel=32/edge
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
         with:
           working-directory: tests
           bundler-cache: true

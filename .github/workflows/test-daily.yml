@@ -15,7 +15,7 @@ jobs:
         run: sudo snap install --edge nextcloud
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+        uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           working-directory: tests
           bundler-cache: true
@@ -34,7 +34,7 @@ jobs:
         run: sudo snap install nextcloud --channel=30/edge
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+        uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           working-directory: tests
           bundler-cache: true
@@ -53,7 +53,7 @@ jobs:
         run: sudo snap install nextcloud --channel=31/edge
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+        uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           working-directory: tests
           bundler-cache: true
@@ -72,7 +72,7 @@ jobs:
         run: sudo snap install nextcloud --channel=32/edge
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
+        uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           working-directory: tests
           bundler-cache: true

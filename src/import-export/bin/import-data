@@ -15,7 +15,7 @@ fi
 # shellcheck disable=SC2119
 wait_for_mysql
 
-COMMAND="nextcloud.import"
+COMMAND="${SNAP_INSTANCE_NAME}.import"
 
 print_usage()
 {

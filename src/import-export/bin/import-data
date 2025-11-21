@@ -34,7 +34,7 @@ print_usage()
 	echo ""
 	echo "Notice:"
 	echo "    The path needs to be available from confinement,"
-	echo "    so put it in /var/snap/nextcloud/common or /var/snap/nextcloud/current/ somewhere."
+	echo "    so put it in /var/snap/${SNAP_INSTANCE_NAME}/common or /var/snap/${SNAP_INSTANCE_NAME}/current/ somewhere."
 	echo "    User root needs to be the owner."
 }
 

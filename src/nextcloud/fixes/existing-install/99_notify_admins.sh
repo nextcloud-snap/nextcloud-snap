@@ -12,7 +12,7 @@ if [ "$previous_version" != "$SNAP_VERSION" ]; then
 	message="$message well, but in the unlikely event something broke,"
 	message="$message remember you can revert the update with a single"
 	message="$message command:\n\n"
-	message="$message    $ sudo snap revert nextcloud\n\n"
+	message="$message    $ sudo snap revert ${SNAP_INSTANCE_NAME}\n\n"
 	message="$message Please also don't forget to log an issue:"
 	message="$message https://github.com/nextcloud/nextcloud-snap"
 

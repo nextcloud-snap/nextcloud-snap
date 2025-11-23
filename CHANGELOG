@@ -1,3 +1,9 @@
+v 32.0.2snap1
+  - nextcloud: update to 32.0.2
+  - mysql: update to 8.0.44
+  - redis: update to 7.2.11
+  - snap: add support for parallel installs
+
 v 31.0.9snap1
   - nextcloud: update to 31.0.9
 

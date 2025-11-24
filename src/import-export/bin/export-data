@@ -15,7 +15,7 @@ fi
 # shellcheck disable=SC2119
 wait_for_mysql
 
-COMMAND="nextcloud.export"
+COMMAND="${SNAP_INSTANCE_NAME}.export"
 BACKUP_DIRECTORY="${SNAP_COMMON}/backups"
 FORMAT="1"
 

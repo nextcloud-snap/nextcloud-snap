@@ -1,3 +1,7 @@
+v 31.0.12snap1
+  - nextcloud: update to 31.0.12
+  - apache: update to 2.4.66
+
 v 31.0.11snap1
   - nextcloud: update to 31.0.11
 

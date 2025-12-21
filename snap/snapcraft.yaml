@@ -127,8 +127,8 @@ hooks:
 parts:
   apache:
     plugin: apache
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.65.tar.bz2
-    source-checksum: sha256/58b8be97d9940ec17f7656c0c6b9f41b618aac468b894b534148e3296c53b8b3
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.bz2
+    source-checksum: sha256/94d7ff2b42acbb828e870ba29e4cbad48e558a79c623ad3596e4116efcfea25a
 
     build-packages:
       - libbrotli-dev
@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-32.0.2.tar.bz2
-    source-checksum: sha256/15ede19ad88ec724834dfad7fae306a72f932fd042f36b333fe2418155a937c5
+    source: https://download.nextcloud.com/server/releases/nextcloud-32.0.3.tar.bz2
+    source-checksum: sha256/9b71ac96c910b4a350d986bd3a92ea06f02a161fa586334b56d87d8acafc62d4
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess

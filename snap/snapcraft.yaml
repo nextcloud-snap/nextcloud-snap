@@ -203,7 +203,6 @@ parts:
     configflags:
       - --enable-fpm
       - --disable-cgi
-      - --disable-phar
       - --disable-phpdbg
       - --enable-ctype
       - --enable-mbstring

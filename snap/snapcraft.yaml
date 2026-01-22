@@ -181,8 +181,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-32.0.3.tar.bz2
-    source-checksum: sha256/9b71ac96c910b4a350d986bd3a92ea06f02a161fa586334b56d87d8acafc62d4
+    source: https://download.nextcloud.com/server/releases/nextcloud-32.0.5.tar.bz2
+    source-checksum: sha256/8dd0bc8f8e2d262edad11197d4a07af799b51fe872ee2d9259ffa19b43e543ad
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -196,14 +196,13 @@ parts:
 
   php:
     plugin: php
-    source: https://php.net/get/php-8.3.23.tar.bz2/from/this/mirror
-    source-checksum: sha256/05488f7b967d90a50932f0674dc356e1b795f522f0298b5ce24b680de233c2d4
+    source: https://php.net/get/php-8.3.29.tar.bz2/from/this/mirror
+    source-checksum: sha256/c7337212e655325d499ea8108fa76f69ddde2fff7cb0fad36aa63eed540cb8a5
     source-type: tar
     install-via: prefix
     configflags:
       - --enable-fpm
       - --disable-cgi
-      - --disable-phar
       - --disable-phpdbg
       - --enable-ctype
       - --enable-mbstring
@@ -340,8 +339,8 @@ parts:
     after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.44.tar.gz
-    source-checksum: md5/d0cc3c8b6fdcaa1f5a820349816c7d2b
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.45.tar.gz
+    source-checksum: md5/ca271fd2f2a4dd5b0e9c90aab9151b10
     configflags:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

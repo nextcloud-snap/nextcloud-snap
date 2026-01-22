@@ -1,3 +1,9 @@
+v 32.0.5snap1
+  - nextcloud: update to 32.0.5
+  - mysql: update to 8.0.45
+  - php: enable phar
+  - php: update to 8.3.29
+
 v 32.0.3snap1
   - nextcloud: update to 32.0.3
   - apache: update to 2.4.66

@@ -1,3 +1,55 @@
+v 32.0.5snap1
+  - nextcloud: update to 32.0.5
+  - mysql: update to 8.0.45
+  - php: enable phar
+  - php: update to 8.3.29
+
+v 32.0.3snap1
+  - nextcloud: update to 32.0.3
+  - apache: update to 2.4.66
+
+v 32.0.2snap1
+  - nextcloud: update to 32.0.2
+  - mysql: update to 8.0.44
+  - redis: update to 7.2.11
+  - snap: add support for parallel installs
+
+v 31.0.9snap1
+  - nextcloud: update to 31.0.9
+
+v 31.0.8snap1
+  - nextcloud: update to 31.0.8
+  - apache: update to 2.4.65
+  - mysql: update to 8.0.43
+
+v 31.0.7snap1
+  - nextcloud: update to 31.0.7
+  - apache: update to 2.4.64
+  - redis: update to 7.2.10
+  - php: update to 8.3.23
+
+v 31.0.6snap1
+  - nextcloud: update to 31.0.6
+  - php: update to 8.3.22
+  - redis: update to 7.2.9
+
+v 31.0.5snap1
+  - nextcloud: update to 31.0.5
+  - redis: update to 7.2.8
+
+v 31.0.4snap1
+  - nextcloud: update to 31.0.4
+  - mysql: update to 8.0.42
+
+v 31.0.2snap2
+  - fixer: actually fix row format
+
+v 31.0.2snap1
+  - nextcloud: update to 31.0.2
+  - php: update to 8.3.19
+  - phpredis: update to 6.2.0
+  - fixer: configure database tables row format to DYNAMIC
+
 v 30.0.6snap1
   - nextcloud: update to 30.0.6
   - php: update to 8.3.17

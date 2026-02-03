@@ -7,7 +7,7 @@
 # shellcheck source=src/nextcloud/utilities/nextcloud-utilities
 . "$SNAP/utilities/nextcloud-utilities"
 
-COMMAND="nextcloud.manual-install"
+COMMAND="${SNAP_INSTANCE_NAME}.manual-install"
 data_directory="$NEXTCLOUD_DATA_DIR"
 
 print_usage()

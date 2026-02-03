@@ -1,6 +1,16 @@
 name: Run tests against changes
 
-on: [push, pull_request]
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - master
+      - develop
+      - '[0-9]+'
+    tags:
+      - '*'
 
 jobs:
   static:
@@ -8,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Install dependencies
         run: sudo apt-get update -qq && sudo apt-get install -qq shellcheck
@@ -21,7 +31,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Install dependencies
         run: sudo apt-get update -qq && sudo apt-get install -qq curl git
@@ -34,7 +44,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Install dependencies
         run: sudo apt-get update -qq && sudo snap refresh lxd && sudo lxd init --auto && sudo snap install --classic --channel=7.x/stable snapcraft
@@ -54,7 +64,7 @@ jobs:
         run: sudo snap install *.snap --dangerous
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@80740b3b13bf9857e28854481ca95a84e78a2bdf # v1.284.0
         with:
           working-directory: tests
           bundler-cache: true
@@ -64,7 +74,7 @@ jobs:
         run: bundle exec ./run-tests.sh integration
 
       - name: Upload snap artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: snap
           path: '*.snap'

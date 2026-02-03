@@ -3,7 +3,7 @@
 # shellcheck source=src/https/utilities/https-utilities
 . "$SNAP/utilities/https-utilities"
 
-COMMAND="nextcloud.enable-https"
+COMMAND="${SNAP_INSTANCE_NAME}.enable-https"
 
 print_usage()
 {

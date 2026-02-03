@@ -211,7 +211,6 @@ parts:
       - --prefix=$CRAFT_PART_INSTALL/usr
       - --enable-fpm
       - --disable-cgi
-      - --disable-phar
       - --disable-phpdbg
       - --enable-ctype
       - --enable-mbstring

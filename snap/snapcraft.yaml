@@ -305,6 +305,8 @@ parts:
     override-build: |
       $CRAFT_STAGE/usr/bin/phpize
       craftctl default
+   organize:
+      usr/lib/php/extensions/no-debug-non-zts-20230831: usr/lib/php/extensions/
 
   redis:
     plugin: make

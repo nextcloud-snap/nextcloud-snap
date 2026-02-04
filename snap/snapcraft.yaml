@@ -292,7 +292,6 @@ parts:
     organize:
       # Put php-fpm in bin with everything else, not sbin.
       usr/sbin/php-fpm: usr/bin/php-fpm
-      usr/lib/php/extensions/no-debug-non-zts-20220829: usr/lib/php/extensions/
 
   redis-php:
     after: [php]

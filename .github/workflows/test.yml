@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        run: sudo apt-get update -qq && sudo snap refresh lxd && sudo lxd init --auto && sudo snap install --classic --channel=7.x/stable snapcraft
+        run: sudo apt-get update -qq && sudo snap refresh lxd && sudo lxd init --auto && sudo snap install --classic snapcraft
 
       # See https://andreas.scherbaum.la/post/2023-01-18_fix-lxc-network-issues-in-ubuntu-22.04/  
       - name: Disable Docker firewall
@@ -55,7 +55,7 @@ jobs:
 
       # Using sudo here because our CI user isn't a member of the lxd group
       - name: Build snap
-        run: sudo snapcraft --provider lxd
+        run: sudo snapcraft --use-lxd
 
       - name: Review snap
         run: sudo snap install review-tools && /snap/bin/review-tools.snap-review *.snap

@@ -55,7 +55,7 @@ jobs:
 
       # Using sudo here because our CI user isn't a member of the lxd group
       - name: Build snap
-        run: sudo snapcraft --use-lxd
+        run: sudo snapcraft pack --use-lxd
 
       - name: Review snap
         run: sudo snap install review-tools && /snap/bin/review-tools.snap-review *.snap

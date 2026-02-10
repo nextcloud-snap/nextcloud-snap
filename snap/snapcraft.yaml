@@ -302,18 +302,7 @@ parts:
       - --prefix=/usr
     override-build: |
       $CRAFT_STAGE/usr/bin/phpize
-
-      # Run the default build (configure and make)
-      # We skip 'craftctl default' to avoid the implicit 'make install' writing to the wrong place
-      ./configure --prefix=/usr
-      make -j$CRAFT_PARALLEL_BUILD_COUNT
-
-      # Calculate the PHP API version directory (e.g., no-debug-non-zts-20230831)
-      API_DIR=$($CRAFT_STAGE/usr/bin/php-config --extension-dir | xargs basename)
-
-      # Manually install the extension to the correct location in this part
-      # We override 'extension_dir' to force it into the standard /usr path structure
-      make install DESTDIR=$CRAFT_PART_INSTALL extension_dir=/usr/lib/php/extensions/$API_DIR
+      craftctl default
 
   redis:
     plugin: make

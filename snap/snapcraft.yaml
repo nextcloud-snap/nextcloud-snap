@@ -126,36 +126,30 @@ hooks:
 
 parts:
   apache:
-    plugin: apache
+    plugin: autotools
     source: https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.bz2
     source-checksum: sha256/94d7ff2b42acbb828e870ba29e4cbad48e558a79c623ad3596e4116efcfea25a
 
     build-packages:
       - libbrotli-dev
+      - pkg-config
+      - libapr1-dev
+      - libaprutil1-dev
+      - libpcre2-dev
+      - libssl-dev
 
     stage-packages:
       - libbrotli1
-
-      # The built-in Apache modules to enable
-    modules:
-      - headers
-      - proxy
-      - proxy_fcgi
-      - setenvif
-      - env
-      - rewrite
-      - mime
-      - dir
-      - authz_core
-      - unixd
-      - alias
-      - ssl
-      - socache_shmcb
-      - slotmem_shm
-      - log_config
-      - logio
-      - brotli
-      - filter
+      - libapr1
+      - libaprutil1
+      - libpcre2-8-0
+    
+    # autotools-configure-parameters:
+    configflags:
+      - --prefix=/
+      - --with-mpm=event
+      - --enable-modules=none
+      - --enable-mods-static=headers proxy proxy_fcgi setenvif env rewrite mime dir authz_core unixd alias ssl socache_shmcb slotmem_shm log_config logio brotli filter
 
     filesets:
       exclude:
@@ -174,7 +168,7 @@ parts:
       - $exclude
     prime:
       - $exclude
-
+    
   apache-customizations:
     plugin: dump
     source: src/apache/
@@ -195,7 +189,7 @@ parts:
       - -htdocs/apps/updatenotification
 
   php:
-    plugin: php
+    plugin: autotools
     source: https://php.net/get/php-8.3.29.tar.bz2/from/this/mirror
     source-checksum: sha256/c7337212e655325d499ea8108fa76f69ddde2fff7cb0fad36aa63eed540cb8a5
     source-type: tar
@@ -286,15 +280,34 @@ parts:
     organize:
       # Put php-fpm in bin with everything else, not sbin.
       sbin/php-fpm: bin/php-fpm
-    extensions:
-      # Build the redis PHP module
-      - source: https://github.com/phpredis/phpredis/archive/6.3.0.tar.gz
-        source-checksum: sha256/cb8f81df1a275599e4f8ddcfec7e1f65ed1953e6f5673649149fd680ebff4cad
+    
+  php-ext-redis:
+    plugin: make
+    source: https://github.com/phpredis/phpredis/archive/6.3.0.tar.gz
+    source-checksum: sha256/cb8f81df1a275599e4f8ddcfec7e1f65ed1953e6f5673649149fd680ebff4cad
+    after:
+      - php
+
+    override-build: |
+      # Prepare the php extension
+      ${SNAPCRAFT_STAGE}/bin/phpize
+
+      # Manually run the configure script
+      ./configure
+
+      # Patch the Makefile to install to the correct location in the snap
+      sed -i.back "s|/parts/php/install/lib/php/extensions/|/parts/php-ext-redis/install/lib/php/extensions/|g" Makefile
+
+      snapcraftctl build
 
   redis:
-    plugin: redis
+    plugin: make
     source: https://download.redis.io/releases/redis-8.0.5.tar.gz
     source-checksum: sha256/012bca956fc7151abc2281950e69768ee9c53ce4b36588772041675bc95fd313
+    
+    override-build: |
+      make -j${SNAPCRAFT_PARALLEL_BUILD_COUNT}
+      make install PREFIX="$SNAPCRAFT_PART_INSTALL"
 
   redis-customizations:
     plugin: dump

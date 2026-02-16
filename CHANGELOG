@@ -1,3 +1,8 @@
+v 32.0.6snap1
+  - nextcloud: update to 32.0.6
+  - redis: update to 8.0.5
+  - phpredis: update to 6.3.0
+
 v 32.0.5snap1
   - nextcloud: update to 32.0.5
   - mysql: update to 8.0.45

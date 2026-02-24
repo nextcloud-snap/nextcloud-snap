@@ -302,8 +302,8 @@ parts:
 
   redis:
     plugin: make
-    source: https://download.redis.io/releases/redis-8.0.5.tar.gz
-    source-checksum: sha256/012bca956fc7151abc2281950e69768ee9c53ce4b36588772041675bc95fd313
+    source: https://download.redis.io/releases/redis-8.2.5.tar.gz
+    source-checksum: sha256/68de6b8c7665ac7f5ddea026745515ea027a1e233d3ed413f67134333c0e611b
     
     override-build: |
       make -j${SNAPCRAFT_PARALLEL_BUILD_COUNT}

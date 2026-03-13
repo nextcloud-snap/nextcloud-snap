@@ -439,7 +439,7 @@ parts:
     override-build: |
       snapcraftctl build
       patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
+      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-copy-group-false.patch
 
   setup-https:
     plugin: dump

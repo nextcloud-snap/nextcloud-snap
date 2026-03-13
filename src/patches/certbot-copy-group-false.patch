@@ -1,0 +1,11 @@
+--- a/storage.py	2026-03-12 23:33:08.000000000 +0000
++++ b/storage.py	2026-03-12 23:35:42.000000000 +0000
+@@ -1108,7 +1108,7 @@
+             # from previous privkey in this lineage.
+             mode = filesystem.compute_private_key_mode(old_privkey, BASE_PRIVKEY_MODE)
+             filesystem.copy_ownership_and_apply_mode(
+-                old_privkey, target["privkey"], mode, copy_user=False, copy_group=True)
++                old_privkey, target["privkey"], mode, copy_user=False, copy_group=False)
+ 
+         # Save everything else
+         with open(target["cert"], "wb") as f:

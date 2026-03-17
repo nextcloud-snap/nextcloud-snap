@@ -81,6 +81,7 @@ else
 		fi
 
 		run_certbot renew --force-renewal $params
+		restart_apache_if_running
 	fi
 fi
 

@@ -136,6 +136,7 @@ parts:
       - libaprutil1-dev
       - libpcre2-dev
       - libssl-dev
+      - rsync
 
     stage-packages:
       - libbrotli1
@@ -144,6 +145,7 @@ parts:
       - libpcre2-8-0
     
     autotools-configure-parameters:
+      - --prefix=/
       - --with-mpm=event
       - --enable-modules=none
       - --enable-mods-static="headers proxy proxy_fcgi setenvif env rewrite mime dir authz_core unixd alias ssl socache_shmcb slotmem_shm log_config logio brotli filter"

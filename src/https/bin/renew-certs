@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # shellcheck source=src/https/utilities/https-utilities
 . "$SNAP/utilities/https-utilities"
@@ -72,15 +72,15 @@ else
 		echo 'Dry-run is only possible with -f'
 		exit 1
 	else
-		params=
+		params=()
 		if [ $dry_mode -eq 1 ]
 		then
-			params="$params --dry-run"
+			params+=("--dry-run")
 		else
-			params="$params --break-my-certs"
+			params+=("--break-my-certs")
 		fi
 
-		run_certbot renew --force-renewal $params
+		run_certbot renew --force-renewal "${params[@]}"
 		restart_apache_if_running
 	fi
 fi

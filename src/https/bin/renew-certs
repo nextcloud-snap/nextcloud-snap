@@ -23,9 +23,7 @@ try_renew_self_signed() {
 }
 
 try_renew_lets_encrypt() {
-	# No need to check the Let's Encrypt certificates-- they'll only
-	# renew if they're within 30 days of expiration.
-	run_certbot renew --post-hook "restart-apache"
+	run_certbot renew --post-hook "restart-apache" "$@"
 }
 
 run_auto_renew=1
@@ -60,27 +58,35 @@ then
 			try_renew_self_signed
 		fi
 
+		# No need to check the Let's Encrypt certificates-- they'll only
+		# renew if they're within 30 days of expiration.
 		try_renew_lets_encrypt
 
 		sleep 1d # Run once a day
 	done
-# elif [  ]
-# then
 else
+	# Not in auto-renewal mode.
+
 	if [ $force_renewal -eq 0 ]
 	then
-		echo 'Dry-run is only possible with -f'
+		echo 'You requested a single renewal, but this is only possible with -f'
 		exit 1
 	else
-		params=()
-		if [ $dry_mode -eq 1 ]
+		if [ -f "$SELF_SIGNED_CERT" ]
 		then
-			params+=("--dry-run")
+			try_renew_self_signed
 		else
-			params+=("--break-my-certs")
+			params=()
+			if [ $dry_mode -eq 1 ]
+			then
+				params+=("--dry-run")
+			else
+				params+=("--break-my-certs")
+			fi
+
+			try_renew_lets_encrypt "${params[@]}"
 		fi
 
-		run_certbot renew --force-renewal "${params[@]}"
 		restart_apache_if_running
 	fi
 fi

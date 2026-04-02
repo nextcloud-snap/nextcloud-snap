@@ -383,6 +383,9 @@ parts:
       - gcc-8
       - g++-8
 
+    stage-packages:
+      - libaio1
+
     stage:
       # Remove scripts that we'll be replacing with our own
       - -support-files/mysql.server

@@ -110,7 +110,7 @@ jobs:
 
       - name: Upload snap
         env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+          CRAFT_STORE_CREDENTIALS: ${{ secrets.CRAFT_STORE_CREDENTIALS }}
         run: snapcraft upload *.snap --release="${{ steps.determine-channel.outputs.result }}"
 
       - name: Set final commit status

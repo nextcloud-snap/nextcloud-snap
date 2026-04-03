@@ -1,3 +1,6 @@
+v 32.0.8snap1
+  - nextcloud: update to 32.0.8
+
 v 32.0.6snap3
   - certbot: update to 0.39.0
 

@@ -7,7 +7,7 @@ description: |
 
 grade: stable
 confinement: strict
-base: core20
+base: core22
 
 architectures:
   - build-on: amd64
@@ -149,23 +149,30 @@ parts:
       - --enable-modules=none
       - --enable-mods-static="headers proxy proxy_fcgi setenvif env rewrite mime dir authz_core unixd alias ssl socache_shmcb slotmem_shm log_config logio brotli filter"
     
-    filesets:
-      exclude:
-        - -man
-        - -manual
-        - -htdocs
-        - -include
-        - -build
-        - -conf/httpd.conf
-        - -conf/magic
-        - -conf/original
-        - -conf/extra
-        - -bin/apachectl
-        - -bin/envvars*
     stage:
-      - $exclude
+      - -man
+      - -manual
+      - -htdocs
+      - -include
+      - -build
+      - -conf/httpd.conf
+      - -conf/magic
+      - -conf/original
+      - -conf/extra
+      - -bin/apachectl
+      - -bin/envvars*
     prime:
-      - $exclude
+      - -man
+      - -manual
+      - -htdocs
+      - -include
+      - -build
+      - -conf/httpd.conf
+      - -conf/magic
+      - -conf/original
+      - -conf/extra
+      - -bin/apachectl
+      - -bin/envvars*
     
   apache-customizations:
     plugin: dump
@@ -199,7 +206,7 @@ parts:
     source-checksum: sha256/4209694d7b0f63c45a3773e07cdc2bbfc71249265a5d951b1ff53e1147edc5ca
     source-type: tar
     autotools-configure-parameters:
-      - --prefix=$SNAPCRAFT_PART_INSTALL
+      - --prefix=$CRAFT_PART_INSTALL
       - --enable-fpm
       - --disable-cgi
       - --disable-phpdbg
@@ -224,7 +231,7 @@ parts:
       - --enable-sysvsem
 
       # Enable ldap
-      - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
+      - --with-libdir=lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       - --with-ldap
 
       # Enable gmp
@@ -261,10 +268,10 @@ parts:
       - libheimbase1-heimdal
       - libheimntlm0-heimdal
       - libhx509-5-heimdal
-      - libicu66
+      - libicu70
       - libjpeg8
       - libkrb5-26-heimdal
-      - libldap-2.4-2
+      - libldap-2.5-0
       - libnghttp2-14
       - libpng16-16
       - libpsl5
@@ -273,7 +280,7 @@ parts:
       - libsasl2-2
       - libwind0-heimdal
       - libxml2
-      - libzip5
+      - libzip4
       - libargon2-0
       - libonig5
       - libsodium23
@@ -295,7 +302,7 @@ parts:
 
     override-build: |
       # Prepare the php extension
-      ${SNAPCRAFT_STAGE}/bin/phpize
+      ${CRAFT_STAGE}/bin/phpize
 
       # Manually run the configure script
       ./configure
@@ -303,7 +310,7 @@ parts:
       # Patch the Makefile to install to the correct location in the snap
       sed -i.back "s|/parts/php/install/lib/php/extensions/|/parts/php-ext-redis/install/lib/php/extensions/|g" Makefile
 
-      snapcraftctl build
+      craftctl default
 
   php-ext-apcu:
     plugin: make
@@ -314,7 +321,7 @@ parts:
 
     override-build: |
       # Prepare the php extension
-      ${SNAPCRAFT_STAGE}/bin/phpize
+      ${CRAFT_STAGE}/bin/phpize
 
       # Manually run the configure script
       ./configure
@@ -330,7 +337,7 @@ parts:
       '
       sed -i.back "$sed_script" Makefile
 
-      snapcraftctl build
+      craftctl default
 
   redis:
     plugin: make
@@ -338,8 +345,8 @@ parts:
     source-checksum: sha256/d33935732f7fc15476295fe05f5ce740927bc14847798e47b3f67b4f27b8b478
     
     override-build: |
-      make -j${SNAPCRAFT_PARALLEL_BUILD_COUNT}
-      make install PREFIX="$SNAPCRAFT_PART_INSTALL"
+      make -j${CRAFT_PARALLEL_BUILD_COUNT}
+      make install PREFIX="$CRAFT_PART_INSTALL"
 
   redis-customizations:
     plugin: dump
@@ -399,9 +406,9 @@ parts:
       - CXX: g++-10
     override-build: |
       cmake --version
-      snapcraftctl build
+      craftctl default
       # MySQL v8 is massive. Strip it.
-      find "$SNAPCRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
+      find "$CRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
 
     build-packages:
       - libncurses5-dev
@@ -461,7 +468,7 @@ parts:
   certbot:
     plugin: python
     source: src/https/
-    requirements: ["requirements.txt"]
+    python-requirements: ["requirements.txt"]
     build-packages:
       - libffi-dev
       # These are needed by the ppc64el arch for building cryptography
@@ -469,16 +476,16 @@ parts:
       - cargo
     after: [patches]
     override-build: |
-      snapcraftctl build
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
+      craftctl default
+      patch -p1 -d $CRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $CRAFT_STAGE/certbot-remove-default-config-files.patch
+      patch -p1 -d $CRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $CRAFT_STAGE/certbot-remove-storage-chown.patch
     override-prime: |
-      snapcraftctl prime
-      cd "$SNAPCRAFT_PRIME/lib/python3.8/site-packages/"
+      craftctl default
+      cd "$CRAFT_PRIME/lib/python3."*"/site-packages/"
       
       # If we have the dir with the underscore, make a link with the dot.
       # This is needed to solve a issue affecting arm64. See #3461
-      for pkg in zope_interface zope_hookable zope_proxy
+      for pkg in zope_*
       do
         for filename in ./$pkg-*.dist-info
         do

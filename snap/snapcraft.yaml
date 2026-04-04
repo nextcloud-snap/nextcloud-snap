@@ -7,11 +7,10 @@ description: |
 
 grade: stable
 confinement: strict
-base: core18
+base: core20
 
 architectures:
   - build-on: amd64
-  - build-on: i386
   - build-on: arm64
   - build-on: armhf
   - build-on: ppc64el
@@ -144,13 +143,12 @@ parts:
       - libaprutil1
       - libpcre2-8-0
     
-    # autotools-configure-parameters:
-    configflags:
+    autotools-configure-parameters:
       - --prefix=/
       - --with-mpm=event
       - --enable-modules=none
-      - --enable-mods-static=headers proxy proxy_fcgi setenvif env rewrite mime dir authz_core unixd alias ssl socache_shmcb slotmem_shm log_config logio brotli filter
-
+      - --enable-mods-static="headers proxy proxy_fcgi setenvif env rewrite mime dir authz_core unixd alias ssl socache_shmcb slotmem_shm log_config logio brotli filter"
+    
     filesets:
       exclude:
         - -man
@@ -193,8 +191,8 @@ parts:
     source: https://php.net/get/php-8.3.29.tar.bz2/from/this/mirror
     source-checksum: sha256/c7337212e655325d499ea8108fa76f69ddde2fff7cb0fad36aa63eed540cb8a5
     source-type: tar
-    install-via: prefix
-    configflags:
+    autotools-configure-parameters:
+      - --prefix=$SNAPCRAFT_PART_INSTALL
       - --enable-fpm
       - --disable-cgi
       - --disable-phpdbg
@@ -256,7 +254,7 @@ parts:
       - libheimbase1-heimdal
       - libheimntlm0-heimdal
       - libhx509-5-heimdal
-      - libicu60
+      - libicu66
       - libjpeg8
       - libkrb5-26-heimdal
       - libldap-2.4-2
@@ -268,9 +266,9 @@ parts:
       - libsasl2-2
       - libwind0-heimdal
       - libxml2
-      - libzip4
+      - libzip5
       - libargon2-0
-      - libonig4
+      - libonig5
       - libsodium23
       - libaio1
       - libsqlite3-0
@@ -354,7 +352,7 @@ parts:
     # Get from https://dev.mysql.com/downloads/mysql/
     source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.45.tar.gz
     source-checksum: md5/ca271fd2f2a4dd5b0e9c90aab9151b10
-    configflags:
+    cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
       - -DCMAKE_BUILD_TYPE=Release
@@ -431,15 +429,14 @@ parts:
 
   certbot:
     plugin: python
-    python-version: python2
     source: src/https/
     requirements: ["requirements.txt"]
     build-packages: [libffi-dev]
     after: [patches]
     override-build: |
       snapcraftctl build
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python2.7/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
+      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
+      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
 
   setup-https:
     plugin: dump

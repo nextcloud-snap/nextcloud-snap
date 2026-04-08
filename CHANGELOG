@@ -1,3 +1,6 @@
+v 32.0.8snap2
+  - snap: update to core20
+
 v 32.0.8snap1
   - nextcloud: update to 32.0.8
 

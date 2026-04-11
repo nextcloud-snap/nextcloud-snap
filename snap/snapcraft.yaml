@@ -335,23 +335,13 @@ parts:
       # The collabora appimage requires this
       - libfontconfig1
 
-  boost:
-    plugin: dump
-    source: https://sourceforge.net/projects/boost/files/boost/1.77.0/boost_1_77_0.tar.bz2
-    source-checksum: sha1/0cb4f947d094fc311e13ffacaff00418130ef5ef
-    stage:
-      - boost/
-    prime:
-      - -*
-
   mysql:
     build-snaps: [cmake]
     plugin: cmake
-    after: [boost]
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.45.tar.gz
-    source-checksum: md5/ca271fd2f2a4dd5b0e9c90aab9151b10
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.8.tar.gz
+    source-checksum: md5/a637cef3a0b385ccbf0939500ee30419
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
@@ -367,9 +357,12 @@ parts:
       - -DWITH_DEBUG=OFF
       - -DWITH_INNODB_EXTRA_DEBUG=OFF
       - -DINSTALL_MYSQLTESTDIR=
-      - -DDOWNLOAD_BOOST=OFF
-      - -DWITH_BOOST=$SNAPCRAFT_STAGE
+      - -DCMAKE_C_COMPILER=gcc-10
+      - -DCMAKE_CXX_COMPILER=g++-10
 
+    build-environment:
+      - CC: gcc-10
+      - CXX: g++-10
     override-build: |
       snapcraftctl build
       # MySQL v8 is massive. Strip it.
@@ -378,8 +371,8 @@ parts:
     build-packages:
       - libncurses5-dev
       - binutils
-      - gcc-8
-      - g++-8
+      - gcc-10
+      - g++-10
 
     stage-packages:
       - libaio1

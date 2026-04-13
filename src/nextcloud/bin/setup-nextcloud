@@ -42,11 +42,19 @@ else
 	# upon installation. Just in case they haven't done that yet.
 	cp -r "$SNAP/htdocs/config/autoconfig.php" "$NEXTCLOUD_CONFIG_DIR/"
 
-	# Also make sure we're using Redis for the memcache and file locking.
+	# Also make sure we're using Redis for the memcache file locking.
 	occ -n config:system:set redis host --value="$REDIS_SOCKET" --type=string
 	occ -n config:system:set redis port --value=0 --type=integer
 	occ -n config:system:set memcache.locking --value="\OC\Memcache\Redis" --type=string
-	occ -n config:system:set memcache.local --value="\OC\Memcache\Redis" --type=string
+	
+	# And, depending on the available RAM, set a different local memcache
+	available_ram=$(get_available_ram_mb)
+	threshold_mb=2048
+	if [ "$available_ram" -ge "$threshold_mb" ]; then
+		occ -n config:system:set memcache.local --value="\OC\Memcache\APCu" --type=string
+	else
+		occ -n config:system:set memcache.local --value="\OC\Memcache\Redis" --type=string
+	fi
 
 	# It's possible for the updatenotification app to be installed (see
 	# https://github.com/nextcloud/nextcloud-snap/issues/838), and it'll

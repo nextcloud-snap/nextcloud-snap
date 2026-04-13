@@ -191,3 +191,12 @@ is_supported_nextcloud_upgrade()
 		return 1
 	fi
 }
+
+get_available_ram_mb()
+{
+    # Pull the MemAvailable line and extract the numeric value.
+    available_kb=$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)
+
+    # Convert KB to MB
+    echo $((available_kb / 1024))
+}

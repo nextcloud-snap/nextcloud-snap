@@ -1,8 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
     capybara (3.39.2)
       addressable
       matrix
@@ -21,9 +21,9 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.1-x86_64-linux-gnu)
       racc (~> 1.4)
-    public_suffix (4.0.6)
+    public_suffix (7.0.5)
     racc (1.8.1)
-    rack (2.2.22)
+    rack (2.2.23)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rake (13.0.6)

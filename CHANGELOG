@@ -1,3 +1,8 @@
+v 32.0.8snap3
+  - mysql: update to 8.4.8
+  - mysql: enable mysql_native_password config
+  - fixer: migrate mysql users to caching_sha2_password
+
 v 32.0.8snap2
   - snap: update to core20
 

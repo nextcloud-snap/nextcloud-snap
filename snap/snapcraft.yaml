@@ -298,6 +298,25 @@ parts:
 
       snapcraftctl build
 
+  php-ext-apcu:
+    plugin: make
+    source: https://github.com/krakjoe/apcu/archive/refs/tags/v5.1.28.tar.gz
+    source-checksum: sha256/0e60ba9d0fa4021c57a70c071f3d8f71de236275d084e560d5959fec4edd8c32
+    after:
+      - php
+
+    override-build: |
+      # Prepare the php extension
+      ${SNAPCRAFT_STAGE}/bin/phpize
+
+      # Manually run the configure script
+      ./configure
+
+      # Patch the Makefile to install to the correct location in the snap
+      sed -i.back "s|/parts/php/install/lib/php/extensions/|/parts/php-ext-apcu/install/lib/php/extensions/|g" Makefile
+
+      snapcraftctl build
+
   redis:
     plugin: make
     source: https://download.redis.io/releases/redis-8.2.5.tar.gz

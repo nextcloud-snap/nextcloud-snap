@@ -179,11 +179,18 @@ parts:
       '.htaccess': htdocs/.htaccess
       '.user.ini': htdocs/.user.ini
       '.reuse': htdocs/.reuse
+    
 
     # This snap automatically updates. No need to include the updater to nag
     # users. This does not result in an integrity check failure.
     prime:
       - -htdocs/apps/updatenotification
+
+  nextcloud-fixer:
+    plugin: nil
+    stage-packages:
+      - mawk
+      - sed
 
   php:
     plugin: autotools

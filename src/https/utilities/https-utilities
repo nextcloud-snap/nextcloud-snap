@@ -106,12 +106,17 @@ deactivate_certificates()
 	rm -rf "$LIVE_CERTS_DIRECTORY"
 }
 
+get_most_recent_certificate_directory()
+{
+	find "$CERTBOT_LIVE_DIRECTORY" -maxdepth 1 -mindepth 1 -not -iname readme -printf "%T@ %P\n" | sort -rn | cut -d " " -f2 | head -1
+}
+
 activate_certbot_certificate()
 {
 	# Multiple domains can accumulate if the user runs the command multiple
 	# times. So we find and use the folder that was most recently modified,
 	# which will contain the most recent certs. Ignore any READMEs.
-	certdir="$(find "$CERTBOT_LIVE_DIRECTORY" -maxdepth 1 -mindepth 1 -not -iname readme -printf "%T@ %P\n" | sort -rn | cut -d " " -f2 | head -1)"
+	certdir="$(get_most_recent_certificate_directory)"
 
 	deactivate_certificates
 	ln -s "$CERTBOT_LIVE_DIRECTORY/$certdir" "$LIVE_CERTS_DIRECTORY"
@@ -140,4 +145,16 @@ run_certbot()
 	certbot --text --config-dir "$CERTBOT_DIRECTORY/config" \
 	               --work-dir "$CERTBOT_DIRECTORY/work" \
 	               --logs-dir "$CERTBOT_DIRECTORY/logs" "$@"
+}
+
+run_certbot_certonly()
+{
+	run_certbot certonly \
+		--authenticator webroot \
+		--webroot-path "$CERTBOT_DIRECTORY" \
+		--rsa-key-size 4096 \
+		--non-interactive \
+		--agree-tos \
+		--force-renewal \
+		"$@"
 }

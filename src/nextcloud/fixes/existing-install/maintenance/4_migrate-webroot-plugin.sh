@@ -9,10 +9,15 @@ set -e
 # shellcheck source=src/https/utilities/https-utilities
 . "$SNAP/utilities/https-utilities"
 
-echo -n "Checking if the certbot plugin needs to be migrated... "
+printf "Checking if the certbot plugin needs to be migrated... "
 
 if ! certificates_are_active; then
     echo "no (no HTTPS certificates are active)"
+    exit
+fi
+
+if self_signed_certificates_are_active || custom_certificates_are_active; then
+    echo "Not using certbot certificates, so no migration is needed."
     exit
 fi
 
@@ -70,27 +75,39 @@ for domain in $domains; do
     extra_params="$extra_params -d $domain"
 done
 
-echo -n "Testing if certificates can be obtained with the webroot plugin... "
+printf "Testing if certificates can be obtained with the webroot plugin... "
 
-if output="$(run_certbot_certonly $extra_params --staging --dry-run" 2>&1)"; then
+# Building CLI commands, so we don't WANT to quote some of these (they need
+# to be separated by whitespace): disable the check
+# shellcheck disable=SC2086
+if output="$(run_certbot_certonly $extra_params --staging --dry-run 2>&1)"; then
     echo "success"
 else
     echo "failed!"
-    echo "error running certbot:\n\n" >&2
+    echo "error running certbot:" >&2
+    echo "" >&2
     echo "$output" >&2
     exit 1
+fi
+
+if [ "$dry_run" = "y" ]; then
+    extra_params="$extra_params --staging"
 fi
 
 # Moving the legacy plugin to a temporary location.
 mv "$SNAP_CURRENT/certs/certbot" "$SNAP_CURRENT/certs/certbot.legacy"
 
-echo "Migrating certbot configuration to use the webroot plugin... "
+printf "Migrating certbot configuration to use the webroot plugin... "
 
+# Building CLI commands, so we don't WANT to quote some of these (they need
+# to be separated by whitespace): disable the check
+# shellcheck disable=SC2086
 if output="$(run_certbot_certonly $extra_params 2>&1)"; then
     echo "success"
 else
     echo "failed!"
-    echo "error running certbot:\n\n" >&2
+    echo "error running certbot:" >&2
+    echo "" >&2
     echo "$output" >&2
 
     echo "Restoring legacy certbot configuration."
@@ -102,3 +119,5 @@ fi
 
 echo "Removing legacy certbot configuration."
 rm -rf "$SNAP_CURRENT/certs/certbot.legacy"
+
+activate_certbot_certificate

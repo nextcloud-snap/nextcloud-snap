@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # shellcheck source=src/https/utilities/https-utilities
 . "$SNAP/utilities/https-utilities"
@@ -7,25 +7,87 @@
 # before renewing it. 2592000 seconds is 30 days.
 seconds_to_renew=2592000
 
-while true; do
-	if [ -f "$SELF_SIGNED_CERT" ]; then
-		# Check the self-signed certificate. Does it need to be renewed?
-		cert_date="$(openssl x509 -noout -enddate -in "$SELF_SIGNED_CERT" | sed -e 's/.*=\(.*\)$/\1/')"
-		cert_date="$(date -d "$cert_date" "+%s")"
-		current_date=$(date "+%s")
-		difference=$((cert_date-current_date))
-		if [ $difference -lt $seconds_to_renew ]; then
-			echo "Renewing self-signed certificate"
-			generate_self_signed_certificate
-			restart_apache_if_running
-		else
-			echo "Self-signed certificates aren't due for renewal"
-		fi
+try_renew_self_signed() {
+	# Check the self-signed certificate. Does it need to be renewed?
+	cert_date="$(openssl x509 -noout -enddate -in "$SELF_SIGNED_CERT" | sed -e 's/.*=\(.*\)$/\1/')"
+	cert_date="$(date -d "$cert_date" "+%s")"
+	current_date=$(date "+%s")
+	difference=$((cert_date-current_date))
+	if [ $difference -lt $seconds_to_renew ]; then
+		echo "Renewing self-signed certificate"
+		generate_self_signed_certificate
+		restart_apache_if_running
+	else
+		echo "Self-signed certificates aren't due for renewal"
 	fi
+}
 
-	# No need to check the Let's Encrypt certificates-- they'll only
-	# renew if they're within 30 days of expiration.
-	run_certbot renew --post-hook "restart-apache"
+try_renew_lets_encrypt() {
+	run_certbot renew --post-hook "restart-apache" "$@"
+}
 
-	sleep 1d # Run once a day
+run_auto_renew=1
+force_renewal=0
+dry_mode=0
+
+while getopts ":fd" opt
+do
+	case $opt in
+		f)
+			force_renewal=1
+			run_auto_renew=0
+			;;
+		d)
+			dry_mode=1
+			run_auto_renew=0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			exit 1
+			;;
+	esac
 done
+
+if [ $run_auto_renew -eq 1 ]
+then
+	echo "Running automatic certificate renewal"
+
+	while true; do
+		if [ -f "$SELF_SIGNED_CERT" ]
+		then
+			try_renew_self_signed
+		fi
+
+		# No need to check the Let's Encrypt certificates-- they'll only
+		# renew if they're within 30 days of expiration.
+		try_renew_lets_encrypt
+
+		sleep 1d # Run once a day
+	done
+else
+	# Not in auto-renewal mode.
+
+	if [ $force_renewal -eq 0 ]
+	then
+		echo 'You requested a single renewal, but this is only possible with -f'
+		exit 1
+	else
+		if [ -f "$SELF_SIGNED_CERT" ]
+		then
+			try_renew_self_signed
+		else
+			params=()
+			if [ $dry_mode -eq 1 ]
+			then
+				params+=("--dry-run")
+			else
+				params+=("--break-my-certs")
+			fi
+
+			try_renew_lets_encrypt "${params[@]}"
+		fi
+
+		restart_apache_if_running
+	fi
+fi
+

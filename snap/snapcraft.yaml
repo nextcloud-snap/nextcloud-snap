@@ -432,6 +432,22 @@ parts:
       snapcraftctl build
       patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
       patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
+    override-prime: |
+      snapcraftctl prime
+      cd "$SNAPCRAFT_PRIME/lib/python3.8/site-packages/"
+      
+      # If we have the dir with the underscore, make a link with the dot.
+      # This is needed to solve a issue affecting arm64. See #3461
+      for pkg in zope_interface zope_hookable zope_proxy
+      do
+        for filename in ./$pkg-*.dist-info
+        do
+          if [ -d "$filename" ]; then
+            # Replace underscores in pkg name, then strip the ./pkg prefix from filename
+            ln -sf "$filename" "${pkg//_/.}${filename#./$pkg}"
+          fi
+        done
+      done
 
   setup-https:
     plugin: dump

@@ -7,7 +7,7 @@ description: |
 
 grade: stable
 confinement: strict
-base: core20
+base: core22
 
 architectures:
   - build-on: amd64
@@ -148,23 +148,30 @@ parts:
       - --enable-modules=none
       - --enable-mods-static="headers proxy proxy_fcgi setenvif env rewrite mime dir authz_core unixd alias ssl socache_shmcb slotmem_shm log_config logio brotli filter"
     
-    filesets:
-      exclude:
-        - -man
-        - -manual
-        - -htdocs
-        - -include
-        - -build
-        - -conf/httpd.conf
-        - -conf/magic
-        - -conf/original
-        - -conf/extra
-        - -bin/apachectl
-        - -bin/envvars*
     stage:
-      - $exclude
+      - -man
+      - -manual
+      - -htdocs
+      - -include
+      - -build
+      - -conf/httpd.conf
+      - -conf/magic
+      - -conf/original
+      - -conf/extra
+      - -bin/apachectl
+      - -bin/envvars*
     prime:
-      - $exclude
+      - -man
+      - -manual
+      - -htdocs
+      - -include
+      - -build
+      - -conf/httpd.conf
+      - -conf/magic
+      - -conf/original
+      - -conf/extra
+      - -bin/apachectl
+      - -bin/envvars*
     
   apache-customizations:
     plugin: dump
@@ -191,7 +198,7 @@ parts:
     source-checksum: sha256/c7337212e655325d499ea8108fa76f69ddde2fff7cb0fad36aa63eed540cb8a5
     source-type: tar
     autotools-configure-parameters:
-      - --prefix=$SNAPCRAFT_PART_INSTALL
+      - --prefix=$CRAFT_PART_INSTALL
       - --enable-fpm
       - --disable-cgi
       - --disable-phpdbg
@@ -216,7 +223,7 @@ parts:
       - --enable-sysvsem
 
       # Enable ldap
-      - --with-libdir=lib/$SNAPCRAFT_ARCH_TRIPLET
+      - --with-libdir=lib/$CRAFT_ARCH_TRIPLET
       - --with-ldap
 
       # Enable gmp
@@ -253,10 +260,10 @@ parts:
       - libheimbase1-heimdal
       - libheimntlm0-heimdal
       - libhx509-5-heimdal
-      - libicu66
+      - libicu70
       - libjpeg8
       - libkrb5-26-heimdal
-      - libldap-2.4-2
+      - libldap-2.5-0
       - libnghttp2-14
       - libpng16-16
       - libpsl5
@@ -265,7 +272,7 @@ parts:
       - libsasl2-2
       - libwind0-heimdal
       - libxml2
-      - libzip5
+      - libzip4
       - libargon2-0
       - libonig5
       - libsodium23
@@ -287,7 +294,7 @@ parts:
 
     override-build: |
       # Prepare the php extension
-      ${SNAPCRAFT_STAGE}/bin/phpize
+      ${CRAFT_STAGE}/bin/phpize
 
       # Manually run the configure script
       ./configure
@@ -295,7 +302,7 @@ parts:
       # Patch the Makefile to install to the correct location in the snap
       sed -i.back "s|/parts/php/install/lib/php/extensions/|/parts/php-ext-redis/install/lib/php/extensions/|g" Makefile
 
-      snapcraftctl build
+      craftctl default
 
   redis:
     plugin: make
@@ -303,8 +310,8 @@ parts:
     source-checksum: sha256/68de6b8c7665ac7f5ddea026745515ea027a1e233d3ed413f67134333c0e611b
     
     override-build: |
-      make -j${SNAPCRAFT_PARALLEL_BUILD_COUNT}
-      make install PREFIX="$SNAPCRAFT_PART_INSTALL"
+      make -j${CRAFT_PARALLEL_BUILD_COUNT}
+      make install PREFIX="$CRAFT_PART_INSTALL"
 
   redis-customizations:
     plugin: dump
@@ -363,9 +370,9 @@ parts:
       - CC: gcc-10
       - CXX: g++-10
     override-build: |
-      snapcraftctl build
+      craftctl default
       # MySQL v8 is massive. Strip it.
-      find "$SNAPCRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
+      find "$CRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;
 
     build-packages:
       - libncurses5-dev
@@ -425,13 +432,14 @@ parts:
   certbot:
     plugin: python
     source: src/https/
-    requirements: ["requirements.txt"]
-    build-packages: [libffi-dev]
+    python-requirements: ["requirements.txt"]
+    build-packages:
+      - libffi-dev
     after: [patches]
     override-build: |
-      snapcraftctl build
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
-      patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
+      craftctl default
+      patch -p1 -d $CRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $CRAFT_STAGE/certbot-remove-default-config-files.patch
+      patch -p1 -d $CRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $CRAFT_STAGE/certbot-remove-storage-chown.patch
 
   setup-https:
     plugin: dump

@@ -111,14 +111,8 @@ handle_lets_encrypt()
 	# Building CLI commands, so we don't WANT to quote some of these (they need
 	# to be separated by whitespace): disable the check
 	# shellcheck disable=SC2086
-	if ! output="$(run_certbot certonly $extra_params \
-	             --authenticator webroot \
-	             --webroot-path "$CERTBOT_DIRECTORY" \
-	             --rsa-key-size 4096 \
+	if ! output="$(run_certbot_certonly $extra_params \
 	             --email "$email" \
-	             --non-interactive \
-	             --agree-tos \
-	             --force-renewal \
 	             $domains 2>&1)"; then
 		printf "error running certbot:\n\n" >&2
 		echo "$output" >&2

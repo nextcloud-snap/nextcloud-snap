@@ -125,8 +125,8 @@ hooks:
 parts:
   apache:
     plugin: autotools
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.bz2
-    source-checksum: sha256/94d7ff2b42acbb828e870ba29e4cbad48e558a79c623ad3596e4116efcfea25a
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.67.tar.bz2
+    source-checksum: sha256/66cd206637b0d5c446fa7dabe75fe03525da8fb55855876c46288cd88b136aa4
 
     build-packages:
       - libbrotli-dev

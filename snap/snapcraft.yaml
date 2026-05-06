@@ -12,7 +12,6 @@ base: core20
 architectures:
   - build-on: amd64
   - build-on: arm64
-  - build-on: armhf
   - build-on: ppc64el
 
 apps:
@@ -126,8 +125,8 @@ hooks:
 parts:
   apache:
     plugin: autotools
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.bz2
-    source-checksum: sha256/94d7ff2b42acbb828e870ba29e4cbad48e558a79c623ad3596e4116efcfea25a
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.67.tar.bz2
+    source-checksum: sha256/66cd206637b0d5c446fa7dabe75fe03525da8fb55855876c46288cd88b136aa4
 
     build-packages:
       - libbrotli-dev
@@ -300,8 +299,8 @@ parts:
 
   redis:
     plugin: make
-    source: https://download.redis.io/releases/redis-8.2.5.tar.gz
-    source-checksum: sha256/68de6b8c7665ac7f5ddea026745515ea027a1e233d3ed413f67134333c0e611b
+    source: https://download.redis.io/releases/redis-8.2.6.tar.gz
+    source-checksum: sha256/78dd7326c5c959202c6c3849d3ea9c61896d78d647c20f6542b52c0917f96eac
     
     override-build: |
       make -j${SNAPCRAFT_PARALLEL_BUILD_COUNT}
@@ -340,8 +339,8 @@ parts:
     plugin: cmake
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.8.tar.gz
-    source-checksum: md5/a637cef3a0b385ccbf0939500ee30419
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.9.tar.gz
+    source-checksum: md5/7b2591fa0b5388f604cc9b8273eab331
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
@@ -433,6 +432,22 @@ parts:
       snapcraftctl build
       patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-default-config-files.patch
       patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
+    override-prime: |
+      snapcraftctl prime
+      cd "$SNAPCRAFT_PRIME/lib/python3.8/site-packages/"
+      
+      # If we have the dir with the underscore, make a link with the dot.
+      # This is needed to solve a issue affecting arm64. See #3461
+      for pkg in zope_interface zope_hookable zope_proxy
+      do
+        for filename in ./$pkg-*.dist-info
+        do
+          if [ -d "$filename" ]; then
+            # Replace underscores in pkg name, then strip the ./pkg prefix from filename
+            ln -sf "$filename" "${pkg//_/.}${filename#./$pkg}"
+          fi
+        done
+      done
 
   setup-https:
     plugin: dump

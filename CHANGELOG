@@ -1,3 +1,13 @@
+v 32.0.8snap4
+  - mysql: update to 8.4.9
+  - redis: update to 8.2.6
+  - apache: update to 2.4.67
+  - cerbot: fix zope* dependencies on arm64
+  - snap: disable armhf builds
+  - snap: use snapcraft 8.x to build the snap
+  - fixer: order fixtures consistenly
+  - ci: disable dailies for nextcloud 31
+
 v 32.0.8snap3
   - mysql: update to 8.4.8
   - mysql: enable mysql_native_password config

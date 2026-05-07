@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        run: sudo apt-get update -qq && sudo snap refresh lxd && sudo lxd init --auto && sudo snap install --classic --channel=7.x/stable snapcraft
+        run: sudo apt-get update -qq && sudo snap refresh lxd && sudo lxd init --auto && sudo snap install --classic --channel=8.x/stable snapcraft
 
       # See https://andreas.scherbaum.la/post/2023-01-18_fix-lxc-network-issues-in-ubuntu-22.04/  
       - name: Disable Docker firewall
@@ -55,7 +55,7 @@ jobs:
 
       # Using sudo here because our CI user isn't a member of the lxd group
       - name: Build snap
-        run: sudo snapcraft --provider lxd
+        run: sudo snapcraft pack --use-lxd
 
       - name: Review snap
         run: sudo snap install review-tools && /snap/bin/review-tools.snap-review *.snap
@@ -64,7 +64,7 @@ jobs:
         run: sudo snap install *.snap --dangerous
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1.299.0
+        uses: ruby/setup-ruby@4c56a21280b36d862b5fc31348f463d60bdc55d5 # v1.301.0
         with:
           working-directory: tests
           bundler-cache: true
@@ -74,7 +74,7 @@ jobs:
         run: bundle exec ./run-tests.sh integration
 
       - name: Upload snap artifact
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: snap
           path: '*.snap'

@@ -1,3 +1,4 @@
+# Certbot and direct dependencies
 acme==1.22.0
 certbot==1.22.0
 certifi==2026.4.22
@@ -23,3 +24,6 @@ zope.component==7.1
 zope.event==6.2
 zope.hookable==8.2
 zope.interface==8.4
+
+# Setuptools for pkg_resources
+setuptools==59.8.0

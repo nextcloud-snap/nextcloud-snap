@@ -442,11 +442,11 @@ parts:
       patch -p1 -d $SNAPCRAFT_PART_INSTALL/lib/python3*/site-packages/certbot < $SNAPCRAFT_STAGE/certbot-remove-storage-chown.patch
     override-prime: |
       craftctl default
-      cd "$SNAPCRAFT_PRIME/lib/python3.8/site-packages/"
+      cd "$SNAPCRAFT_PRIME/lib/python3."*"/site-packages/"
       
       # If we have the dir with the underscore, make a link with the dot.
       # This is needed to solve a issue affecting arm64. See #3461
-      for pkg in zope_interface zope_hookable zope_proxy
+      for pkg in zope_*
       do
         for filename in ./$pkg-*.dist-info
         do

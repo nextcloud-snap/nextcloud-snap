@@ -223,7 +223,7 @@ parts:
       - --enable-sysvsem
 
       # Enable ldap
-      - --with-libdir=lib/$CRAFT_ARCH_TRIPLET
+      - --with-libdir=lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       - --with-ldap
 
       # Enable gmp

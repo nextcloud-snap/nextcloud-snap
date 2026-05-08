@@ -10,7 +10,7 @@ setup(
 	],
 	entry_points={
 		'certbot.plugins': [
-			'webroot = certbot_nextcloud_plugin.webroot:Authenticator',
+			'nc_webroot = certbot_nextcloud_plugin.webroot:Authenticator',
 		],
 	},
 )

@@ -1,9 +1,9 @@
---- a/compat/filesystem.py	2026-03-16 22:05:19.000000000 +0000
-+++ b/compat/filesystem.py	2026-03-16 22:05:38.000000000 +0000
-@@ -69,7 +69,6 @@
-         stats = os.stat(src)
-         user_id = stats.st_uid if copy_user else -1
-         group_id = stats.st_gid if copy_group else -1
+--- a/compat/filesystem.py
++++ b/compat/filesystem.py
+@@ -105,7 +105,6 @@ def copy_ownership_and_apply_mode(src: str, dst: str, mode: int,
+         # On Windows, os.chown does not exist. This is checked through POSIX_MODE value,
+         # but MyPy/PyLint does not know it and raises an error here on Windows.
+         # We disable specifically the check to fix the issue.
 -        os.chown(dst, user_id, group_id)
      elif copy_user:
          # There is no group handling in Windows

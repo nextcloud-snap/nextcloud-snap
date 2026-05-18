@@ -12,7 +12,7 @@ import zope.interface
 
 from acme import challenges
 
-from certbot import cli
+from certbot._internal import cli
 from certbot import errors
 from certbot import interfaces
 from certbot.display import util as display_util

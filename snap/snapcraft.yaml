@@ -174,16 +174,24 @@ parts:
     plugin: dump
     source: https://download.nextcloud.com/server/releases/nextcloud-33.0.3.tar.bz2
     source-checksum: sha256/5c1052f860b35aa56b24bc2613a6bea0c22313b9fbd02bb0247c1f0b9dbf77d2
+
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
       '.user.ini': htdocs/.user.ini
       '.reuse': htdocs/.reuse
+    
 
     # This snap automatically updates. No need to include the updater to nag
     # users. This does not result in an integrity check failure.
     prime:
       - -htdocs/apps/updatenotification
+
+  nextcloud-fixer:
+    plugin: nil
+    stage-packages:
+      - mawk
+      - sed
 
   php:
     plugin: autotools

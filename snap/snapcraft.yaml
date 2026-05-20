@@ -319,7 +319,15 @@ parts:
       ./configure
 
       # Patch the Makefile to install to the correct location in the snap
-      sed -i.back "s|/parts/php/install/lib/php/extensions/|/parts/php-ext-apcu/install/lib/php/extensions/|g" Makefile
+      sed_script='
+      # Install the library to the correct location in the snap
+      s|/parts/php/install/lib/php/extensions/|/parts/php-ext-apcu/install/lib/php/extensions/|g
+      # Install the header files to the correct location (to parts/xxx/install). Will be staged/primed into the snap.
+      /phpincludedir/s|/parts/php/install/include|/parts/php-ext-apcu/install/include|g
+      # Avoid grabbing into the private location parts/php/install. Instead use stage to allow for proper interaction between extenstions.
+      s|/parts/php/install/include|/stage/include|g
+      '
+      sed -i.back "$sed_script" Makefile
 
       snapcraftctl build
 

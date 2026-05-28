@@ -172,7 +172,7 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-32.0.9.tar.bz2
+    source: https://download.nextcloud.com/server/releases/nextcloud-33.0.4.tar.bz2
     source-checksum: sha256/fd6d591975efde1caf0e8427a82baa55a4a8b7ae643da29ed83e299c208c1eee
     organize:
       '*': htdocs/
@@ -195,7 +195,7 @@ parts:
   php:
     plugin: autotools
     source: https://php.net/get/php-8.3.31.tar.bz2/from/this/mirror
-    source-checksum: sha256/e6986b1fd37eb25402127fe4a7278a3e03b7f9025bb7a4bd292a271bdf930fb9
+    source-checksum: sha256/f4b1cd6dd0525c6ba888f2cc1f0f1f53799d6d17cb0d7cf660542ec4cbcd7a72
     source-type: tar
     autotools-configure-parameters:
       - --prefix=$SNAPCRAFT_PART_INSTALL

@@ -1,3 +1,9 @@
+v 33.0.5snap1
+  - nextcloud: update to 33.0.5
+  - certbot: migrate legacy webroot plugin
+  - php: add apcu extension
+  - setup-nextcloud: configure memcache.local depending on available RAM
+
 v 32.0.9snap1
   - nextcloud: update to 32.0.9
 

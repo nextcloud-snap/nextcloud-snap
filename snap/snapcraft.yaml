@@ -172,18 +172,25 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-32.0.9.tar.bz2
-    source-checksum: sha256/fd6d591975efde1caf0e8427a82baa55a4a8b7ae643da29ed83e299c208c1eee
+    source: https://download.nextcloud.com/server/releases/nextcloud-33.0.5.tar.bz2
+    source-checksum: sha256/ed46b91d8da4e1f0234d0188b25bee9448fa2f301887e5b28013e6b547d6dcca
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
       '.user.ini': htdocs/.user.ini
       '.reuse': htdocs/.reuse
+    
 
     # This snap automatically updates. No need to include the updater to nag
     # users. This does not result in an integrity check failure.
     prime:
       - -htdocs/apps/updatenotification
+
+  nextcloud-fixer:
+    plugin: nil
+    stage-packages:
+      - mawk
+      - sed
 
   php:
     plugin: autotools
@@ -294,6 +301,33 @@ parts:
 
       # Patch the Makefile to install to the correct location in the snap
       sed -i.back "s|/parts/php/install/lib/php/extensions/|/parts/php-ext-redis/install/lib/php/extensions/|g" Makefile
+
+      snapcraftctl build
+
+  php-ext-apcu:
+    plugin: make
+    source: https://github.com/krakjoe/apcu/archive/refs/tags/v5.1.28.tar.gz
+    source-checksum: sha256/0e60ba9d0fa4021c57a70c071f3d8f71de236275d084e560d5959fec4edd8c32
+    after:
+      - php
+
+    override-build: |
+      # Prepare the php extension
+      ${SNAPCRAFT_STAGE}/bin/phpize
+
+      # Manually run the configure script
+      ./configure
+
+      # Patch the Makefile to install to the correct location in the snap
+      sed_script='
+      # Install the library to the correct location in the snap
+      s|/parts/php/install/lib/php/extensions/|/parts/php-ext-apcu/install/lib/php/extensions/|g
+      # Install the header files to the correct location (to parts/xxx/install). Will be staged/primed into the snap.
+      /phpincludedir/s|/parts/php/install/include|/parts/php-ext-apcu/install/include|g
+      # Avoid grabbing into the private location parts/php/install. Instead use stage to allow for proper interaction between extenstions.
+      s|/parts/php/install/include|/stage/include|g
+      '
+      sed -i.back "$sed_script" Makefile
 
       snapcraftctl build
 

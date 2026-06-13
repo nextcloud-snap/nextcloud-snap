@@ -125,8 +125,8 @@ hooks:
 parts:
   apache:
     plugin: autotools
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.67.tar.bz2
-    source-checksum: sha256/66cd206637b0d5c446fa7dabe75fe03525da8fb55855876c46288cd88b136aa4
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.68.tar.bz2
+    source-checksum: sha256/68c74d4df38c26bed4dfbdb8f3baf1eb532f3872357becc1bba5d136f6b63c06
 
     build-packages:
       - libbrotli-dev
@@ -333,8 +333,8 @@ parts:
 
   redis:
     plugin: make
-    source: https://download.redis.io/releases/redis-8.2.6.tar.gz
-    source-checksum: sha256/78dd7326c5c959202c6c3849d3ea9c61896d78d647c20f6542b52c0917f96eac
+    source: https://download.redis.io/releases/redis-8.2.7.tar.gz
+    source-checksum: sha256/afaae66030c193b06720a714ba7a558136b82689027536e0e24f53908c18cbe9
     
     override-build: |
       make -j${SNAPCRAFT_PARALLEL_BUILD_COUNT}

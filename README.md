@@ -8,6 +8,8 @@ Nextcloud server packaged as a snap. It consists of:
 - MySQL 8.4
 - Redis 8.2
 
+The nextcloud snap is a community driven project.
+
 ## How to install
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/nextcloud)

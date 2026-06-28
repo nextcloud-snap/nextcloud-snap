@@ -172,8 +172,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-33.0.5.tar.bz2
-    source-checksum: sha256/ed46b91d8da4e1f0234d0188b25bee9448fa2f301887e5b28013e6b547d6dcca
+    source: https://download.nextcloud.com/server/releases/nextcloud-33.0.6.tar.bz2
+    source-checksum: sha256/791821a55029944de04319cfcafcac4ae8e7ef56b4cd1efc2631bf30b79d16de
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -373,8 +373,8 @@ parts:
     plugin: cmake
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.9.tar.gz
-    source-checksum: md5/7b2591fa0b5388f604cc9b8273eab331
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.10.tar.gz
+    source-checksum: md5/db1e11216dd83423a9374999367d77e4
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

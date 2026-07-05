@@ -1,3 +1,6 @@
+v 32.0.12snap2
+  - php: update to 8.3.32
+
 v 32.0.12snap1
   - nextcloud: update to 32.0.12
   - mysql: update to 8.4.10

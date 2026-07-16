@@ -135,6 +135,7 @@ parts:
       - libaprutil1-dev
       - libpcre2-dev
       - libssl-dev
+      - rsync
 
     stage-packages:
       - libbrotli1

@@ -369,7 +369,6 @@ parts:
       - libfontconfig1
 
   mysql:
-    build-snaps: [cmake]
     plugin: cmake
 
     # Get from https://dev.mysql.com/downloads/mysql/
@@ -379,6 +378,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
       - -DCMAKE_BUILD_TYPE=Release
+      - -DWITH_ROUTER=OFF
       - -DWITH_UNIT_TESTS=OFF
       - -DWITH_EMBEDDED_SERVER=OFF
       - -DWITH_ARCHIVE_STORAGE_ENGINE=OFF
@@ -397,6 +397,7 @@ parts:
       - CC: gcc-10
       - CXX: g++-10
     override-build: |
+      cmake --version
       snapcraftctl build
       # MySQL v8 is massive. Strip it.
       find "$SNAPCRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;

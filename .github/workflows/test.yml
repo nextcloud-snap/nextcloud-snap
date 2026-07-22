@@ -64,7 +64,7 @@ jobs:
         run: sudo snap install *.snap --dangerous
 
       - name: Setup ruby
-        uses: ruby/setup-ruby@d45b1a4e94b71acab930e56e79c6aa188764e7f9 # v1.316.0
+        uses: ruby/setup-ruby@a30dfa457ad68707b8b910ac3a244714b61c0626 # v1.320.0
         with:
           working-directory: tests
           bundler-cache: true

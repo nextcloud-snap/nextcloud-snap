@@ -1,3 +1,8 @@
+v 34.0.2snap1
+  - nextcloud: update to 34.0.2
+  - redis: update to 8.2.8
+  - mysql: use core20 cmake
+
 v 34.0.1snap1
   - nextcloud: update to 34.0.1
   - php: update to 8.4.23

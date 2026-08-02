@@ -194,8 +194,8 @@ parts:
 
   php:
     plugin: autotools
-    source: https://php.net/get/php-8.4.23.tar.bz2/from/this/mirror
-    source-checksum: sha256/c142c063b10cff68d072766e3ffbfb3654a089b938668b0830356437ee95e0fa
+    source: https://php.net/get/php-8.4.24.tar.bz2/from/this/mirror
+    source-checksum: sha256/286890447588510df110ede9e9ce09f1eb4f9856630b47fdc40ece70e20373cf
     source-type: tar
     autotools-configure-parameters:
       - --prefix=$SNAPCRAFT_PART_INSTALL

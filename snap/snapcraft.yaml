@@ -195,8 +195,8 @@ parts:
 
   php:
     plugin: autotools
-    source: https://php.net/get/php-8.4.23.tar.bz2/from/this/mirror
-    source-checksum: sha256/c142c063b10cff68d072766e3ffbfb3654a089b938668b0830356437ee95e0fa
+    source: https://php.net/get/php-8.4.24.tar.bz2/from/this/mirror
+    source-checksum: sha256/286890447588510df110ede9e9ce09f1eb4f9856630b47fdc40ece70e20373cf
     source-type: tar
     autotools-configure-parameters:
       - --prefix=$SNAPCRAFT_PART_INSTALL
@@ -373,8 +373,8 @@ parts:
     plugin: cmake
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.10.tar.gz
-    source-checksum: md5/db1e11216dd83423a9374999367d77e4
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.11.tar.gz
+    source-checksum: md5/7e36429318298eb05a79054309f18cb2
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

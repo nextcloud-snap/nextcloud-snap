@@ -195,7 +195,7 @@ parts:
 
   php:
     plugin: autotools
-    source: https://php.net/get/php-8.4.24.tar.bz2/from/this/mirror
+    source: https://www.php.net/distributions/php-8.4.24.tar.bz2
     source-checksum: sha256/286890447588510df110ede9e9ce09f1eb4f9856630b47fdc40ece70e20373cf
     source-type: tar
     autotools-configure-parameters:

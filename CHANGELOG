@@ -1,3 +1,8 @@
+v 34.0.3snap1
+  - redis: update to 8.2.9
+  - nextcloud: update to 34.0.3
+  - certbot: remove nextcloud plugin
+
 v 34.0.2snap2
   - mysql: update to 8.4.11
   - php: update to 8.4.24

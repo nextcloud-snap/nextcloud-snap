@@ -173,8 +173,8 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-34.0.2.tar.bz2
-    source-checksum: sha256/41ce31df12cc81090c3d07fe0e8b90bde61c92b18ae80e4d648bad43d7991101
+    source: https://download.nextcloud.com/server/releases/nextcloud-34.0.3.tar.bz2
+    source-checksum: sha256/d7ed36ac0e14a2d9bbd167d6f6d4fc498f0f39fcccdf304e67e35bfc42e4506d
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
@@ -195,7 +195,7 @@ parts:
 
   php:
     plugin: autotools
-    source: https://php.net/get/php-8.4.24.tar.bz2/from/this/mirror
+    source: https://www.php.net/distributions/php-8.4.24.tar.bz2
     source-checksum: sha256/286890447588510df110ede9e9ce09f1eb4f9856630b47fdc40ece70e20373cf
     source-type: tar
     autotools-configure-parameters:
@@ -334,8 +334,8 @@ parts:
 
   redis:
     plugin: make
-    source: https://download.redis.io/releases/redis-8.2.8.tar.gz
-    source-checksum: sha256/01354ee4449e758e6e45d056fe5802abd9ccde4d669b79c9d5e9f6d730a80759
+    source: https://download.redis.io/releases/redis-8.2.9.tar.gz
+    source-checksum: sha256/531b314e5557ad76d941f605b3e3162ac61dc141f37c407e1f91fcfe17ea8c30
     
     override-build: |
       make -j${SNAPCRAFT_PARALLEL_BUILD_COUNT}

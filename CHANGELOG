@@ -1,3 +1,41 @@
+v 34.0.3snap1
+  - redis: update to 8.2.9
+  - nextcloud: update to 34.0.3
+  - certbot: remove nextcloud plugin
+
+v 34.0.2snap2
+  - mysql: update to 8.4.11
+  - php: update to 8.4.24
+
+v 34.0.2snap1
+  - nextcloud: update to 34.0.2
+  - redis: update to 8.2.8
+  - mysql: use core20 cmake
+
+v 34.0.1snap1
+  - nextcloud: update to 34.0.1
+  - php: update to 8.4.23
+
+v 33.0.6snap1
+  - nextcloud: update to 33.0.6
+  - mysql: update to 8.4.10
+
+v 33.0.5snap2
+  - apache: update to 2.4.68
+  - redis: update to 8.2.7
+
+v 33.0.5snap1
+  - nextcloud: update to 33.0.5
+  - certbot: migrate legacy webroot plugin
+  - php: add apcu extension
+  - setup-nextcloud: configure memcache.local depending on available RAM
+
+v 32.0.9snap1
+  - nextcloud: update to 32.0.9
+
+v 32.0.8snap5
+  - php: update to 8.3.31
+
 v 32.0.8snap4
   - mysql: update to 8.4.9
   - redis: update to 8.2.6

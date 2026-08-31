@@ -125,8 +125,8 @@ hooks:
 parts:
   apache:
     plugin: autotools
-    source: https://archive.apache.org/dist/httpd/httpd-2.4.67.tar.bz2
-    source-checksum: sha256/66cd206637b0d5c446fa7dabe75fe03525da8fb55855876c46288cd88b136aa4
+    source: https://archive.apache.org/dist/httpd/httpd-2.4.68.tar.bz2
+    source-checksum: sha256/68c74d4df38c26bed4dfbdb8f3baf1eb532f3872357becc1bba5d136f6b63c06
 
     build-packages:
       - libbrotli-dev
@@ -135,6 +135,7 @@ parts:
       - libaprutil1-dev
       - libpcre2-dev
       - libssl-dev
+      - rsync
 
     stage-packages:
       - libbrotli1
@@ -172,23 +173,30 @@ parts:
 
   nextcloud:
     plugin: dump
-    source: https://download.nextcloud.com/server/releases/nextcloud-32.0.8.tar.bz2
-    source-checksum: sha256/58ad8ddf860d75a294b97a8e3e39562dec87ff650cb91c114589b3744ab1de0d
+    source: https://download.nextcloud.com/server/releases/nextcloud-34.0.3.tar.bz2
+    source-checksum: sha256/d7ed36ac0e14a2d9bbd167d6f6d4fc498f0f39fcccdf304e67e35bfc42e4506d
     organize:
       '*': htdocs/
       '.htaccess': htdocs/.htaccess
       '.user.ini': htdocs/.user.ini
       '.reuse': htdocs/.reuse
+    
 
     # This snap automatically updates. No need to include the updater to nag
     # users. This does not result in an integrity check failure.
     prime:
       - -htdocs/apps/updatenotification
 
+  nextcloud-fixer:
+    plugin: nil
+    stage-packages:
+      - mawk
+      - sed
+
   php:
     plugin: autotools
-    source: https://php.net/get/php-8.3.29.tar.bz2/from/this/mirror
-    source-checksum: sha256/c7337212e655325d499ea8108fa76f69ddde2fff7cb0fad36aa63eed540cb8a5
+    source: https://www.php.net/distributions/php-8.4.24.tar.bz2
+    source-checksum: sha256/286890447588510df110ede9e9ce09f1eb4f9856630b47fdc40ece70e20373cf
     source-type: tar
     autotools-configure-parameters:
       - --prefix=$SNAPCRAFT_PART_INSTALL
@@ -297,10 +305,37 @@ parts:
 
       snapcraftctl build
 
+  php-ext-apcu:
+    plugin: make
+    source: https://github.com/krakjoe/apcu/archive/refs/tags/v5.1.28.tar.gz
+    source-checksum: sha256/0e60ba9d0fa4021c57a70c071f3d8f71de236275d084e560d5959fec4edd8c32
+    after:
+      - php
+
+    override-build: |
+      # Prepare the php extension
+      ${SNAPCRAFT_STAGE}/bin/phpize
+
+      # Manually run the configure script
+      ./configure
+
+      # Patch the Makefile to install to the correct location in the snap
+      sed_script='
+      # Install the library to the correct location in the snap
+      s|/parts/php/install/lib/php/extensions/|/parts/php-ext-apcu/install/lib/php/extensions/|g
+      # Install the header files to the correct location (to parts/xxx/install). Will be staged/primed into the snap.
+      /phpincludedir/s|/parts/php/install/include|/parts/php-ext-apcu/install/include|g
+      # Avoid grabbing into the private location parts/php/install. Instead use stage to allow for proper interaction between extenstions.
+      s|/parts/php/install/include|/stage/include|g
+      '
+      sed -i.back "$sed_script" Makefile
+
+      snapcraftctl build
+
   redis:
     plugin: make
-    source: https://download.redis.io/releases/redis-8.2.6.tar.gz
-    source-checksum: sha256/78dd7326c5c959202c6c3849d3ea9c61896d78d647c20f6542b52c0917f96eac
+    source: https://download.redis.io/releases/redis-8.2.9.tar.gz
+    source-checksum: sha256/531b314e5557ad76d941f605b3e3162ac61dc141f37c407e1f91fcfe17ea8c30
     
     override-build: |
       make -j${SNAPCRAFT_PARALLEL_BUILD_COUNT}
@@ -335,16 +370,16 @@ parts:
       - libfontconfig1
 
   mysql:
-    build-snaps: [cmake]
     plugin: cmake
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.9.tar.gz
-    source-checksum: md5/7b2591fa0b5388f604cc9b8273eab331
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.11.tar.gz
+    source-checksum: md5/7e36429318298eb05a79054309f18cb2
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release
       - -DCMAKE_BUILD_TYPE=Release
+      - -DWITH_ROUTER=OFF
       - -DWITH_UNIT_TESTS=OFF
       - -DWITH_EMBEDDED_SERVER=OFF
       - -DWITH_ARCHIVE_STORAGE_ENGINE=OFF
@@ -363,6 +398,7 @@ parts:
       - CC: gcc-10
       - CXX: g++-10
     override-build: |
+      cmake --version
       snapcraftctl build
       # MySQL v8 is massive. Strip it.
       find "$SNAPCRAFT_PART_INSTALL/bin" -type f -exec sh -c 'grep -IL . "$1" || strip --strip-all "$1"' sh "{}" \;

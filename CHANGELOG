@@ -1,3 +1,6 @@
+v 33.0.9snap1
+  - nextcloud: update to 33.0.9
+
 v 33.0.8snap1
   - nextcloud: update to 33.0.8
   - redis: update to 8.2.9

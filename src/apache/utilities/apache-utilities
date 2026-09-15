@@ -6,6 +6,7 @@
 DEFAULT_HTTP_PORT="80"
 DEFAULT_HTTPS_PORT="443"
 DEFAULT_HTTP_COMPRESSION="false"
+DEFAULT_FCGI_FLUSHPACKETS="false"
 DEFAULT_HTTP_NOTIFY_PUSH_REVERSE_PROXY="false"
 
 : "${APACHE_PIDFILE:="/tmp/pids/httpd.pid"}"
@@ -201,4 +202,52 @@ _apache_get_previous_notify_push_reverse_proxy_enabled()
 _apache_set_previous_notify_push_reverse_proxy_enabled()
 {
 	snapctl set private.http.notify-push-reverse-proxy="$1"
+}
+
+apache_fcgi_flushpackets_enabled()
+{
+	[ "$(apache_get_fcgi_flushpackets)" = "true" ]
+}
+
+apache_enable_fcgi_flushpackets()
+{
+	_apache_set_fcgi_flushpackets "true"
+}
+
+apache_disable_fcgi_flushpackets()
+{
+	_apache_set_fcgi_flushpackets "false"
+}
+
+apache_fcgi_flushpackets_has_changed()
+{
+	[ "$(apache_get_fcgi_flushpackets)" != "$(_apache_get_previous_fcgi_flushpackets)" ]
+}
+
+apache_get_fcgi_flushpackets()
+{
+	fcgi_flushpackets="$(snapctl get http.fcgi-flushpackets)"
+
+	if [ -z "$fcgi_flushpackets" ]; then
+		fcgi_flushpackets="$DEFAULT_FCGI_FLUSHPACKETS"
+		_apache_set_fcgi_flushpackets "$fcgi_flushpackets"
+	fi
+
+	echo "$fcgi_flushpackets"
+}
+
+_apache_set_fcgi_flushpackets()
+{
+	snapctl set http.fcgi-flushpackets="$1"
+	_apache_set_previous_fcgi_flushpackets "$1"
+}
+
+_apache_get_previous_fcgi_flushpackets()
+{
+	snapctl get private.http.fcgi-flushpackets
+}
+
+_apache_set_previous_fcgi_flushpackets()
+{
+	snapctl set private.http.fcgi-flushpackets="$1"
 }

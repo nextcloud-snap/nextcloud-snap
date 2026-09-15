@@ -128,6 +128,18 @@ To disable it, run:
     $ sudo snap set nextcloud http.compression=false
 
 
+#### PHP-FPM proxy buffering configuration
+
+By default, Apache's reverse proxy to PHP-FPM will not auto-flush output after each chunk of data.
+If you need the proxy to be configured without buffering, run:
+
+    $ sudo snap set nextcloud http.fcgi-flushpackets=true
+
+To disable it, run:
+
+    $ sudo snap set nextcloud http.fcgi-flushpackets=false
+
+
 #### Reverse Proxy for Files High Performance Backend
 
 This option simply enables the reverse proxy configuration mentioned in the [Client Push README](https://github.com/nextcloud/notify_push#apache), that is the recommended way to setup the `notify_push` component.

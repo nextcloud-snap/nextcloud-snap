@@ -19,6 +19,10 @@
 #   Whether or not HTTP compression should be enabled. Valid values are 'true'
 #   and 'false'.
 #
+# - http.fcgi-flushpackets (string)
+#   Whether to auto-flush output of the FCGI proxy after each chunk of data.
+#   Valid values are 'true' and 'false'.
+#
 # - http.notify-push-reverse-proxy (string)
 #   Whether or not the notify_push reverse proxy should be enabled. Valid
 #   values are 'true' and 'false'.
@@ -160,6 +164,24 @@ handle_http_compression()
 	snapctl restart "${SNAP_INSTANCE_NAME}.apache"
 }
 
+handle_fcgi_flushpackets()
+{
+	# If no changes were requested, then there's nothing to do here.
+	if ! apache_fcgi_flushpackets_has_changed; then
+		return 0
+	fi
+
+	# Validate input
+	value="$(apache_get_fcgi_flushpackets)"
+	if [ "$value" != "true" ] && [ "$value" != "false" ]; then
+		echo "http.fcgi-flushpackets must be either 'true' or 'false'" >&2
+		return 1
+	fi
+
+	# Restart Apache to apply new config
+	snapctl restart "${SNAP_INSTANCE_NAME}.apache"
+}
+
 handle_notify_push_reverse_proxy()
 {
 	# If no changes were requested, then there's nothing to do here.
@@ -183,4 +205,5 @@ handle_php_memory_limit
 handle_cronjob_interval
 handle_mode
 handle_http_compression
+handle_fcgi_flushpackets
 handle_notify_push_reverse_proxy

@@ -1,3 +1,6 @@
+v 34.0.4snap3
+  - certbot: fix ppc64el builds
+
 v 34.0.4snap2
   - certbot: update to 1.21.0
   - redis: update to 8.2.10

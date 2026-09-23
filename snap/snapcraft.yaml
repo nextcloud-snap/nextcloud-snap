@@ -462,7 +462,11 @@ parts:
     plugin: python
     source: src/https/
     requirements: ["requirements.txt"]
-    build-packages: [libffi-dev]
+    build-packages:
+      - libffi-dev
+      # These are needed by the ppc64el arch for building cryptography
+      - rustc
+      - cargo
     after: [patches]
     override-build: |
       snapcraftctl build

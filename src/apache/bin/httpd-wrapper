@@ -52,6 +52,15 @@ HTTPS_PORT="$(apache_https_port)"
 export HTTP_PORT
 export HTTPS_PORT
 
+if apache_fcgi_flushpackets_enabled; then
+    echo "http.fcgi-flushpackets is enabled"
+    FCGI_FLUSHPACKETS="on"
+else
+    echo "http.fcgi-flushpackets is disabled"
+    FCGI_FLUSHPACKETS="off"
+fi
+export FCGI_FLUSHPACKETS
+
 # Disable shellcheck for quoting params, since we're building a command line
 # and these need to be separated by spaces
 # shellcheck disable=SC2086

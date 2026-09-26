@@ -1,0 +1,61 @@
+name: Renovate snap dependencies
+
+on:
+  schedule:
+    # Run three times a day; Renovate opens/updates PRs immediately.
+    - cron: "0 0,8,16 * * *"
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: Log level
+        type: choice
+        default: info
+        options:
+          - debug
+          - info
+          - warn
+      dryRun:
+        description: Dry run (do not create or update pull requests)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: renovate
+  cancel-in-progress: false
+
+jobs:
+  renovate:
+    name: Renovate
+    runs-on: ubuntu-latest
+    # A normal run takes a few minutes; a wedged one must not burn the
+    # full hosted-runner budget (6 hours by default).
+    timeout-minutes: 20
+    steps:
+      # Exchange the GitHub App credentials for a short-lived installation
+      # token. Nothing long-lived is stored beyond the app's private key, and
+      # Renovate commits/PRs are attributed to the app bot rather than a person.
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.RENOVATE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+          # The owner (organization) and the single repository the app is
+          # installed on. Scope the token to this repo only.
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@dcfba84a42d1b5d5e49bf131b1bf53511851a123 # v46.3.1
+        with:
+          configurationFile: .github/renovate.json5
+          token: ${{ steps.app-token.outputs.token }}
+        env:
+          LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
+          RENOVATE_DRY_RUN: ${{ inputs.dryRun && 'full' || 'false' }}

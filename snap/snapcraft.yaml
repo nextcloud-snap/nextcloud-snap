@@ -468,7 +468,7 @@ parts:
   certbot:
     plugin: python
     source: src/https/
-    requirements: ["requirements.txt"]
+    python-requirements: ["requirements.txt"]
     build-packages:
       - libffi-dev
       # These are needed by the ppc64el arch for building cryptography

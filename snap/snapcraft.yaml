@@ -337,7 +337,7 @@ parts:
       '
       sed -i.back "$sed_script" Makefile
 
-      snapcraftctl build
+      craftctl default
 
   redis:
     plugin: make

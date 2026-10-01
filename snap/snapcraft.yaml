@@ -285,7 +285,12 @@ parts:
     organize:
       # Put php-fpm in bin with everything else, not sbin.
       sbin/php-fpm: bin/php-fpm
-    
+      # Rename the PHP CLI binary to make room for a wrapper script, wich will
+      # be provided by the php-customizations part, that ensures the snap's php.ini is
+      # always loaded, even when PHP is invoked without an explicit `-c`.
+      # See #3211.
+      bin/php: bin/php.bin
+
   php-ext-redis:
     plugin: make
     source: https://github.com/phpredis/phpredis/archive/6.3.0.tar.gz

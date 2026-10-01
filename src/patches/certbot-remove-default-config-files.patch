@@ -3,7 +3,7 @@
 @@ -14,12 +14,7 @@
  """Plugins Setuptools entry point before rename."""
  
- CLI_DEFAULTS: Dict[str, Any] = dict(
+ CLI_DEFAULTS = dict(
 -    config_files=[
 -        os.path.join(misc.get_default_folder('config'), 'cli.ini'),
 -        # https://freedesktop.org/wiki/Software/xdg-user-dirs/

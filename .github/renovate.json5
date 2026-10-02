@@ -1,0 +1,150 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  // This is the self-hosted ("global") Renovate configuration used by
+  // .github/workflows/renovate.yml. It is deliberately not named renovate.json
+  // so that Renovate does not also treat it as a repository config.
+  onboarding: false,
+  requireConfig: "optional",
+  repositories: ["nextcloud-snap/nextcloud-snap"],
+
+  extends: ["config:recommended", ":semanticCommitsDisabled"],
+
+  // Supported release lines: `develop` is the active line and the numeric
+  // branches are the maintained Nextcloud major releases. Add the new branch
+  // here when a new major release branch is cut.
+  baseBranchPatterns: ["develop", "33"],
+  branchPrefix: "renovate-snap/",
+  labels: ["dependencies"],
+
+  // The workflow runs three times a day; open each update immediately instead
+  // of waiting for the next hour (Renovate's default prHourlyLimit is 2).
+  prHourlyLimit: 0,
+
+  // Worst case is one open PR per tracked component per base branch
+  // (7 x 3 = 21); the default prConcurrentLimit of 10 would stall updates on
+  // the remaining branches until PRs merge. Keep this in sync with
+  // baseBranchPatterns and the customManagers below.
+  prConcurrentLimit: 21,
+
+  // Major upgrades are applied manually when the time is right, so Renovate
+  // only proposes minor and patch updates on every branch.
+  major: {
+    enabled: false,
+  },
+
+  // For PHP and Redis an automatic semver-minor bump is a no go
+  // (PHP 8.4 -> 8.5, Redis 8.2 -> 8.3), and `major: {enabled: false}` would
+  // not stop it. Pin each branch to the minor line it currently ships; like
+  // majors, line bumps are applied manually, and the pins must be moved here
+  // when that happens (also when a new release branch is added). MySQL is
+  // already pinned to its 8.4 line by its extractVersionTemplate below.
+  packageRules: [
+    {
+      matchDepNames: ["php/php-src"],
+      // matchBaseBranches: ["develop", "33"],
+      allowedVersions: "/^8\\.4\\./",
+    },
+    {
+      matchDepNames: ["redis/redis"],
+      allowedVersions: "/^8\\.2\\./",
+    },
+  ],
+
+  // Dependabot (.github/dependabot.yml) keeps the GitHub Actions pinned.
+  // Renovate only handles the upstream tarballs in snap/snapcraft.yaml. It is
+  // scoped to `custom.regex`, so certbot (which is updated manually) and the
+  // rest of the Python requirements are left untouched.
+  enabledManagers: ["custom.regex"],
+
+  // After Renovate bumps a `source:` URL, recompute the matching
+  // `source-checksum` before the branch is committed, so the snapcraft build
+  // stays valid.
+  allowedCommands: ["^bash .github/tools/update-checksums\\.sh$"],
+  postUpgradeTasks: {
+    commands: ["bash .github/tools/update-checksums.sh"],
+    fileFilters: ["snap/snapcraft.yaml"],
+    executionMode: "update",
+  },
+    // Each `source:` is tracked through the upstream GitHub tags.
+  // `extractVersionTemplate` strips the tag prefix/suffix so the version
+  // compares correctly against the version embedded in the tarball URL.
+  customManagers: [
+    {
+      customType: "regex",
+      description: "Apache httpd (snap/snapcraft.yaml)",
+      managerFilePatterns: ["snap/snapcraft.yaml"],
+      matchStrings: [
+        "archive\\.apache\\.org/dist/httpd/httpd-(?<currentValue>\\d+\\.\\d+\\.\\d+)\\.tar\\.bz2",
+      ],
+      datasourceTemplate: "github-tags",
+      depNameTemplate: "apache/httpd",
+      extractVersionTemplate: "^(?<version>\\d+\\.\\d+\\.\\d+)$",
+    },
+    {
+      customType: "regex",
+      description: "Nextcloud server (snap/snapcraft.yaml)",
+      managerFilePatterns: ["snap/snapcraft.yaml"],
+      matchStrings: [
+        "download\\.nextcloud\\.com/server/releases/nextcloud-(?<currentValue>\\d+\\.\\d+\\.\\d+)\\.tar\\.bz2",
+      ],
+      datasourceTemplate: "github-tags",
+      depNameTemplate: "nextcloud/server",
+      extractVersionTemplate: "^v(?<version>\\d+\\.\\d+\\.\\d+)$",
+    },
+    {
+      customType: "regex",
+      description: "PHP (snap/snapcraft.yaml)",
+      managerFilePatterns: ["snap/snapcraft.yaml"],
+      matchStrings: [
+        "www\\.php\\.net/distributions/php-(?<currentValue>\\d+\\.\\d+\\.\\d+)\\.tar\\.bz2",
+      ],
+      datasourceTemplate: "github-tags",
+      depNameTemplate: "php/php-src",
+      extractVersionTemplate: "^php-(?<version>\\d+\\.\\d+\\.\\d+)$",
+    },
+    {
+      customType: "regex",
+      description: "phpredis extension (snap/snapcraft.yaml)",
+      managerFilePatterns: ["snap/snapcraft.yaml"],
+      matchStrings: [
+        "phpredis/phpredis/archive/(?<currentValue>\\d+\\.\\d+\\.\\d+)\\.tar\\.gz",
+      ],
+      datasourceTemplate: "github-tags",
+      depNameTemplate: "phpredis/phpredis",
+      extractVersionTemplate: "^(?<version>\\d+\\.\\d+\\.\\d+)$",
+    },
+    {
+      customType: "regex",
+      description: "APCu extension (snap/snapcraft.yaml)",
+      managerFilePatterns: ["snap/snapcraft.yaml"],
+      matchStrings: [
+        "krakjoe/apcu/archive/refs/tags/v(?<currentValue>\\d+\\.\\d+\\.\\d+)\\.tar\\.gz",
+      ],
+      datasourceTemplate: "github-tags",
+      depNameTemplate: "krakjoe/apcu",
+      extractVersionTemplate: "^v(?<version>\\d+\\.\\d+\\.\\d+)$",
+    },
+    {
+      customType: "regex",
+      description: "Redis (snap/snapcraft.yaml)",
+      managerFilePatterns: ["snap/snapcraft.yaml"],
+      matchStrings: [
+        "download\\.redis\\.io/releases/redis-(?<currentValue>\\d+\\.\\d+\\.\\d+)\\.tar\\.gz",
+      ],
+      datasourceTemplate: "github-tags",
+      depNameTemplate: "redis/redis",
+      extractVersionTemplate: "^(?<version>\\d+\\.\\d+\\.\\d+)$",
+    },
+      customType: "regex",
+      description: "MySQL 8.4 LTS (snap/snapcraft.yaml)",
+      managerFilePatterns: ["snap/snapcraft.yaml"],
+      matchStrings: [
+        "MySQL-8\\.4/mysql-(?<currentValue>8\\.4\\.\\d+)\\.tar\\.gz",
+      ],
+      datasourceTemplate: "github-tags",
+      depNameTemplate: "mysql/mysql-server",
+      extractVersionTemplate: "^mysql-(?<version>8\\.4\\.\\d+)$",
+    },
+  ],
+}

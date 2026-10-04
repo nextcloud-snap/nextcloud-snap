@@ -20,7 +20,7 @@ pytz==2021.3
 requests==2.26.0
 requests-toolbelt==0.9.1
 six==1.16.0
-urllib3==1.26.7
+urllib3==2.8.0
 zope.component==5.0.1
 zope.deferredimport==4.3.1
 zope.deprecation==4.4.0

@@ -61,3 +61,36 @@ jobs:
       - name: Run tests
         working-directory: tests
         run: bundle exec ./run-tests.sh integration
+
+  # Run the Pebble-based ACME test on arm64 to catch architecture-specific
+  # regressions in the`nextcloud.enable-https` stack.
+  # For example #3461.
+  test-daily-arm64:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-26.04-arm
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install nextcloud
+        run: sudo snap install nextcloud --channel=latest/beta
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+        with:
+          working-directory: tests
+          bundler-cache: true
+      
+      - name: Install Chrome
+        run: |
+          if ! command -v google-chrome > /dev/null; then
+            wget --quiet https://dl.google.com/linux/direct/google-chrome-stable_current_arm64.deb
+            sudo apt-get install -y ./google-chrome-stable_current_arm64.deb
+          fi
+
+      - name: Run tests
+        working-directory: tests
+        env:
+          TEST: integration/enable_https_spec.rb
+        run: bundle exec ./run-tests.sh integration

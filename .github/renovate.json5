@@ -59,10 +59,21 @@
 
   // After Renovate bumps a `source:` URL, recompute the matching
   // `source-checksum` before the branch is committed, so the snapcraft build
-  // stays valid.
-  allowedCommands: ["^bash .github/tools/update-checksums\\.sh$"],
+  // stays valid. The slim Renovate image ships no Python, so the first two
+  // commands install the interpreter and the ruamel.yaml dependency (both
+  // succeed harmlessly if already present); the script itself also re-tries the
+  // pip install when run by hand.
+  allowedCommands: [
+    "^install-tool python 3\\.14\\.6$",
+    "^python3 -m pip install --quiet --user ruamel\\.yaml$",
+    "^python3 \\.github/tools/update-checksums\\.py$",
+  ],
   postUpgradeTasks: {
-    commands: ["bash .github/tools/update-checksums.sh"],
+    commands: [
+      "install-tool python 3.14.6",
+      "python3 -m pip install --quiet --user ruamel.yaml",
+      "python3 .github/tools/update-checksums.py",
+    ],
     fileFilters: ["snap/snapcraft.yaml"],
     executionMode: "update",
   },
@@ -136,6 +147,7 @@
       depNameTemplate: "redis/redis",
       extractVersionTemplate: "^(?<version>\\d+\\.\\d+\\.\\d+)$",
     },
+    {
       customType: "regex",
       description: "MySQL 8.4 LTS (snap/snapcraft.yaml)",
       managerFilePatterns: ["snap/snapcraft.yaml"],
@@ -148,3 +160,4 @@
     },
   ],
 }
+

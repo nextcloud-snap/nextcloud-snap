@@ -1,4 +1,7 @@
 acme==1.21.0
+# Certbot 1.21 imports pkg_resources at startup (certbot._internal.constants),
+# which setuptools removed in v82.0.0.
+setuptools<82
 asn1crypto==1.4.0
 certbot==1.21.0
 certifi==2021.10.8

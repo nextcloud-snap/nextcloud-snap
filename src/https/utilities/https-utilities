@@ -149,6 +149,16 @@ run_certbot()
 
 run_certbot_certonly()
 {
+	# Allow pointing certbot at a different ACME server, e.g. a private
+	# one. Unset means Let's Encrypt, as usual.
+	server=""
+	if [ -n "$CERTBOT_SERVER" ]; then
+		server="--server $CERTBOT_SERVER"
+	fi
+
+	# Building CLI commands, so we don't WANT to quote this (it needs to
+	# be separated by whitespace): disable the check
+	# shellcheck disable=SC2086
 	run_certbot certonly \
 		--authenticator webroot \
 		--webroot-path "$CERTBOT_DIRECTORY" \
@@ -156,5 +166,6 @@ run_certbot_certonly()
 		--non-interactive \
 		--agree-tos \
 		--force-renewal \
+		$server \
 		"$@"
 }

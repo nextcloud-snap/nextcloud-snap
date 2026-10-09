@@ -144,6 +144,11 @@ headers and error pages. Debug mode can be enabled with:
 
 "debug" and "production" are the only valid modes.
 
+Debug mode also enables an Apache timing log at
+`/var/snap/nextcloud/current/logs/apache_timing.log`, recording how long each
+request took to serve (in microseconds, including time queued on the PHP-FPM
+socket) and how many bytes were transferred.
+
 
 ### Included CLI utilities
 

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Wrapper around the real PHP CLI binary (bin/php.bin) that makes it load the
+# php.ini shipped in the snap even when it's invoked without an explicit `-c`
+# option.
+#
+# This is required because PHP is built with a build-time prefix, so it cannot
+# find any php.ini on its own inside the snap. See #3211.
+#
+# PHP honors the last `-c` it's given (and `-n` always wins), so callers that
+# manage their own configuration, such as run-php, keep working unchanged.
+
+# The php.ini shipped in the snap substitutes these environment variables.
+# They're usually already set (e.g. by run-php, or inherited from php-fpm);
+# fall back to the snap's defaults otherwise (keep the memory limit in sync
+# with DEFAULT_MEMORY_LIMIT in utilities/php-utilities).
+export PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
+export PHP_EXPOSE_PHP="${PHP_EXPOSE_PHP:-Off}"
+
+exec "$SNAP/bin/php.bin" -c "$SNAP/config/php" "$@"

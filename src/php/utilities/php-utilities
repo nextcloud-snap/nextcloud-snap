@@ -4,6 +4,7 @@
 . "$SNAP/utilities/common-utilities"
 
 DEFAULT_MEMORY_LIMIT="512M"
+DEFAULT_APC_SHM_SIZE="32M"
 export PHP_FPM_PIDFILE="/tmp/pids/php-fpm.pid"
 export PHP_FPM_SOCKET="/tmp/sockets/php-fpm.sock"
 
@@ -84,4 +85,31 @@ php_previous_memory_limit()
 php_set_previous_memory_limit()
 {
 	snapctl set private.php.memory-limit="$1"
+}
+
+php_apc_shm_size()
+{
+       apc_shm_size="$(snapctl get php.apc-shm-size)"
+       if [ -z "$apc_shm_size" ]; then
+               apc_shm_size="$DEFAULT_APC_SHM_SIZE"
+               php_set_apc_shm_size "$apc_shm_size"
+               php_set_previous_apc_shm_size "$apc_shm_size"
+       fi
+
+       echo "$apc_shm_size"
+}
+
+php_set_apc_shm_size()
+{
+       snapctl set php.apc-shm-size="$1"
+}
+
+php_previous_apc_shm_size()
+{
+       snapctl get private.php.apc-shm-size
+}
+
+php_set_previous_apc_shm_size()
+{
+       snapctl set private.php.apc-shm-size="$1"
 }

@@ -102,6 +102,22 @@ To set it to be unlimited (not recommended), use -1:
     $ sudo snap set nextcloud php.memory-limit=-1
 
 
+#### APC shm size configuration
+
+The snap uses APCu for local caching. By default, APCu allocates 32M of
+shared memory but the Nextcloud documentation recommends 128MB as a starting
+point. If your Nextcloud admin panel shows a warning that the APCu cache is
+full, you may need to increase this value.
+
+If you'd like to set the APC shm size to nextcloud's recommended value (128M),
+run:
+
+    $ sudo snap set nextcloud php.apc-shm-size=128M
+
+Note that this memory needs to be available in your system's memory, so keep
+it in mind when sizing the number of workers on your server.
+
+
 #### Cronjob interval configuration
 
 By default the cronjob interval is 5 minutes.

@@ -12,6 +12,10 @@
 #   Memory limit for PHP workers. String can include units, e.g. 32M is 32
 #   megabytes.
 #
+# - php.apc-shm-size (string)
+#   APC shared memory size for APCu (the amount of memory allocated for
+#   local caching). String can include units, e.g. 128M is 128 megabytes.
+#
 # - nextcloud.cron-interval (string)
 #   Interval of the internal Nextcloud cronjob
 #
@@ -94,6 +98,31 @@ handle_php_memory_limit()
 
 	# Restart PHP to apply new config
 	snapctl restart "${SNAP_INSTANCE_NAME}.php-fpm"
+}
+
+handle_php_apc_shm_size()
+{
+       apc_shm_size="$(php_apc_shm_size)"
+       previous_apc_shm_size="$(php_previous_apc_shm_size)"
+
+       # If no changes were requested, then there's nothing to do here.
+       if [ "$apc_shm_size" = "$previous_apc_shm_size" ]; then
+               return 0
+       fi
+
+       # Validate APC shm size. Raw bytes and K/M/G shorthand allowed.
+       if ! expr "$apc_shm_size" : '^[0-9]\+[KMG]\?$' > /dev/null; then
+               echo "\"$apc_shm_size\" is not a valid APC shm size" >&2
+               return 1
+       fi
+
+       # Set new value. Since snapctl only gives us new values, also keep track of
+       # the current value so we know when it changes.
+       php_set_apc_shm_size "$apc_shm_size"
+       php_set_previous_apc_shm_size "$apc_shm_size"
+
+       # Restart PHP to apply new config
+       snapctl restart "${SNAP_INSTANCE_NAME}.php-fpm"
 }
 
 handle_cronjob_interval()
@@ -180,6 +209,7 @@ handle_notify_push_reverse_proxy()
 
 handle_apache_port_config
 handle_php_memory_limit
+handle_php_apc_shm_size
 handle_cronjob_interval
 handle_mode
 handle_http_compression

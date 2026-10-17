@@ -16,5 +16,6 @@
 # with DEFAULT_MEMORY_LIMIT in utilities/php-utilities).
 export PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
 export PHP_EXPOSE_PHP="${PHP_EXPOSE_PHP:-Off}"
+export PHP_APC_SHM_SIZE="${PHP_APC_SHM_SIZE:-32M}"
 
 exec "$SNAP/bin/php.bin" -c "$SNAP/config/php" "$@"

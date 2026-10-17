@@ -1,3 +1,10 @@
+v 34.0.5snap1
+  - nextcloud: update to 34.0.5
+  - snap: upgrade to core22
+  - php: allow for apc.shm_size configuration
+  - php: ensure the snap's php.ini is always loaded
+  - ci: test enable-https with Let's Encrypt Pebble
+
 v 34.0.4snap4
   - php: update to 8.4.26
   - apache: update to 2.4.69

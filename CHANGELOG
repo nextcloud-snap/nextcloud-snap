@@ -1,3 +1,7 @@
+v 34.0.5snap2
+  - mysql: configure innodb_log_file_size to 256MB
+  - ci: fix pr upload snap step
+
 v 34.0.5snap1
   - nextcloud: update to 34.0.5
   - snap: upgrade to core22

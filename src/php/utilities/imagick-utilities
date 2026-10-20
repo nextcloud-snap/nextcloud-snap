@@ -1,0 +1,115 @@
+#!/bin/sh
+
+# The PHP imagick extension and its ImageMagick libraries are provided by the
+# separate `imagick` snap through a content interface. The admin opts in
+# manually:
+#
+#   snap connect nextcloud:imagick imagick:php-extensions
+#
+# When connected, the content is mounted at $SNAP/extensions. Loading is
+# conditional: if the plug is not connected, or the imagick snap has no build
+# for this snap's PHP API (it uses the same no-debug-non-zts-<API> directory
+# name as our own extension dir), the extension doesn't exist and PHP starts
+# exactly as before.
+IMAGICK_EXTENSION=""
+for imagick_api_dir in "$SNAP"/lib/php/extensions/no-debug-non-zts-*; do
+	IMAGICK_EXTENSION="$SNAP/extensions/php/extensions/$(basename "$imagick_api_dir")/imagick.so"
+done
+unset imagick_api_dir
+
+# Extra command-line arguments for php/php-fpm, set by imagick_configure.
+# Intentionally unquoted at the call sites: it is either empty or a few
+# `-d <setting>` pairs (no spaces in the values).
+IMAGICK_PHP_ARGS=""
+
+imagick_is_connected()
+{
+	[ -f "$IMAGICK_EXTENSION" ]
+}
+
+# Print the colon-separated list $1 with $2 appended, unless it's already in
+# there. Appending (rather than prepending) keeps this snap's own libraries and
+# binaries ahead of the imagick snap's copies of the same ones.
+imagick_path_append()
+{
+	case ":$1:" in
+		*":$2:"*) printf "%s" "$1" ;;
+		*) printf "%s" "${1:+$1:}$2" ;;
+	esac
+}
+
+# Export the environment imagick needs and set IMAGICK_PHP_ARGS. No-op when
+# the imagick snap is not connected.
+imagick_configure()
+{
+	IMAGICK_PHP_ARGS=""
+
+	if ! imagick_is_connected; then
+		return 0
+	fi
+
+	# ImageMagick's libraries, plus the runtime dependencies staged by the
+	# imagick snap (librsvg, libheif, libtiff, libgs, ...) in a multiarch
+	# subdir.
+	LD_LIBRARY_PATH="$(imagick_path_append "$LD_LIBRARY_PATH" "$SNAP/extensions/usr/lib")"
+	for libdir in "$SNAP"/extensions/usr/lib/*-linux-gnu; do
+		if [ -d "$libdir" ]; then
+			LD_LIBRARY_PATH="$(imagick_path_append "$LD_LIBRARY_PATH" "$libdir")"
+		fi
+	done
+	export LD_LIBRARY_PATH
+
+	# ghostscript (the PDF/PostScript delegate) is staged there too.
+	PATH="$(imagick_path_append "$PATH" "$SNAP/extensions/usr/bin")"
+	export PATH
+
+	# ImageMagick's config (policy.xml, delegates.xml, ...); the build-time
+	# prefix is meaningless inside this snap, so point it at the mount.
+	export MAGICK_CONFIGURE_PATH="$SNAP/extensions/usr/etc/ImageMagick-7"
+
+	# ghostscript's Resource files are versioned; find them.
+	for resource in "$SNAP"/extensions/usr/share/ghostscript/*/Resource/Init; do
+		if [ -d "$resource" ]; then
+			export GS_LIB="$resource"
+		fi
+	done
+
+	# ImageMagick is built without OpenMP, but keep it single-threaded
+	# inside php-fpm's forked workers regardless.
+	export MAGICK_THREAD_LIMIT=1
+
+	# Used by the callers that source this file (php, start-php-fpm). Without
+	# OpenMP there are no threads to wait for at shutdown, so skip imagick's
+	# shutdown sleep.
+	# shellcheck disable=SC2034
+	IMAGICK_PHP_ARGS="-d extension=$IMAGICK_EXTENSION -d imagick.shutdown_sleep_count=0"
+}
+
+# The identity of the imagick.so that's mounted right now: a different
+# revision of the imagick snap is a different mount, so this changes on
+# every refresh. "none" when it isn't there.
+imagick_identity()
+{
+	stat -L -c '%d:%i' "$IMAGICK_EXTENSION" 2>/dev/null || echo "none"
+}
+
+# Runs in the background next to php-fpm (see start-php-fpm), so it stops and
+# starts with it. A running php-fpm keeps the imagick.so (and ImageMagick) it
+# loaded at startup even after the imagick snap refreshes, so ImageMagick
+# security updates wouldn't take effect until php-fpm happened to restart.
+# When the mounted imagick.so changes, gracefully reload php-fpm (SIGUSR2:
+# the master re-executes and loads the extension afresh; running requests
+# finish). Connecting and disconnecting the plug are handled by the
+# connect/disconnect hooks, which restart php-fpm.
+imagick_watch_for_refresh()
+{
+	loaded="$(imagick_identity)"
+	while sleep "${IMAGICK_WATCH_INTERVAL:-60}"; do
+		current="$(imagick_identity)"
+		if [ "$current" != "$loaded" ] && [ "$current" != "none" ] && php_is_running; then
+			echo "The imagick snap was refreshed; reloading PHP to load the new imagick"
+			kill -USR2 "$(php_pid)"
+			loaded="$current"
+		fi
+	done
+}

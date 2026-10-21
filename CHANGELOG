@@ -1,3 +1,7 @@
+v 34.0.5snap3
+  - php: update to 8.4.27
+  - certbot: update certifi to 2026.10.19
+
 v 34.0.5snap2
   - mysql: update to 8.4.13
   - mysql: configure innodb_log_file_size to 256MB

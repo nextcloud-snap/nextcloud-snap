@@ -202,8 +202,8 @@ parts:
 
   php:
     plugin: autotools
-    source: https://www.php.net/distributions/php-8.4.26.tar.bz2
-    source-checksum: sha256/4209694d7b0f63c45a3773e07cdc2bbfc71249265a5d951b1ff53e1147edc5ca
+    source: https://www.php.net/distributions/php-8.4.27.tar.bz2
+    source-checksum: sha256/b2530a877c722f4b08c9e174a30cb08bac2b7e1903ee6e9e315f0aa9f5f82c24
     source-type: tar
     autotools-configure-parameters:
       - --prefix=$CRAFT_PART_INSTALL

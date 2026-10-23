@@ -20,6 +20,15 @@ fi
 
 set_mysql_setup_running
 
+# With an old snapd on the host, the shell builtin `test -x` fails inside the
+# sandbox, so mysql.server and mysqld_safe report "Couldn't find MySQL server"
+# and Nextcloud waits for PHP forever (#3684, #3697). Say so, with the fix.
+# The builtin is used on purpose: it is the check that fails.
+if [ -f "$SNAP/bin/mysqld_safe" ] && ! test -x "$SNAP/bin/mysqld_safe"; then
+	echo "ERROR: this system's snapd appears too old to run this snap (the shell's 'test -x' fails inside the sandbox)." >&2
+	echo "Fix: sudo snap install snapd, then: sudo snap revert nextcloud && sudo snap refresh nextcloud" >&2
+fi
+
 # Start mysql
 "$SNAP/support-files/mysql.server" start
 

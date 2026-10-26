@@ -49,6 +49,11 @@ apps:
       # Optional interface for accessing removable media
       - removable-media
 
+      # Optional content interface: the imagick snap provides the PHP
+      # imagick extension (+ ImageMagick 7) here. Manual opt-in:
+      #   snap connect nextcloud:imagick imagick:php-extensions
+      - imagick
+
   # redis server daemon
   redis-server:
     command: bin/start-redis-server
@@ -68,7 +73,7 @@ apps:
   # Nextcloud occ command
   occ:
     command: bin/occ
-    plugs: [network, network-bind, removable-media]
+    plugs: [network, network-bind, removable-media, imagick]
 
   enable-https:
     command: bin/enable-https
@@ -88,27 +93,27 @@ apps:
     command: bin/nextcloud-cron
     daemon: simple
     restart-condition: on-failure
-    plugs: [network, network-bind, removable-media]
+    plugs: [network, network-bind, removable-media, imagick]
 
   # Command for manually installing instead of visiting site to create admin.
   manual-install:
     command: bin/manual-install
-    plugs: [network, network-bind, removable-media]
+    plugs: [network, network-bind, removable-media, imagick]
 
   import:
     command: bin/import-data
-    plugs: [network, network-bind, removable-media]
+    plugs: [network, network-bind, removable-media, imagick]
 
   export:
     command: bin/export-data
-    plugs: [network, network-bind, removable-media]
+    plugs: [network, network-bind, removable-media, imagick]
 
   # Service for automatically fixing Nextcloud indices, etc.
   nextcloud-fixer:
     command: bin/nextcloud-fixer
     daemon: simple
     restart-condition: on-failure
-    plugs: [network, network-bind, removable-media]
+    plugs: [network, network-bind, removable-media, imagick]
 
   logrotate:
     command: bin/run-logrotate
@@ -116,11 +121,25 @@ apps:
     restart-condition: on-failure
     timer: 00:00 # Run once a day at midnight
 
+plugs:
+  # Content plug for the optional PHP imagick extension. No default-provider
+  # on purpose: this is a manual opt-in. Install the `imagick` snap, then:
+  #   snap connect nextcloud:imagick imagick:php-extensions
+  # ImageMagick parses many complex, untrusted image formats and has a long
+  # CVE history; by connecting this the admin accepts that risk (the
+  # extension runs inside this snap's php-fpm, with this snap's privileges).
+  imagick:
+    interface: content
+    content: php-extensions
+    target: $SNAP/extensions
+
 hooks:
   configure:
     plugs: [network, network-bind, removable-media]
   pre-refresh:
     plugs: [network, network-bind, removable-media]
+  connect-plug-imagick: {}
+  disconnect-plug-imagick: {}
 
 parts:
   apache:

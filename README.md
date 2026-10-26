@@ -200,6 +200,50 @@ There are a few CLI utilities included:
       requires `sudo`.
 
 
+### Optional imagick extension
+
+Nextcloud's theming app warns when the PHP `imagick` module isn't enabled. It
+isn't bundled here on purpose: ImageMagick has a long history of CVEs in its
+image-parsing code, and the extension runs inside this snap's `php-fpm` (with
+this snap's privileges), so it is opt-in.
+
+The companion **imagick** snap (https://snapcraft.io/imagick) ships
+`imagick.so` plus a self-built, full-featured ImageMagick 7 behind a `content`
+interface. Install it and connect the plug:
+
+    sudo snap install imagick
+    sudo snap connect nextcloud:imagick imagick:php-extensions
+
+`php-fpm` is restarted automatically on connect (and on disconnect), so PHP
+picks up the module on the next request. When the imagick snap refreshes
+(for example, to an ImageMagick security release), `php-fpm` notices within
+a minute and reloads gracefully to load the new version. The admin overview
+(Settings -> Overview) should no longer show the imagick warning. To check
+from the command line:
+
+    sudo nextcloud.occ setupchecks
+
+The provided ImageMagick covers what Nextcloud uses it for: SVG (theming
+favicons), HEIC/HEIF, TIFF/TGA/SGI/Photoshop, PDF/PostScript/Illustrator (via
+ghostscript), font previews, plus png/jpeg/webp/gif. Note that Nextcloud keeps
+most of those previews disabled until you list them in the `enabledPreviewProviders`
+config value.
+
+To stop using it:
+
+    sudo snap disconnect nextcloud:imagick
+
+or remove the imagick snap. Disconnecting or removing it stops the exposure
+from that point on; it does not undo anything that happened while the plug was
+connected.
+
+The extension must match this snap's PHP API (non-ZTS). The imagick snap is
+built against the exact PHP source this snap uses and tracks changes to it. Its
+build sits in a directory named after the PHP API, so if PHP here moves to a new
+minor version before the imagick snap has a matching build, imagick simply
+isn't loaded (the admin warning comes back) until the imagick snap catches up.
+
+
 ## Where is my stuff?
 
 - `$SNAP_DATA` (`/var/snap/nextcloud/current/` by default)

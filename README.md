@@ -2,7 +2,7 @@
 
 Nextcloud server packaged as a snap. It consists of:
 
-- Nextcloud 34
+- Nextcloud 35
 - Apache 2.4
 - PHP 8.4
 - MySQL 8.4
@@ -104,7 +104,7 @@ To set it to be unlimited (not recommended), use -1:
 
 #### APC shm size configuration
 
-The snap uses APCu for local caching on on systems with >= 2GB. By default,
+The snap uses APCu for local caching on systems with >= 2GB. By default,
 APCu allocates 32M of shared memory but the Nextcloud documentation recommends
 128MB as a starting point. If your Nextcloud admin panel shows a warning that
 the APCu cache is full, you may need to increase this value.

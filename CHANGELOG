@@ -1,3 +1,8 @@
+v 35.0.2snap1
+  - nextcloud: update to 35.0.2
+  - ci: configure Renovate for the snap dependencies
+  - tests: udpate ruby to 3.4.12
+
 v 34.0.5snap3
   - php: update to 8.4.27
   - certbot: update certifi to 2026.10.19

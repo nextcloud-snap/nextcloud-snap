@@ -13,7 +13,7 @@
   // Supported release lines: `develop` is the active line and the numeric
   // branches are the maintained Nextcloud major releases. Add the new branch
   // here when a new major release branch is cut.
-  baseBranchPatterns: ["develop", "33"],
+  baseBranchPatterns: ["develop", "33", "34"],
   branchPrefix: "renovate-snap/",
   labels: ["dependencies"],
 

@@ -346,8 +346,8 @@ parts:
 
   redis:
     plugin: make
-    source: https://download.redis.io/releases/redis-8.2.10.tar.gz
-    source-checksum: sha256/d33935732f7fc15476295fe05f5ce740927bc14847798e47b3f67b4f27b8b478
+    source: https://download.redis.io/releases/redis-8.2.11.tar.gz
+    source-checksum: sha256/fba14b77c4bdcb2d5418b6741fc0cdaac4b78bc73eab9b2e5f3c255d597f16fa
     
     override-build: |
       make -j${CRAFT_PARALLEL_BUILD_COUNT}

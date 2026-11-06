@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Interface hook: the imagick content snap was connected
+#   snap connect nextcloud:imagick imagick:php-extensions
+# php-fpm must restart so it loads the extension and the ImageMagick
+# libraries now mounted at $SNAP/extensions.
+#
+# snapctl defers the restart until this hook's change has completed, i.e.
+# until the content mount has actually been added/removed. Restarting php-fpm
+# directly from the hook would race with that (on disconnect the new php-fpm
+# would still see, and load, the extension).
+snapctl restart "${SNAP_INSTANCE_NAME}.php-fpm"

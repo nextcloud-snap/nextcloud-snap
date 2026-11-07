@@ -1,3 +1,8 @@
+v 35.0.2snap2
+  - apache: update to 2.4.70
+  - redis: update to 8.2.11
+  - tests: update selenium-webdriver to 4.52.0
+
 v 35.0.2snap1
   - nextcloud: update to 35.0.2
   - ci: configure Renovate for the snap dependencies

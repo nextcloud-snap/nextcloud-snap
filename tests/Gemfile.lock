@@ -21,6 +21,8 @@ GEM
     nokogiri (1.19.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.19.4-aarch64-linux-gnu)
+      racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
     public_suffix (7.0.5)
@@ -30,7 +32,6 @@ GEM
       rack (>= 1.0, < 3)
     rake (13.0.6)
     regexp_parser (2.1.1)
-    rexml (3.2.6)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -44,18 +45,18 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.2)
-    rubyzip (3.4.0)
-    selenium-webdriver (4.44.0)
+    rubyzip (3.7.0)
+    selenium-webdriver (4.52.0)
       base64 (~> 0.2)
       logger (~> 1.4)
-      rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    websocket (1.2.9)
+    websocket (1.2.11)
     xpath (3.2.0)
       nokogiri (~> 1.8)
 
 PLATFORMS
+  aarch64-linux
   ruby
   x86_64-linux
 

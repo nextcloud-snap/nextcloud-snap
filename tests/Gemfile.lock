@@ -27,7 +27,7 @@ GEM
       racc (~> 1.4)
     public_suffix (7.0.5)
     racc (1.8.1)
-    rack (2.2.23)
+    rack (2.2.25)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rake (13.0.6)

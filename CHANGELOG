@@ -1,3 +1,7 @@
+v 34.0.6snap1
+  - nextcloud: update to 34.0.6
+  - apache: update to 2.4.71
+
 v 34.0.5snap4
   - redis: update to 8.2.11
   - apache: update to 2.4.70

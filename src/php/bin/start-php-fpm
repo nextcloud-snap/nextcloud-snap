@@ -4,6 +4,8 @@
 . "$SNAP/utilities/mysql-utilities"
 # shellcheck source=src/php/utilities/php-utilities
 . "$SNAP/utilities/php-utilities"
+# shellcheck source=src/php/utilities/imagick-utilities
+. "$SNAP/utilities/imagick-utilities"
 # shellcheck source=src/redis/utilities/redis-utilities
 . "$SNAP/utilities/redis-utilities"
 # shellcheck source=src/nextcloud/utilities/nextcloud-utilities
@@ -50,4 +52,12 @@ if debug_mode_enabled; then
 fi
 export PHP_EXPOSE_PHP
 
-php-fpm -R -F --fpm-config "${SNAP}/config/php/php-fpm.conf" -c "${SNAP}/config/php"
+# Load the imagick extension if the imagick content snap is connected, and
+# pick up refreshes of it while running.
+imagick_configure
+if imagick_is_connected; then
+	imagick_watch_for_refresh &
+fi
+
+# shellcheck disable=SC2086 # IMAGICK_PHP_ARGS is intentionally word-split
+php-fpm -R -F --fpm-config "${SNAP}/config/php/php-fpm.conf" -c "${SNAP}/config/php" $IMAGICK_PHP_ARGS

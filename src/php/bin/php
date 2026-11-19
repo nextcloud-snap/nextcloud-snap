@@ -18,4 +18,10 @@ export PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
 export PHP_EXPOSE_PHP="${PHP_EXPOSE_PHP:-Off}"
 export PHP_APC_SHM_SIZE="${PHP_APC_SHM_SIZE:-32M}"
 
-exec "$SNAP/bin/php.bin" -c "$SNAP/config/php" "$@"
+# Load the imagick extension if the imagick content snap is connected.
+# shellcheck source=src/php/utilities/imagick-utilities
+. "$SNAP/utilities/imagick-utilities"
+imagick_configure
+
+# shellcheck disable=SC2086 # IMAGICK_PHP_ARGS is intentionally word-split
+exec "$SNAP/bin/php.bin" -c "$SNAP/config/php" $IMAGICK_PHP_ARGS "$@"

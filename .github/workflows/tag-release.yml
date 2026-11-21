@@ -1,0 +1,89 @@
+name: Tag Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+      - '[0-9]+'
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
+    runs-on: ubuntu-latest
+    environment: launchpad
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Check out the actual merge commit that landed on the target branch
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          # Fetch all history so we can push
+          fetch-depth: 0
+
+      - name: Fetch existing tags
+        run: git fetch --tags --force origin
+
+      - name: Extract release from CHANGELOG
+        id: extract
+        run: |
+          # Grab the version string from line 1
+          VERSION=$(head -n1 CHANGELOG | awk '{print $2}')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # Build the message
+          {
+            echo "Version $VERSION"
+            echo ""
+            sed -n '2,/^$/p' CHANGELOG
+          } > tag_message.txt
+
+      - name: Check if tag exists
+        id: check-tag
+        run: |
+          VERSION="${{ steps.extract.outputs.version }}"
+          if git rev-parse "refs/tags/$VERSION" >/dev/null 2>&1; then
+            echo "Tag '$VERSION' already exists. Skipping."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create and push annotated tag
+        if: steps.check-tag.outputs.exists != 'true'
+        run: |
+          VERSION="${{ steps.extract.outputs.version }}"
+          git config user.name "CI Bot"
+          git config user.email "nextcloud-snappy-bot@git.launchpad.net"
+          git tag -a "$VERSION" -F tag_message.txt
+          git push origin "refs/tags/$VERSION"
+
+      # We need to push the tag to Launchapd, because when this action pushes the tag using GITHUB_TOKEN,
+      # GitHub will not trigger .github/workflows/launchpad.yml to block workflow recursion from GITHUB_TOKEN.
+        
+      - name: Setup SSH
+        if: steps.check-tag.outputs.exists != 'true'
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Setup launchpad keys
+        if: steps.check-tag.outputs.exists != 'true'
+        run: echo "${{ vars.LAUNCHPAD_SSH_PUBLIC_KEYS }}" > ~/.ssh/known_hosts
+
+      - name: Push branch and tag to Launchpad
+        if: steps.check-tag.outputs.exists != 'true'
+        run: |
+          VERSION="${{ steps.extract.outputs.version }}"
+          git remote add deploy git+ssh://nextcloud-snappy-bot@git.launchpad.net/nextcloud-snap
+          git push deploy "HEAD:refs/heads/${{ github.base_ref }}" "refs/tags/$VERSION"
+      
+      - name: Sync master into develop
+        if: steps.check-tag.outputs.exists != 'true' && github.base_ref == 'master'
+        run: |
+          git checkout develop
+          git merge --no-edit master
+          git push origin develop

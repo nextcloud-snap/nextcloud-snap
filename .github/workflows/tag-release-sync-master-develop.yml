@@ -1,0 +1,87 @@
+name: Tag Release and Sync master Into develop
+
+on:
+  push:
+    branches:
+      - master
+      - '[0-9]+'
+    paths:
+      - CHANGELOG
+
+permissions: {}
+
+concurrency:
+  group: tag-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Persists the App token in Git credentials for subsequent pushes
+          token: ${{ steps.app-token.outputs.token }}
+          # Full history required to merge into develop
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Extract and validate release from CHANGELOG
+        id: extract
+        run: |
+          # Grab the version string from line 1 (e.g. "v 35.0.2snap2")
+          VERSION=$(head -n1 CHANGELOG | awk '{print $2}')
+
+          if [[ -z "$VERSION" ]] \
+            || ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([a-zA-Z0-9._-]+)?snap[0-9]+$ ]] \
+            || ! git check-ref-format "refs/tags/$VERSION"; then
+            echo "::error::Invalid or empty version extracted from CHANGELOG: '$VERSION'"
+            exit 1
+          fi
+
+          if git rev-parse "refs/tags/$VERSION" >/dev/null 2>&1; then
+            echo "Tag '$VERSION' already exists. Skipping."
+            echo "should_tag=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          {
+            printf 'Version %s\n\n' "$VERSION"
+            awk 'NR==1 { next } /^$/ { exit } { print }' CHANGELOG
+          } > "$RUNNER_TEMP/tag_message.txt"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "should_tag=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push annotated tag
+        if: steps.extract.outputs.should_tag == 'true'
+        env:
+          VERSION: ${{ steps.extract.outputs.version }}
+        run: |
+          git config user.name "CI Bot"
+          git config user.email "nextcloud-snappy-bot@git.launchpad.net"
+          git tag -a "$VERSION" -F "$RUNNER_TEMP/tag_message.txt"
+          git push origin "refs/tags/$VERSION"
+      
+      - name: Sync master into develop
+        if: steps.extract.outputs.should_tag == 'true' && github.ref_name == 'master'
+        run: |
+          git fetch origin develop
+
+          if git merge-base --is-ancestor "$GITHUB_SHA" origin/develop; then
+            echo "Commit $GITHUB_SHA is already in develop. Skipping sync."
+            exit 0
+          fi
+
+          git checkout -B develop origin/develop
+          git merge --no-edit "$GITHUB_SHA"
+          git push origin develop

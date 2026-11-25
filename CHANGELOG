@@ -1,3 +1,6 @@
+v 35.0.3snap3
+  - mysql: update to 8.4.13.1
+
 v 35.0.3snap2
   - php: update to 8.4.28
 

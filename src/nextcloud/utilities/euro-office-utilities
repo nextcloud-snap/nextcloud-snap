@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# shellcheck source=src/nextcloud/utilities/nextcloud-utilities
+. "$SNAP/utilities/nextcloud-utilities"
+
+# Provided by the euro-office-documentserver snap when the plug is connected.
+EURO_OFFICE_CONNECTION="$SNAP/euro-office/connection.json"
+EURO_OFFICE_CONFIG="$NEXTCLOUD_CONFIG_DIR/euro-office.config.php"
+
+# Loopback-only port where the document server reaches Nextcloud. It's separate
+# because the normal HTTP port redirects once HTTPS is enabled.
+export EURO_OFFICE_STORAGE_PORT="8481"
+
+euro_office_is_connected()
+{
+	[ -r "$EURO_OFFICE_CONNECTION" ]
+}
+
+euro_office_url()
+{
+	jq -er .url "$EURO_OFFICE_CONNECTION"
+}
+
+# Keep the Nextcloud config in line with the state of the plug. The file reads
+# the connection details when it's loaded, so a new secret applies right away.
+configure_euro_office()
+{
+	if euro_office_is_connected; then
+		cp "$SNAP/euro-office-config/euro-office.config.php" "$EURO_OFFICE_CONFIG"
+	elif [ -f "$EURO_OFFICE_CONFIG" ]; then
+		rm -f "$EURO_OFFICE_CONFIG"
+		# occ saves the merged config, so config.php may hold a copy
+		occ -n config:system:delete eurooffice
+	fi
+}

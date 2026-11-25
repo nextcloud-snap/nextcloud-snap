@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# snapctl defers the restarts until the plug is fully connected, so the services
+# see the new state. Restarting Apache also updates the Nextcloud config.
+snapctl restart "${SNAP_INSTANCE_NAME}.php-fpm" "${SNAP_INSTANCE_NAME}.apache"

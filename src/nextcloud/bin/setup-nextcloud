@@ -6,6 +6,8 @@
 . "$SNAP/utilities/mysql-utilities"
 # shellcheck source=src/nextcloud/utilities/nextcloud-utilities
 . "$SNAP/utilities/nextcloud-utilities"
+# shellcheck source=src/nextcloud/utilities/euro-office-utilities
+. "$SNAP/utilities/euro-office-utilities"
 # shellcheck source=src/redis/utilities/redis-utilities
 . "$SNAP/utilities/redis-utilities"
 # shellcheck source=src/common/utilities/common-utilities
@@ -62,6 +64,8 @@ else
 	occ -n app:disable updatenotification
 fi
 
+
+configure_euro_office
 
 if nextcloud_is_installed; then
 	# Finally, make sure nextcloud is up to date. The return code of the

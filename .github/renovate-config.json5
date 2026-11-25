@@ -151,11 +151,12 @@
       description: "MySQL 8.4 LTS (snap/snapcraft.yaml)",
       managerFilePatterns: ["snap/snapcraft.yaml"],
       matchStrings: [
-        "MySQL-8\\.4/mysql-(?<currentValue>8\\.4\\.\\d+)\\.tar\\.gz",
+        "MySQL-8\\.4/mysql-(?<currentValue>8\\.4\\.\\d+(?:\\.\\d+)?)\\.tar\\.gz",
       ],
       datasourceTemplate: "github-tags",
       depNameTemplate: "mysql/mysql-server",
-      extractVersionTemplate: "^mysql-(?<version>8\\.4\\.\\d+)$",
+      extractVersionTemplate: "^mysql-(?<version>8\\.4\\.\\d+(?:\\.\\d+)?)$",
+      versioningTemplate: "semver-extended",
     },
   ],
 }

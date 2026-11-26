@@ -1,5 +1,8 @@
+v 33.0.11snap3
+  - mysql: update to 8.4.13.1
+
 v 33.0.11snap2
-- php: update to 8.4.28
+  - php: update to 8.4.28
 
 v 33.0.11snap1
   - nextcloud: udpate to 33.0.11

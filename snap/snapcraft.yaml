@@ -372,8 +372,8 @@ parts:
     plugin: cmake
 
     # Get from https://dev.mysql.com/downloads/mysql/
-    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.13.tar.gz
-    source-checksum: md5/a6edcc422fcdfca29f6d48a5116acbdf
+    source: https://dev.mysql.com/get/Downloads/MySQL-8.4/mysql-8.4.13.1.tar.gz
+    source-checksum: md5/28962862ca8b6b3be19f878b0e749233
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/
       - -DBUILD_CONFIG=mysql_release

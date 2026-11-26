@@ -9,6 +9,8 @@ include "https-utilities"
 include "apache-utilities"
 # shellcheck source=src/php/utilities/php-utilities
 include "php-utilities"
+# shellcheck source=src/nextcloud/utilities/euro-office-utilities
+include "euro-office-utilities"
 # shellcheck source=src/hooks/utilities/configuration-utilities
 include "configuration-utilities"
 
@@ -46,6 +48,13 @@ else
 	echo "notify_push reverse proxy is disabled"
 fi
 
+if euro_office_is_connected && EURO_OFFICE_URL="$(euro_office_url)"; then
+	echo "Euro-Office is connected"
+	export EURO_OFFICE_URL
+	params="$params -DEnableEuroOffice"
+else
+	echo "Euro-Office is not connected"
+fi
 
 HTTP_PORT="$(apache_http_port)"
 HTTPS_PORT="$(apache_https_port)"

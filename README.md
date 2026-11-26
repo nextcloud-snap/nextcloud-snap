@@ -150,6 +150,21 @@ This option simply enables the reverse proxy configuration mentioned in the [Cli
 Read the complete instructions in [our wiki](https://github.com/nextcloud-snap/nextcloud-snap/wiki/Configure-HPB-client-push-for-Nextcloud-snap).
 
 
+#### Euro-Office document server
+
+The Nextcloud Office (`eurooffice`) app can use the document server from the
+`euro-office-documentserver` snap on the same machine:
+
+    $ sudo snap install euro-office-documentserver
+    $ sudo snap connect nextcloud:euro-office euro-office-documentserver:nextcloud
+    $ sudo nextcloud.occ app:install eurooffice
+
+No further configuration is needed. The editors are served from
+`/euro-office/` on the Nextcloud address. If the app was used with another
+document server before, clear the addresses and the key in its admin settings,
+as these take precedence. Disconnecting the plug removes the configuration.
+
+
 #### Debug mode
 
 By default, the snap installs itself in production mode, which prevents Apache

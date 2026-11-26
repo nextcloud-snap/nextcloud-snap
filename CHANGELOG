@@ -1,3 +1,6 @@
+v 34.0.6snap4
+  - ci: add workflow to tag releases and sync develop
+
 v 34.0.6snap3
   - mysql: update to 8.4.13.1
 
